@@ -19,8 +19,15 @@ import net.pitan76.spacecube.item.PersonalShrinkingDevice;
 import org.jetbrains.annotations.Nullable;
 
 public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProvider {
-    public SpaceCubeBlock(CompatibleBlockSettings settings) {
+    public final int size;
+
+    public SpaceCubeBlock(CompatibleBlockSettings settings, int size) {
         super(settings);
+        this.size = size;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     @Override

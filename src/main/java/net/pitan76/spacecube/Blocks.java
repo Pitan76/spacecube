@@ -10,12 +10,12 @@ import net.pitan76.spacecube.block.SpaceCubeWallBlock;
 import java.util.function.Supplier;
 
 public class Blocks {
-    public static ExtendBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings());
-    public static ExtendBlock SMALL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings());
-    public static ExtendBlock NORMAL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings());
-    public static ExtendBlock LARGE_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings());
-    public static ExtendBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings());
-    public static ExtendBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings());
+    public static ExtendBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 2);
+    public static ExtendBlock SMALL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 3);
+    public static ExtendBlock NORMAL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 4);
+    public static ExtendBlock LARGE_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 5);
+    public static ExtendBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 6);
+    public static ExtendBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 7);
 
     public static ExtendBlock SOLID_WALL = new SpaceCubeWallBlock(new CompatibleBlockSettings().luminance((state) -> 15));
     public static ExtendBlock WALL = new SpaceCubeWallBlock(new CompatibleBlockSettings());

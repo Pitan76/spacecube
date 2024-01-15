@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public class CubeGenerator {
 
-    // 中心からの距離を指定して、中心が空洞のキューブを生成するみたいな感じです。だから実際には2倍のサイズになる
+    // 中心からの距離を指定して、中心が空洞のキューブを生成するみたいな感じです。だから実際には(2倍 - 1)のサイズになる
     // Generate a cube with a hollow center by specifying the distance from the center.　So it's actually twice the size
 
     // ちなみに空気の部分の距離なだけなので壁のブロックは含まない計算で指定してや

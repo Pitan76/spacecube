@@ -57,6 +57,8 @@ public class PersonalShrinkingDevice extends ExtendItem {
             ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player.getEntity();
             SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
 
+            int size = ((SpaceCubeBlock) state.getBlock()).getSize();
+
             // Map of SpaceCube (room) coordinates in SpaceCubeDimension and Space Cube Block coordinates
             Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
 
@@ -92,7 +94,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     spaceCubeBlockEntity.setScPos(scPos);
 
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
-                    CubeGenerator.generateCube(spaceCubeWorld, scPos, Blocks.SOLID_WALL, 2);
+                    CubeGenerator.generateCube(spaceCubeWorld, scPos, Blocks.SOLID_WALL, size);
                 }
                 spacePosWithSCBlockPath.put(scPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
 
@@ -117,7 +119,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     spaceCubeBlockEntity.setScPos(scPos);
 
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
-                    CubeGenerator.generateCube(spaceCubeWorld, scPos, Blocks.SOLID_WALL, 2);
+                    CubeGenerator.generateCube(spaceCubeWorld, scPos, Blocks.SOLID_WALL, size);
                 }
 
 
