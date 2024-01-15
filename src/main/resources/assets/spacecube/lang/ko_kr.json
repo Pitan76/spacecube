@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "우주 큐브 (작은)",
+  "block.spacecube.small_space_cube": "우주 큐브 (작음)",
+  "block.spacecube.normal_space_cube": "우주 큐브 (보통)",
+  "block.spacecube.large_space_cube": "우주 큐브 (큰)",
+  "block.spacecube.giant_space_cube": "우주 큐브 (거대)",
+  "block.spacecube.maximum_space_cube": "우주 큐브 (최대)",
+  "block.spacecube.solid_wall": "튼튼한 우주 큐브 벽",
+  "block.spacecube.wall": "우주 큐브 벽",
+
+  "item.spacecube.personal_shrinking_device": "개인용 수축 장치",
+  "item.spacecube.energy_tunnel": "에너지 터널",
+  "item.spacecube.fluid_tunnel": "유체 터널",
+  "item.spacecube.item_tunnel": "아이템 터널"
+}

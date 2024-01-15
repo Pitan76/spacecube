@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "Куб пространства (Миниатюрный)",
+  "block.spacecube.small_space_cube": "Куб пространства (Маленький)",
+  "block.spacecube.normal_space_cube": "Куб пространства (Обычный)",
+  "block.spacecube.large_space_cube": "Куб пространства (Большой)",
+  "block.spacecube.giant_space_cube": "Куб пространства (Гигантский)",
+  "block.spacecube.maximum_space_cube": "Куб пространства (Максимальный)",
+  "block.spacecube.solid_wall": "Прочная стена куба пространства",
+  "block.spacecube.wall": "Стена куба пространства",
+
+  "item.spacecube.personal_shrinking_device": "Персональное устройство уменьшения",
+  "item.spacecube.energy_tunnel": "Энергетический туннель",
+  "item.spacecube.fluid_tunnel": "Туннель для жидкости",
+  "item.spacecube.item_tunnel": "Туннель для предметов"
+}

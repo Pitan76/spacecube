@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "Space Cube (Tiny)",
+  "block.spacecube.small_space_cube": "Space Cube (Small)",
+  "block.spacecube.normal_space_cube": "Space Cube (Normal)",
+  "block.spacecube.large_space_cube": "Space Cube (Large)",
+  "block.spacecube.giant_space_cube": "Space Cube (Giant)",
+  "block.spacecube.maximum_space_cube": "Space Cube (Maximum)",
+  "block.spacecube.solid_wall": "Solid Space Cube Wall",
+  "block.spacecube.wall": "Space Cube Wall",
+
+  "item.spacecube.personal_shrinking_device": "Personal Shrinking Device",
+  "item.spacecube.energy_tunnel": "Energy Tunnel",
+  "item.spacecube.fluid_tunnel": "Fluid Tunnel",
+  "item.spacecube.item_tunnel": "Item Tunnel"
+}

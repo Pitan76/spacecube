@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "المكعب الفضائي (صغير)",
+  "block.spacecube.small_space_cube": "المكعب الفضائي (صغير)",
+  "block.spacecube.normal_space_cube": "المكعب الفضائي (عادي)",
+  "block.spacecube.large_space_cube": "المكعب الفضائي (كبير)",
+  "block.spacecube.giant_space_cube": "المكعب الفضائي (عملاق)",
+  "block.spacecube.maximum_space_cube": "المكعب الفضائي (الحد الأقصى)",
+  "block.spacecube.solid_wall": "جدار المكعب الفضائي الصلب",
+  "block.spacecube.wall": "جدار المكعب الفضائي",
+
+  "item.spacecube.personal_shrinking_device": "جهاز التقليص الشخصي",
+  "item.spacecube.energy_tunnel": "نفق الطاقة",
+  "item.spacecube.fluid_tunnel": "نفق السوائل",
+  "item.spacecube.item_tunnel": "نفق العناصر"
+}

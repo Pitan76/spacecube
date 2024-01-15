@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "spacecube",
+  "version": "${version}",
+  "name": "SpaceCube",
+  "description": "Space Cube is a mod that creates space in another dimension",
+  "authors": [
+    "Pitan"
+  ],
+  "contact": {
+    "website": "https://www.curseforge.com/minecraft/mc-mods/spacecube",
+    "repo": "https://github.com/PTOM76/spacecube"
+  },
+  "license": "MIT",
+  "icon": "assets/spacecube/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.pitan76.spacecube.client.SpaceCubeClient"
+    ],
+    "main": [
+      "net.pitan76.spacecube.SpaceCube"
+    ]
+  },
+  "mixins": [
+    "spacecube.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "Cubo Espacial (Pequeño)",
+  "block.spacecube.small_space_cube": "Cubo Espacial (Pequeño)",
+  "block.spacecube.normal_space_cube": "Cubo Espacial (Normal)",
+  "block.spacecube.large_space_cube": "Cubo Espacial (Grande)",
+  "block.spacecube.giant_space_cube": "Cubo Espacial (Gigante)",
+  "block.spacecube.maximum_space_cube": "Cubo Espacial (Máximo)",
+  "block.spacecube.solid_wall": "Pared Sólida del Cubo Espacial",
+  "block.spacecube.wall": "Pared del Cubo Espacial",
+
+  "item.spacecube.personal_shrinking_device": "Dispositivo de Encogimiento Personal",
+  "item.spacecube.energy_tunnel": "Túnel de Energía",
+  "item.spacecube.fluid_tunnel": "Túnel de Fluido",
+  "item.spacecube.item_tunnel": "Túnel de Objetos"
+}

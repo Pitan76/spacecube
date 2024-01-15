@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "スペースキューブ (極小)",
+  "block.spacecube.small_space_cube": "スペースキューブ (小)",
+  "block.spacecube.normal_space_cube": "スペースキューブ (通常)",
+  "block.spacecube.large_space_cube": "スペースキューブ (大)",
+  "block.spacecube.giant_space_cube": "スペースキューブ (巨大)",
+  "block.spacecube.maximum_space_cube": "スペースキューブ (最大)",
+  "block.spacecube.solid_wall": "頑丈なスペースキューブの壁",
+  "block.spacecube.wall": "スペースキューブの壁",
+
+  "item.spacecube.personal_shrinking_device": "個人用縮小デバイス",
+  "item.spacecube.energy_tunnel": "エネルギートンネル",
+  "item.spacecube.fluid_tunnel": "液体トンネル",
+  "item.spacecube.item_tunnel": "アイテムトンネル"
+}

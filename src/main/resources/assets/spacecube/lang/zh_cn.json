@@ -1,0 +1,17 @@
+{
+  "itemGroup.spacecube.creative_tab": "Space Cube",
+
+  "block.spacecube.tiny_space_cube": "空间立方体（微小）",
+  "block.spacecube.small_space_cube": "空间立方体（小）",
+  "block.spacecube.normal_space_cube": "空间立方体（普通）",
+  "block.spacecube.large_space_cube": "空间立方体（大）",
+  "block.spacecube.giant_space_cube": "空间立方体（巨大）",
+  "block.spacecube.maximum_space_cube": "空间立方体（最大）",
+  "block.spacecube.solid_wall": "坚固的空间立方体墙",
+  "block.spacecube.wall": "空间立方体墙",
+
+  "item.spacecube.personal_shrinking_device": "个人缩小装置",
+  "item.spacecube.energy_tunnel": "能量隧道",
+  "item.spacecube.fluid_tunnel": "流体隧道",
+  "item.spacecube.item_tunnel": "物品隧道"
+}
