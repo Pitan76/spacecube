@@ -137,6 +137,6 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
         int side = size * 2 - 1;
-        tooltip.add(TextUtil.translatable("tooltip.spacecube.space_cube_block.size",  side + "x" + size + "x" + size));
+        tooltip.add(TextUtil.translatable("tooltip.spacecube.space_cube_block.size",  side + "x" + side + "x" + side));
     }
 }
