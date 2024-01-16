@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "spacecube:tiny_space_cube",
+    "spacecube:small_space_cube",
+    "spacecube:normal_space_cube",
+    "spacecube:large_space_cube",
+    "spacecube:giant_space_cube",
+    "spacecube:maximum_space_cube",
+    "spacecube:wall"
+  ]
+}

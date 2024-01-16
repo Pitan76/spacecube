@@ -10,15 +10,15 @@ import net.pitan76.spacecube.block.SpaceCubeWallBlock;
 import java.util.function.Supplier;
 
 public class Blocks {
-    public static ExtendBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 2);
-    public static ExtendBlock SMALL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 3);
-    public static ExtendBlock NORMAL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 4);
-    public static ExtendBlock LARGE_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 5);
-    public static ExtendBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 6);
-    public static ExtendBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings(), 7);
+    public static ExtendBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 2);
+    public static ExtendBlock SMALL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 3);
+    public static ExtendBlock NORMAL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 4);
+    public static ExtendBlock LARGE_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 5);
+    public static ExtendBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 6);
+    public static ExtendBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 7);
 
-    public static ExtendBlock SOLID_WALL = new SpaceCubeWallBlock(new CompatibleBlockSettings().luminance((state) -> 15));
-    public static ExtendBlock WALL = new SpaceCubeWallBlock(new CompatibleBlockSettings());
+    public static ExtendBlock SOLID_WALL = new SpaceCubeWallBlock(new CompatibleBlockSettings().luminance((state) -> 15).strength(-1.0F, 3600000.0F));
+    public static ExtendBlock WALL = new SpaceCubeWallBlock(new CompatibleBlockSettings().strength(3.0F, 6.0F));
 
     public static void init() {
         register(SpaceCube.id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);

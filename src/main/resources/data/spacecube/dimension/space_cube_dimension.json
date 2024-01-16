@@ -1,11 +1,12 @@
 {
-  "type": "minecraft:overworld",
+  "type": "spacecube:space_cube_world",
   "generator": {
     "type": "minecraft:flat",
     "settings": {
       "lakes": false,
       "features": false,
-      "layers": []
+      "layers": [],
+      "structure_overrides": []
     }
   }
 }

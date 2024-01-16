@@ -1,7 +1,10 @@
 package net.pitan76.spacecube.api;
 
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 public class SpaceCubeUtil {
@@ -46,5 +49,27 @@ public class SpaceCubeUtil {
 
     public static int getSpaceCubeCount(ServerWorld world) {
         return getSpaceCubeCount(SpaceCubeState.getOrCreate(world.getServer()));
+    }
+
+    // plan: include MCPitanLib
+    public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t, boolean swingHand) {
+        return switch (result) {
+            case PASS -> TypedActionResult.pass(t);
+            case SUCCESS -> TypedActionResult.success(t, swingHand);
+            case FAIL -> TypedActionResult.fail(t);
+            case CONSUME, CONSUME_PARTIAL -> TypedActionResult.consume(t);
+        };
+    }
+
+    public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t) {
+        return typedActionResult(result, t, true);
+    }
+
+    public static <T> ActionResult actionResult(TypedActionResult<T> result) {
+        return result.getResult();
+    }
+
+    public static ServerWorld getSpaceCubeWorld(ServerWorld world) {
+        return world.getServer().getWorld(SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
     }
 }
