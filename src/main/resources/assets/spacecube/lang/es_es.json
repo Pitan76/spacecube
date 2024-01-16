@@ -13,5 +13,7 @@
   "item.spacecube.personal_shrinking_device": "Dispositivo de Encogimiento Personal",
   "item.spacecube.energy_tunnel": "Túnel de Energía",
   "item.spacecube.fluid_tunnel": "Túnel de Fluido",
-  "item.spacecube.item_tunnel": "Túnel de Objetos"
+  "item.spacecube.item_tunnel": "Túnel de Objetos",
+
+  "tooltip.spacecube.personal_shrinking_device": "§aHaga clic derecho en Space Cube para ingresar a Space Cube (Room)."
 }

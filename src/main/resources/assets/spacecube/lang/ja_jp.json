@@ -13,5 +13,7 @@
   "item.spacecube.personal_shrinking_device": "個人用縮小デバイス",
   "item.spacecube.energy_tunnel": "エネルギートンネル",
   "item.spacecube.fluid_tunnel": "液体トンネル",
-  "item.spacecube.item_tunnel": "アイテムトンネル"
+  "item.spacecube.item_tunnel": "アイテムトンネル",
+
+  "tooltip.spacecube.personal_shrinking_device": "§aスペースキューブを右クリックしてスペースキューブ (部屋) に入ります。"
 }

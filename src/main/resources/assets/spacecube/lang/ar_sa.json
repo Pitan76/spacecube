@@ -13,5 +13,7 @@
   "item.spacecube.personal_shrinking_device": "جهاز التقليص الشخصي",
   "item.spacecube.energy_tunnel": "نفق الطاقة",
   "item.spacecube.fluid_tunnel": "نفق السوائل",
-  "item.spacecube.item_tunnel": "نفق العناصر"
+  "item.spacecube.item_tunnel": "نفق العناصر",
+
+  "tooltip.spacecube.personal_shrinking_device": "§aانقر بزر الماوس الأيمن فوق مكعب الفضاء للدخول إلى مكعب الفضاء (غرفة)."
 }

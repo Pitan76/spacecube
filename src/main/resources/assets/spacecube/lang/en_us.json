@@ -13,5 +13,8 @@
   "item.spacecube.personal_shrinking_device": "Personal Shrinking Device",
   "item.spacecube.energy_tunnel": "Energy Tunnel",
   "item.spacecube.fluid_tunnel": "Fluid Tunnel",
-  "item.spacecube.item_tunnel": "Item Tunnel"
+  "item.spacecube.item_tunnel": "Item Tunnel",
+
+  "tooltip.spacecube.space_cube_block.size": "§aInternal Size: %s",
+  "tooltip.spacecube.personal_shrinking_device": "§aRight click on Space Cube to enter Space Cube (Room)."
 }

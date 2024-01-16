@@ -6,18 +6,23 @@ import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.api.SpaceCubeUtil;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.data.SCBlockPath;
@@ -25,6 +30,7 @@ import net.pitan76.spacecube.item.PersonalShrinkingDevice;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProvider {
@@ -66,10 +72,11 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        // Creative only - サバイバルは getPickStack() で処理 (Survival is handled by getPickStack() )
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!world.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
-            if (!tile.isScPosNull()) {
+            if (player.isCreative() && !tile.isScPosNull()) {
                 ItemStack itemStack = new ItemStack(this);
                 NbtCompound nbt = new NbtCompound();
                 tile.writeNbtOverride(nbt);
@@ -113,5 +120,23 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
             }
         }
         super.onPlaced(world, pos, state, placer, stack);
+    }
+
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getPickStack(world, pos, state);
+        try {
+            world.getBlockEntity(pos, BlockEntities.SPACE_CUBE_BLOCK.getOrNull()).ifPresent(blockEntity -> blockEntity.setStackNbt(stack));
+        } catch (NullPointerException e) {
+            System.out.println("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + pos.toString());
+        }
+        return stack;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+        int side = size * 2 - 1;
+        tooltip.add(TextUtil.translatable("tooltip.spacecube.space_cube_block.size",  side + "x" + size + "x" + size));
     }
 }

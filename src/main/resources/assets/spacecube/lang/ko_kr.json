@@ -13,5 +13,7 @@
   "item.spacecube.personal_shrinking_device": "개인용 수축 장치",
   "item.spacecube.energy_tunnel": "에너지 터널",
   "item.spacecube.fluid_tunnel": "유체 터널",
-  "item.spacecube.item_tunnel": "아이템 터널"
+  "item.spacecube.item_tunnel": "아이템 터널",
+
+  "tooltip.spacecube.personal_shrinking_device": "§a우주 큐브를 우클릭하면 우주 큐브 (방)에 들어갑니다."
 }

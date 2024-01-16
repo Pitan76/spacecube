@@ -13,5 +13,7 @@
   "item.spacecube.personal_shrinking_device": "个人缩小装置",
   "item.spacecube.energy_tunnel": "能量隧道",
   "item.spacecube.fluid_tunnel": "流体隧道",
-  "item.spacecube.item_tunnel": "物品隧道"
+  "item.spacecube.item_tunnel": "物品隧道",
+
+  "tooltip.spacecube.personal_shrinking_device": "§a右键点击空间立方体进入空间立方体（房间）。"
 }

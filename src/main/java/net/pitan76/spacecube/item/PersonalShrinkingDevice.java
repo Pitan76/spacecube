@@ -1,10 +1,12 @@
 package net.pitan76.spacecube.item;
 
 import ml.pkom.mcpitanlibarch.api.entity.Player;
+import ml.pkom.mcpitanlibarch.api.event.item.ItemAppendTooltipEvent;
 import ml.pkom.mcpitanlibarch.api.event.item.ItemUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.item.ItemUseOnBlockEvent;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -221,5 +223,11 @@ public class PersonalShrinkingDevice extends ExtendItem {
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
+    }
+
+    @Override
+    public void appendTooltip(ItemAppendTooltipEvent event) {
+        super.appendTooltip(event);
+        event.getTooltip().add(TextUtil.translatable("tooltip.spacecube.personal_shrinking_device"));
     }
 }

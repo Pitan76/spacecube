@@ -13,5 +13,7 @@
   "item.spacecube.personal_shrinking_device": "Персональное устройство уменьшения",
   "item.spacecube.energy_tunnel": "Энергетический туннель",
   "item.spacecube.fluid_tunnel": "Туннель для жидкости",
-  "item.spacecube.item_tunnel": "Туннель для предметов"
+  "item.spacecube.item_tunnel": "Туннель для предметов",
+
+  "tooltip.spacecube.personal_shrinking_device": "§aНажмите правой кнопкой мыши на Куб пространства, чтобы войти в Куб пространства (Комната)."
 }
