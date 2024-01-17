@@ -1,6 +1,6 @@
 {
   "parent": "spacecube:tunnel/base",
   "textures": {
-    "wall": "spacecube:block/tunnels/north"
+    "side": "spacecube:block/tunnels/north"
   }
 }
