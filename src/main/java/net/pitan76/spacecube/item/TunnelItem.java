@@ -3,6 +3,7 @@ package net.pitan76.spacecube.item;
 import ml.pkom.mcpitanlibarch.api.event.item.ItemUseOnBlockEvent;
 import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
+import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -37,6 +38,8 @@ public class TunnelItem extends ExtendItem {
                 // TODO: トンネルの座標を SpaceCubeState に追加する
 
                 BlockPos scPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, event.getBlockPos());
+
+                event.getPlayer().sendMessage(TextUtil.literal("scPos: " + scPos.toString()));
 
                 tunnelWallBlockEntity.setTunnelType(getTunnelType());
                 tunnelWallBlockEntity.setScPos(scPos);
