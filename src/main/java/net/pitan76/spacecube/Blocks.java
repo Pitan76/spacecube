@@ -5,6 +5,7 @@ import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.pitan76.spacecube.block.SpaceCubeBlock;
+import net.pitan76.spacecube.block.TunnelWallBlock;
 import net.pitan76.spacecube.block.WallBlock;
 
 import java.util.function.Supplier;
@@ -17,6 +18,7 @@ public class Blocks {
     public static ExtendBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 6);
     public static ExtendBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 7);
 
+    public static ExtendBlock TUNNEL_WALL = new TunnelWallBlock(new CompatibleBlockSettings().luminance((state) -> 15).strength(-1.0F, 3600000.0F));
     public static ExtendBlock SOLID_WALL = new WallBlock(new CompatibleBlockSettings().luminance((state) -> 15).strength(-1.0F, 3600000.0F));
     public static ExtendBlock WALL = new WallBlock(new CompatibleBlockSettings().strength(3.0F, 6.0F));
 
@@ -28,6 +30,7 @@ public class Blocks {
         register(SpaceCube.id("giant_space_cube"), () -> GIANT_SPCAE_CUBE);
         register(SpaceCube.id("maximum_space_cube"), () -> MAXIMUM_SPCAE_CUBE);
 
+        register(SpaceCube.id("tunnel_wall"), () -> TUNNEL_WALL);
         register(SpaceCube.id("solid_wall"), () -> SOLID_WALL);
         register(SpaceCube.id("wall"), () -> WALL);
     }

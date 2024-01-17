@@ -1,10 +1,13 @@
-package net.pitan76.spacecube.api;
+package net.pitan76.spacecube.api.util;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.pitan76.spacecube.Items;
 import net.pitan76.spacecube.SpaceCube;
+import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.item.TunnelItem;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 public class SpaceCubeUtil {
@@ -39,6 +42,27 @@ public class SpaceCubeUtil {
         };
     }
 
+    // 最も近いスペースキューブの座標を取得する (スペースキューブがない場合は null を返す)
+    // Get the coordinates of the nearest space cube (returns null if there is no space cube)
+    public static BlockPos getNearestPos(SpaceCubeState state, BlockPos pos) {
+        BlockPos nearestPos = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (BlockPos scPos : state.getSpacePosWithSCBlockPath().keySet()) {
+            double distance = pos.getSquaredDistance(scPos.getX(), scPos.getY(), scPos.getZ());
+            if (distance < nearestDistance) {
+                nearestPos = scPos;
+                nearestDistance = distance;
+            }
+        }
+
+        return new BlockPos(nearestPos.getX(), 64, nearestPos.getZ());
+    }
+
+    public static BlockPos getNearestPos(ServerWorld world, BlockPos pos) {
+        return getNearestPos(SpaceCubeState.getOrCreate(world.getServer()), pos);
+    }
+
     public static BlockPos getNewPos(ServerWorld world) {
         return getNewPos(SpaceCubeState.getOrCreate(world.getServer()));
     }
@@ -68,6 +92,8 @@ public class SpaceCubeUtil {
     public static <T> ActionResult actionResult(TypedActionResult<T> result) {
         return result.getResult();
     }
+
+    // ----
 
     public static ServerWorld getSpaceCubeWorld(ServerWorld world) {
         return world.getServer().getWorld(SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);

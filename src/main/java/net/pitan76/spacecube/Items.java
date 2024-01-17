@@ -4,8 +4,7 @@ import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
-import net.pitan76.spacecube.item.PersonalShrinkingDevice;
-import net.pitan76.spacecube.item.TunnelItem;
+import net.pitan76.spacecube.item.*;
 
 import java.util.function.Supplier;
 
@@ -22,9 +21,9 @@ public class Items {
     public static Item SOLID_WALL = ItemUtil.ofBlock(Blocks.SOLID_WALL, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("solid_wall")));
     public static Item WALL = ItemUtil.ofBlock(Blocks.WALL, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("wall")));
 
-    public static Item ENERGY_TUNNEL = new TunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("energy_tunnel")));
-    public static Item FLUID_TUNNEL = new TunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("fluid_tunnel")));
-    public static Item ITEM_TUNNEL = new TunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("item_tunnel")));
+    public static Item ENERGY_TUNNEL = new EnergyTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("energy_tunnel")));
+    public static Item FLUID_TUNNEL = new FluidTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("fluid_tunnel")));
+    public static Item ITEM_TUNNEL = new ItemTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("item_tunnel")));
 
     public static void init() {
         register(SpaceCube.id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);

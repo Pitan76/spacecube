@@ -1,10 +1,11 @@
-package net.pitan76.spacecube.util;
+package net.pitan76.spacecube.api.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CubeGenerator {
+    // TODO: Y座標の最低は固定したい
 
     // 中心からの距離を指定して、中心が空洞のキューブを生成するみたいな感じです。だから実際には(2倍 - 1)のサイズになる
     // Generate a cube with a hollow center by specifying the distance from the center.　So it's actually twice the size

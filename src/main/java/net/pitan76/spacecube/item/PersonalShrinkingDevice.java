@@ -21,11 +21,11 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
-import net.pitan76.spacecube.api.SpaceCubeUtil;
+import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.block.SpaceCubeBlock;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.api.data.SCBlockPath;
-import net.pitan76.spacecube.util.CubeGenerator;
+import net.pitan76.spacecube.api.util.CubeGenerator;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 import java.util.Map;

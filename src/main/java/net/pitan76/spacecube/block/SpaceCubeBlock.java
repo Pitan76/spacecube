@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
-import net.pitan76.spacecube.api.SpaceCubeUtil;
+import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.item.PersonalShrinkingDevice;

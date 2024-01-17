@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "": {
+      "model": "spacecube:tunnel/top"
+    },
+    "connected_side=up": {
+      "model": "spacecube:tunnel/top"
+    },
+    "connected_side=down": {
+      "model": "spacecube:tunnel/bottom"
+    },
+    "connected_side=north": {
+      "model": "spacecube:tunnel/north"
+    },
+    "connected_side=south": {
+      "model": "spacecube:tunnel/south"
+    },
+    "connected_side=west": {
+      "model": "spacecube:tunnel/west"
+    },
+    "connected_side=east": {
+      "model": "spacecube:tunnel/east"
+    }
+  }
+}
