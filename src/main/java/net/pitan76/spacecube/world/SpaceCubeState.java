@@ -11,8 +11,8 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
-import net.pitan76.spacecube.data.SCBlockPath;
-import net.pitan76.spacecube.data.SCPlayerData;
+import net.pitan76.spacecube.api.data.SCBlockPath;
+import net.pitan76.spacecube.api.data.SCPlayerData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

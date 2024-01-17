@@ -17,7 +17,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
     }
 
     public SpaceCubeBlockEntity(TileCreateEvent event) {
-        super(BlockEntities.SPACE_CUBE_BLOCK.getOrNull(), event);
+        super(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull(), event);
     }
 
     public void setScPos(BlockPos scPos) {
