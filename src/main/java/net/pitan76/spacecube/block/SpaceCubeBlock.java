@@ -126,7 +126,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
         try {
-            world.getBlockEntity(pos, BlockEntities.SPACE_CUBE_BLOCK.getOrNull()).ifPresent(blockEntity -> blockEntity.setStackNbt(stack));
+            world.getBlockEntity(pos, BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()).ifPresent(blockEntity -> blockEntity.setStackNbt(stack));
         } catch (NullPointerException e) {
             System.out.println("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + pos.toString());
         }
