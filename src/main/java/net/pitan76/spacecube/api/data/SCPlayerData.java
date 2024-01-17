@@ -1,4 +1,4 @@
-package net.pitan76.spacecube.data;
+package net.pitan76.spacecube.api.data;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryKey;
