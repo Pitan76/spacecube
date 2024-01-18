@@ -75,23 +75,84 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             return ActionResult.SUCCESS;
         }
 
-        // トンネルの接続サイドを変更する Change the connected side of the tunnel
-        // TODO: 既にSpaceCubeで使われているCONNECTED_SIDEの方向には設置できないようにする
-        BlockState state = world.getBlockState(pos);
-        if (state.contains(CONNECTED_SIDE)) {
-            if (state.get(CONNECTED_SIDE) == Direction.UP) {
+        if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
+            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+            if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
+                SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
 
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.DOWN));
-            } else if (state.get(CONNECTED_SIDE) == Direction.DOWN) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));
-            } else if (state.get(CONNECTED_SIDE) == Direction.NORTH) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.SOUTH));
-            } else if (state.get(CONNECTED_SIDE) == Direction.SOUTH) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.WEST));
-            } else if (state.get(CONNECTED_SIDE) == Direction.WEST) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.EAST));
-            } else if (state.get(CONNECTED_SIDE) == Direction.EAST) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.UP));
+                // トンネルの接続サイドを変更する Change the connected side of the tunnel
+                BlockState state = world.getBlockState(pos);
+                if (state.contains(CONNECTED_SIDE)) {
+                    switch (state.get(CONNECTED_SIDE).asString()) {
+                        case "up":
+                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                                return ActionResult.FAIL;
+                            }
+                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN)) {
+                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.DOWN));
+                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP);
+                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN, pos);
+                                break;
+                            }
+
+                        case "down":
+                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                                return ActionResult.FAIL;
+                            }
+                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH)) {
+                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));
+                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN);
+                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH, pos);
+                                break;
+                            }
+                        case "north":
+                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                                return ActionResult.FAIL;
+                            }
+                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH)) {
+                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.SOUTH));
+                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH);
+                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH, pos);
+                                break;
+                            }
+                        case "south":
+                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                                return ActionResult.FAIL;
+                            }
+                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST)) {
+                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.WEST));
+                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH);
+                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST, pos);
+                                break;
+                            }
+                        case "west":
+                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                                return ActionResult.FAIL;
+                            }
+                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST)) {
+                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.EAST));
+                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST);
+                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST, pos);
+                                break;
+                            }
+                        case "east":
+                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                                return ActionResult.FAIL;
+                            }
+                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP)) {
+                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.UP));
+                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST);
+                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP, pos);
+                                break;
+                            }
+                    }
+                }
             }
         }
 
