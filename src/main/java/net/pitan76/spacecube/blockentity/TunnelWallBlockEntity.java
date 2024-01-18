@@ -3,6 +3,7 @@ package net.pitan76.spacecube.blockentity;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.Item;
@@ -10,10 +11,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.spacecube.BlockEntities;
+import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import org.jetbrains.annotations.Nullable;
 
-public class TunnelWallBlockEntity extends ExtendBlockEntity {
+public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAttachmentBlockEntity {
     private BlockPos scPos;
     private TunnelType tunnelType;
     private Identifier tunnelItemId;
@@ -96,5 +98,12 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity {
 
     public void setTunnelItemId(Identifier tunnelItemId) {
         this.tunnelItemId = tunnelItemId;
+    }
+
+    @Override
+    public @Nullable Object getRenderAttachmentData() {
+        // ClientのRender用スレッドへのアクセスはこれを使う
+        // Access to the client's Render thread is done using this
+        return new TunnelWallBlockEntityRenderAttachmentData(getTunnelType());
     }
 }

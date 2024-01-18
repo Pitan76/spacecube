@@ -44,6 +44,9 @@ public class TunnelItem extends ExtendItem {
                 tunnelWallBlockEntity.setTunnelType(getTunnelType());
                 tunnelWallBlockEntity.setScPos(scPos);
                 tunnelWallBlockEntity.setTunnelItem(event.getStack().getItem());
+
+                System.out.println(tunnelWallBlockEntity.getTunnelType().getId());
+
             }
 
             event.getStack().decrement(1);
