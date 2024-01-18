@@ -22,6 +22,8 @@ public class SpaceCubeClient implements ClientModInitializer {
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 // getRenderAttachmentData() で、RenderスレッドでもTunnelWallBlockEntityのデータへアクセスできるようになる
                 TunnelWallBlockEntityRenderAttachmentData renderAttachmentData = (TunnelWallBlockEntityRenderAttachmentData) ((RenderAttachmentBlockEntity) blockEntity).getRenderAttachmentData();
+                //System.out.println(renderAttachmentData.getTunnelType().getId());
+
                 if (tintIndex == 0)
                     return renderAttachmentData.getTunnelType().IMPORT_COLOR;
 

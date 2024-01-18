@@ -27,25 +27,29 @@ public class TunnelItem extends ExtendItem {
         BlockPos pos = event.getBlockPos();
         BlockState state = world.getBlockState(pos);
 
-        if (world.isClient()) return ActionResult.SUCCESS;
         if (state.getBlock() == Blocks.SOLID_WALL) {
             world.setBlockState(pos, Blocks.TUNNEL_WALL.getDefaultState());
 
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
+                tunnelWallBlockEntity.setTunnelType(getTunnelType());
+                tunnelWallBlockEntity.setTunnelItem(event.getStack().getItem());
+                if (world.isClient()) return ActionResult.SUCCESS;
 
                 // TODO: トンネルの座標を SpaceCubeState に追加する
 
                 BlockPos scPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, event.getBlockPos());
 
-                event.getPlayer().sendMessage(TextUtil.literal("scPos: " + scPos.toString()));
+                //event.getPlayer().sendMessage(TextUtil.literal("scPos: " + scPos.toString()));
 
-                tunnelWallBlockEntity.setTunnelType(getTunnelType());
                 tunnelWallBlockEntity.setScPos(scPos);
-                tunnelWallBlockEntity.setTunnelItem(event.getStack().getItem());
 
-                System.out.println(tunnelWallBlockEntity.getTunnelType().getId());
+                tunnelWallBlockEntity.markDirty();
+                tunnelWallBlockEntity.sync();
+
+
+                //System.out.println(tunnelWallBlockEntity.getTunnelType().getId());
 
             }
 

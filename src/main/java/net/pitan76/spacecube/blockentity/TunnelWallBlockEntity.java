@@ -8,6 +8,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.spacecube.BlockEntities;
@@ -26,6 +30,19 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
 
     public TunnelWallBlockEntity(TileCreateEvent event) {
         super(BlockEntities.TUNNEL_WALL_BLOCK_ENTITY.getOrNull(), event);
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        writeNbtOverride(nbt);
+        return nbt;
     }
 
     @Override
@@ -102,8 +119,17 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
 
     @Override
     public @Nullable Object getRenderAttachmentData() {
-        // ClientのRender用スレッドへのアクセスはこれを使う
-        // Access to the client's Render thread is done using this
+        // Render用スレッドへのアクセスはこれを使う
+        // Access to the Render thread is done using this
+
         return new TunnelWallBlockEntityRenderAttachmentData(getTunnelType());
+    }
+
+    public void sync() {
+        if (world.getMinecraftWorld() == null) return;
+        if (world.getMinecraftWorld().isClient()) return;
+        if (!(world.getMinecraftWorld() instanceof ServerWorld)) return;
+
+        ((ServerWorld) world.getMinecraftWorld()).getChunkManager().markForUpdate(getPos());
     }
 }
