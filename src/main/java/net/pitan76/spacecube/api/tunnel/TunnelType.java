@@ -5,11 +5,11 @@ import net.pitan76.spacecube.SpaceCube;
 
 public class TunnelType {
 
-    public static TunnelType NONE = new TunnelType(SpaceCube.id("none"), 0x6D6D6D, 0x6D6D6D, 0x6D6D6D);
-    public static TunnelType ENERGY = new TunnelType(SpaceCube.id("energy_tunnel"), 0x6D6D6D, 0x19C419, 0x00FF00);
-    public static TunnelType FLUID = new TunnelType(SpaceCube.id("fluid_tunnel"), 0x6D6D6D, 0x19C4C4, 0x00FF00);
-    public static TunnelType ITEM = new TunnelType(SpaceCube.id("item_tunnel"), 0x6D6D6D, 0xE1C400, 0x00FF00);
-    public static TunnelType REDSTONE = new TunnelType(SpaceCube.id("redstone_tunnel"), 0xE11900, 0xE11900, 0x00FF00);
+    public static TunnelType NONE = new TunnelType(SpaceCube.id("none"), 0x6D6D6D, 0x6D6D6D, 0x19C419);
+    public static TunnelType ENERGY = new TunnelType(SpaceCube.id("energy_tunnel"), 0x6D6D6D, 0x19C419, 0x19C419);
+    public static TunnelType FLUID = new TunnelType(SpaceCube.id("fluid_tunnel"), 0x6D6D6D, 0x19C4C4, 0x19C419);
+    public static TunnelType ITEM = new TunnelType(SpaceCube.id("item_tunnel"), 0x6D6D6D, 0xE1C400, 0x19C419);
+    public static TunnelType REDSTONE = new TunnelType(SpaceCube.id("redstone_tunnel"), 0xE11900, 0xE11900, 0x19C419);
 
     private final Identifier id;
     public int INDICATOR_COLOR;
