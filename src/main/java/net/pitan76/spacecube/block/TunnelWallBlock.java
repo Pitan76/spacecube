@@ -77,8 +77,10 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
 
         if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+
 
                 // トンネルの接続サイドを変更する Change the connected side of the tunnel
                 BlockState state = world.getBlockState(pos);

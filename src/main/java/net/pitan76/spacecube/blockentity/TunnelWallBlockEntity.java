@@ -5,6 +5,7 @@ import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -16,8 +17,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
+import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.api.util.SpaceCubeUtil;
+import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
 public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAttachmentBlockEntity {
@@ -140,8 +144,12 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         World mcWorld = world.getMinecraftWorld();
         if (getScPos() == null) return null;
         if (mcWorld == null) return null;
-        if (!(mcWorld.getBlockEntity(getScPos()) instanceof SpaceCubeBlockEntity)) return null;
-        return (SpaceCubeBlockEntity) mcWorld.getBlockEntity(getScPos());
+
+        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(mcWorld.getServer());
+        SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScPos());
+        BlockEntity blockEntity = mcWorld.getServer().getWorld(scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
+        if (!(blockEntity instanceof SpaceCubeBlockEntity)) {return null;}
+        return (SpaceCubeBlockEntity) blockEntity;
     }
 
     public boolean existSpaceCubeBlockEntity() {

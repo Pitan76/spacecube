@@ -113,6 +113,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
     }
 
     public boolean hasTunnel(TunnelType type, Direction direction) {
+        if (hasTunnelType(type)) return false;
         return getTunnelSide(type).hasTunnel(direction);
     }
 
@@ -134,7 +135,12 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
         return tunnelSides.get(type);
     }
 
+    public boolean hasTunnelType(TunnelType type) {
+        return tunnelSides.containsKey(type);
+    }
+
     public boolean tunnelIsFull(TunnelType type) {
+        if (!hasTunnelType(type)) return false;
         return getTunnelSide(type).isFull();
     }
 }
