@@ -9,6 +9,7 @@ import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.item.TunnelItem;
 import net.pitan76.spacecube.world.SpaceCubeState;
+import org.jetbrains.annotations.Nullable;
 
 public class SpaceCubeUtil {
 
@@ -43,6 +44,7 @@ public class SpaceCubeUtil {
 
     // 最も近いスペースキューブの座標を取得する (スペースキューブがない場合は null を返す)
     // Get the coordinates of the nearest space cube (returns null if there is no space cube)
+    @Nullable
     public static BlockPos getNearestPos(SpaceCubeState state, BlockPos pos) {
         BlockPos nearestPos = null;
         double nearestDistance = Double.MAX_VALUE;

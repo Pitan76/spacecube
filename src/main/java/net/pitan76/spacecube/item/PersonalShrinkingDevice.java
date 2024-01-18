@@ -221,6 +221,42 @@ public class PersonalShrinkingDevice extends ExtendItem {
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
             player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
             return ActionResult.SUCCESS;
+        } else {
+            // データがないときの処理
+            // Processing if no data
+            BlockPos pos = SpaceCubeUtil.getNearestPos(spaceCubeState, serverPlayer.getBlockPos());
+            if (pos != null) {
+                Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
+                SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(pos);
+
+                ServerWorld returnWorld = Objects.requireNonNull(playerWorld.getServer()).getWorld(RegistryKey.of(Registry.WORLD_KEY, scBlockPath.getDimension().getValue()));
+                if (returnWorld == null) {
+                    System.out.println("[SpaceCube] Error: player's world is null.");
+                    return ActionResult.PASS;
+                }
+
+                int x, y, z;
+                if (scBlockPath.pos != null) {
+                    // entryPosListがある場合は、その最後の座標を取得 (普通はこっち)
+                    // If entryPosList exists, get the last coordinate (usually this one)
+                    BlockPos entryPos = scBlockPath.getPos();
+                    x = entryPos.getX();
+                    y = entryPos.getY();
+                    z = entryPos.getZ();
+                } else {
+                    // 未知のバグが発生した場合は、スポーン地点を取得 (普通は発生しない)
+                    // If an unknown bug occurs, get the spawn point (usually doesn't happen)
+                    x = returnWorld.getSpawnPos().getX();
+                    y = returnWorld.getSpawnPos().getY();
+                    z = returnWorld.getSpawnPos().getZ();
+                }
+                serverPlayer.teleport(returnWorld, x, y, z, serverPlayer.getYaw(), serverPlayer.getPitch());
+
+                // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
+                player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                return ActionResult.SUCCESS;
+            }
+
         }
         return ActionResult.PASS;
     }
