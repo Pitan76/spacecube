@@ -12,9 +12,9 @@ public class TunnelType {
     public static TunnelType REDSTONE = new TunnelType(SpaceCube.id("redstone_tunnel"), 0xE11900, 0xE11900, 0x19C419);
 
     private final Identifier id;
-    public int INDICATOR_COLOR;
-    public int IMPORT_COLOR;
-    public int EXPORT_COLOR;
+    public int INDICATOR_COLOR = 0x6D6D6D;
+    public int IMPORT_COLOR = 0x6D6D6D;
+    public int EXPORT_COLOR = 0x19C419;
 
     public TunnelType(Identifier id, int INDICATOR_COLOR, int IMPORT_COLOR, int EXPORT_COLOR) {
         this.id = id;
