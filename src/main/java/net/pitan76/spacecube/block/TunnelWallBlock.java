@@ -67,15 +67,15 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             if (state.get(CONNECTED_SIDE) == Direction.UP) {
                 world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.DOWN));
             } else if (state.get(CONNECTED_SIDE) == Direction.DOWN) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.UP));
+                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));
             } else if (state.get(CONNECTED_SIDE) == Direction.NORTH) {
                 world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.SOUTH));
             } else if (state.get(CONNECTED_SIDE) == Direction.SOUTH) {
-                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));
-            } else if (state.get(CONNECTED_SIDE) == Direction.EAST) {
                 world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.WEST));
             } else if (state.get(CONNECTED_SIDE) == Direction.WEST) {
                 world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.EAST));
+            } else if (state.get(CONNECTED_SIDE) == Direction.EAST) {
+                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.UP));
             }
         }
 
