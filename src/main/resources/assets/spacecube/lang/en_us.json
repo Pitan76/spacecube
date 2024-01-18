@@ -17,5 +17,6 @@
   "item.spacecube.item_tunnel": "Item Tunnel",
 
   "tooltip.spacecube.space_cube_block.size": "§aInternal Size: %s",
-  "tooltip.spacecube.personal_shrinking_device": "§aRight click on Space Cube to enter Space Cube (Room)."
+  "tooltip.spacecube.personal_shrinking_device": "§aRight click on Space Cube to enter Space Cube (Room).",
+  "message.spacecube.tunnel_full": "§cThis type of tunnel is already full."
 }

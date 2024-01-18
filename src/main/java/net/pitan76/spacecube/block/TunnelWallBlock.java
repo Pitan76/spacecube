@@ -21,12 +21,18 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvider {
+    // 今のところは使っていない (Not used for now)
     public static final DirectionProperty TUNNEL_SIDE = DirectionProperty.of("tunnel_side", Direction.values());
+
+    // トンネルの接続サイド (Connected side of the tunnel)
     public static final DirectionProperty CONNECTED_SIDE = DirectionProperty.of("connected_side", Direction.values());
+
+    // Redstone Power
     public static final BooleanProperty POWERED = Properties.POWERED;
 
     public TunnelWallBlock(CompatibleBlockSettings settings) {
@@ -53,10 +59,19 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
                 if (item != null) {
                     event.getPlayer().giveStack(new ItemStack(item, 1));
                 }
+
+                if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
+                    SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+
+                    TunnelType tunnelType = tunnelWallBlockEntity.getTunnelType();
+                    Direction direction = world.getBlockState(pos).get(CONNECTED_SIDE);
+
+                    if (spaceCubeBlockEntity.hasTunnel(tunnelType, direction))
+                        spaceCubeBlockEntity.removeTunnel(tunnelType, direction);
+                }
             }
             world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultState());
 
-            // TODO: トンネルをはがしたら、SpaceCubeState のトンネルの座標を削除する
             return ActionResult.SUCCESS;
         }
 
@@ -65,6 +80,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
         BlockState state = world.getBlockState(pos);
         if (state.contains(CONNECTED_SIDE)) {
             if (state.get(CONNECTED_SIDE) == Direction.UP) {
+
                 world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.DOWN));
             } else if (state.get(CONNECTED_SIDE) == Direction.DOWN) {
                 world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));

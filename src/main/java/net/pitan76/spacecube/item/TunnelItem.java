@@ -9,10 +9,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.Blocks;
+import net.pitan76.spacecube.api.data.TunnelSideData;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.block.TunnelWallBlock;
+import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 
 public class TunnelItem extends ExtendItem {
@@ -37,20 +41,21 @@ public class TunnelItem extends ExtendItem {
                 tunnelWallBlockEntity.setTunnelItem(event.getStack().getItem());
                 if (world.isClient()) return ActionResult.SUCCESS;
 
-                // TODO: トンネルの座標を SpaceCubeState に追加する
-
                 BlockPos scPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, event.getBlockPos());
 
-                //event.getPlayer().sendMessage(TextUtil.literal("scPos: " + scPos.toString()));
-
                 tunnelWallBlockEntity.setScPos(scPos);
-
                 tunnelWallBlockEntity.markDirty();
                 tunnelWallBlockEntity.sync();
 
-
-                //System.out.println(tunnelWallBlockEntity.getTunnelType().getId());
-
+                if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
+                    SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                    if (spaceCubeBlockEntity.tunnelIsFull(getTunnelType())) {
+                        event.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                        return ActionResult.FAIL;
+                    }
+                    Direction direction = state.get(TunnelWallBlock.CONNECTED_SIDE);
+                    spaceCubeBlockEntity.addTunnel(getTunnelType(), direction, pos);
+                }
             }
 
             event.getStack().decrement(1);

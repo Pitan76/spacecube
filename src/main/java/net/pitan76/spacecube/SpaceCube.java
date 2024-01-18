@@ -20,6 +20,8 @@ public class SpaceCube implements ModInitializer {
     public static final ItemGroup SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1)).build();
     public static final RegistryKey<World> SPACE_CUBE_DIMENSION_WORLD_KEY = RegistryKey.of(Registry.WORLD_KEY, id("space_cube_dimension"));
 
+    // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)
+
     @Override
     public void onInitialize() {
         // Register the creative tab

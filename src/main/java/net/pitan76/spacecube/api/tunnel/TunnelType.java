@@ -31,6 +31,10 @@ public class TunnelType {
         return id;
     }
 
+    public static TunnelType fromString(String id) {
+        return fromId(new Identifier(id));
+    }
+
     public static TunnelType fromId(Identifier id) {
         return switch (id.toString()) {
             case "spacecube:none" -> NONE;

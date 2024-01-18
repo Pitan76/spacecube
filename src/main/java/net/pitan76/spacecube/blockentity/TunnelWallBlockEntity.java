@@ -14,6 +14,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
@@ -126,10 +127,24 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     public void sync() {
-        if (world.getMinecraftWorld() == null) return;
-        if (world.getMinecraftWorld().isClient()) return;
-        if (!(world.getMinecraftWorld() instanceof ServerWorld)) return;
+        World mcWorld = world.getMinecraftWorld();
+
+        if (mcWorld == null) return;
+        if (mcWorld.isClient()) return;
+        if (!(mcWorld instanceof ServerWorld)) return;
 
         ((ServerWorld) world.getMinecraftWorld()).getChunkManager().markForUpdate(getPos());
+    }
+
+    public SpaceCubeBlockEntity getSpaceCubeBlockEntity() {
+        World mcWorld = world.getMinecraftWorld();
+        if (getScPos() == null) return null;
+        if (mcWorld == null) return null;
+        if (!(mcWorld.getBlockEntity(getScPos()) instanceof SpaceCubeBlockEntity)) return null;
+        return (SpaceCubeBlockEntity) mcWorld.getBlockEntity(getScPos());
+    }
+
+    public boolean existSpaceCubeBlockEntity() {
+        return getSpaceCubeBlockEntity() != null;
     }
 }

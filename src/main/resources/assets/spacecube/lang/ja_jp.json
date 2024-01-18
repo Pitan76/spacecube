@@ -16,5 +16,6 @@
   "item.spacecube.fluid_tunnel": "液体トンネル",
   "item.spacecube.item_tunnel": "アイテムトンネル",
 
-  "tooltip.spacecube.personal_shrinking_device": "§aスペースキューブを右クリックしてスペースキューブ (部屋) に入ります。"
+  "tooltip.spacecube.personal_shrinking_device": "§aスペースキューブを右クリックしてスペースキューブ (部屋) に入ります。",
+  "message.spacecube.tunnel_full": "§cこのタイプのトンネルは既に最大数です。"
 }
