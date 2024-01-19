@@ -101,7 +101,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
                     int x = tunnel_nbt.getInt("x");
                     int y = tunnel_nbt.getInt("y");
                     int z = tunnel_nbt.getInt("z");
-                    data.addTunnel(Direction.valueOf(direction), new BlockPos(x, y, z));
+                    data.addTunnel(Direction.valueOf(direction.toUpperCase()), new BlockPos(x, y, z));
                 }
                 tunnelSides.put(tunnelType, data);
             }
@@ -113,13 +113,17 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
     }
 
     public boolean hasTunnel(TunnelType type, Direction direction) {
-        if (hasTunnelType(type)) return false;
+        if (!hasTunnelType(type)) return false;
         return getTunnelSide(type).hasTunnel(direction);
     }
 
-    public void addTunnel(TunnelType type, Direction direction, BlockPos pos) {
+    public boolean addTunnel(TunnelType type, Direction direction, BlockPos pos) {
         if (!tunnelSides.containsKey(type)) addTunnelType(type);
+        if (getTunnelSide(type).hasTunnel(direction)) {
+            return false;
+        }
         getTunnelSide(type).addTunnel(direction, pos);
+        return true;
     }
 
     public void addTunnelType(TunnelType type) {
@@ -142,5 +146,11 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
     public boolean tunnelIsFull(TunnelType type) {
         if (!hasTunnelType(type)) return false;
         return getTunnelSide(type).isFull();
+    }
+
+    public Direction getRestDir(TunnelType type) {
+        if (!tunnelSides.containsKey(type)) addTunnelType(type);
+        TunnelSideData data = getTunnelSide(type);
+        return data.getRestDir();
     }
 }

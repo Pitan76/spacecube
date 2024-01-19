@@ -147,6 +147,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
 
         SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(mcWorld.getServer());
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScPos());
+
         BlockEntity blockEntity = mcWorld.getServer().getWorld(scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
         if (!(blockEntity instanceof SpaceCubeBlockEntity)) {return null;}
         return (SpaceCubeBlockEntity) blockEntity;

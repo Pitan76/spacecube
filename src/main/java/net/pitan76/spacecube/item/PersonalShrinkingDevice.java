@@ -229,7 +229,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
                 SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(pos);
 
-                ServerWorld returnWorld = Objects.requireNonNull(playerWorld.getServer()).getWorld(RegistryKey.of(Registry.WORLD_KEY, scBlockPath.getDimension().getValue()));
+                ServerWorld returnWorld = Objects.requireNonNull(playerWorld.getServer()).getWorld(scBlockPath.getDimension());
                 if (returnWorld == null) {
                     System.out.println("[SpaceCube] Error: player's world is null.");
                     return ActionResult.PASS;

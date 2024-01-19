@@ -63,4 +63,12 @@ public class TunnelSideData {
     public boolean isNone() {
         return tunnels.isEmpty();
     }
+
+    public Direction getRestDir() {
+        Direction[] directions = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+        for (Direction direction : directions) {
+            if (!hasTunnel(direction)) return direction;
+        }
+        return null;
+    }
 }

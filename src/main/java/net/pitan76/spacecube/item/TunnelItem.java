@@ -32,7 +32,6 @@ public class TunnelItem extends ExtendItem {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() == Blocks.SOLID_WALL) {
-            // todo: 余っているところを割り当てるようにしないといけない
             world.setBlockState(pos, Blocks.TUNNEL_WALL.getDefaultState().with(TunnelWallBlock.CONNECTED_SIDE, Direction.UP));
 
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -50,12 +49,22 @@ public class TunnelItem extends ExtendItem {
 
                 if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
                     SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
-                    if (spaceCubeBlockEntity.tunnelIsFull(getTunnelType())) {
-                        event.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                        return ActionResult.FAIL;
-                    }
+
                     state = world.getBlockState(pos);
                     Direction direction = state.get(TunnelWallBlock.CONNECTED_SIDE);
+
+                    if (spaceCubeBlockEntity.tunnelIsFull(getTunnelType())) {
+                        event.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                        world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultState());
+                        return ActionResult.FAIL;
+                    }
+
+                    // Connected Sideが存在する場合は別のSideに割り当てる
+                    if (spaceCubeBlockEntity.hasTunnel(getTunnelType(), direction)) {
+                        direction = spaceCubeBlockEntity.getRestDir(getTunnelType());
+                        world.setBlockState(pos, state.with(TunnelWallBlock.CONNECTED_SIDE, direction));
+
+                    }
                     spaceCubeBlockEntity.addTunnel(getTunnelType(), direction, pos);
                 }
             }
