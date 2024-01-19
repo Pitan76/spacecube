@@ -193,8 +193,6 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
 
         int dirindex = dirToIndex(side);
-        //System.out.println("import: " + getImportStack(side));
-        //System.out.println("dirindex: " + getStack(dirindex * 2) + ", " + getStack(dirindex * 2 + 1));
         return new int[]{dirindex * 2, dirindex * 2 + 1};
     }
 
@@ -277,7 +275,6 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
                 ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
                 if (tunnelDef instanceof ItemTunnel) {
                     ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
-                    //System.out.println("stacks: " + itemTunnel.getStacks().get(0));
                     int dirindex = dirToIndex(entry.getKey());
 
                     stacks.set(dirindex * 2, itemTunnel.getImportStack());
