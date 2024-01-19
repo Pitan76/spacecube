@@ -54,6 +54,9 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
         BlockPos pos = event.getPos();
 
         if (world.isClient()) return ActionResult.SUCCESS;
+
+        BlockState state = world.getBlockState(pos);
+
         if (event.getPlayer().isSneaking()) {
             // トンネルをはがす
             if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
@@ -67,10 +70,10 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
                     SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
 
                     TunnelType tunnelType = tunnelWallBlockEntity.getTunnelType();
-                    Direction direction = world.getBlockState(pos).get(CONNECTED_SIDE);
+                    Direction dir = state.get(CONNECTED_SIDE);
 
-                    if (spaceCubeBlockEntity.hasTunnel(tunnelType, direction))
-                        spaceCubeBlockEntity.removeTunnel(tunnelType, direction);
+                    if (spaceCubeBlockEntity.hasTunnel(tunnelType, dir))
+                        spaceCubeBlockEntity.removeTunnel(tunnelType, dir);
                 }
             }
             world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultState());
@@ -84,160 +87,24 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
 
-                /*
                 // トンネルの接続サイドを変更する Change the connected side of the tunnel
-                BlockState state = world.getBlockState(pos);
+
                 if (state.contains(CONNECTED_SIDE)) {
-                    boolean again = false;
-                    switch (state.get(CONNECTED_SIDE).asString()) {
-                        case "up":
-                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                return ActionResult.FAIL;
-                            }
-                            world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.DOWN));
-                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN)) {
-                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP);
-                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN, pos);
-                                break;
-                            }
+                    Direction dir = state.get(CONNECTED_SIDE);
+                    Direction nextDir = spaceCubeBlockEntity.getNextDir(tunnelWallBlockEntity.getTunnelType(), dir);
 
-                        case "down":
-                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                return ActionResult.FAIL;
-                            }
-                            world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));
-                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH)) {
-                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN);
-                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH, pos);
-                                break;
-                            }
-                        case "north":
-                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                return ActionResult.FAIL;
-                            }
-                            world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.SOUTH));
-                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH)) {
-                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH);
-                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH, pos);
-                                break;
-                            }
-                        case "south":
-                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                return ActionResult.FAIL;
-                            }
-                            world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.WEST));
-                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST)) {
-                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH);
-                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST, pos);
-                                break;
-                            }
-                        case "west":
-                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                return ActionResult.FAIL;
-                            }
-                            world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.EAST));
-                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST)) {
-                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST);
-                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST, pos);
-                                break;
-                            }
-                        case "east":
-                            if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                return ActionResult.FAIL;
-                            }
-                            world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.UP));
-                            if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP)) {
-                                spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST);
-                                spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP, pos);
-                                break;
-                            }
-                        default:
-                            again = true;
-
+                    // すべての接続サイドが使われている場合 (If all connected sides are used)
+                    if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                        event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                        return ActionResult.FAIL;
                     }
 
-                    if (again) {
-                        switch (state.get(CONNECTED_SIDE).asString()) {
-                            case "up":
-                                if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                    event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                    return ActionResult.FAIL;
-                                }
-                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.DOWN));
-                                if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN)) {
-                                    spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP);
-                                    spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN, pos);
-                                    break;
-                                }
-
-                            case "down":
-                                if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                    event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                    return ActionResult.FAIL;
-                                }
-                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.NORTH));
-                                if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH)) {
-                                    spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.DOWN);
-                                    spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH, pos);
-                                    break;
-                                }
-                            case "north":
-                                if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                    event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                    return ActionResult.FAIL;
-                                }
-                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.SOUTH));
-                                if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH)) {
-                                    spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.NORTH);
-                                    spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH, pos);
-                                    break;
-                                }
-                            case "south":
-                                if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                    event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                    return ActionResult.FAIL;
-                                }
-                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.WEST));
-                                if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST)) {
-                                    spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.SOUTH);
-                                    spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST, pos);
-                                    break;
-                                }
-                            case "west":
-                                if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                    event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                    return ActionResult.FAIL;
-                                }
-                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.EAST));
-                                if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST)) {
-                                    spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.WEST);
-                                    spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST, pos);
-                                    break;
-                                }
-                            case "east":
-                                if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                                    event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                                    return ActionResult.FAIL;
-                                }
-                                world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, Direction.UP));
-                                if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP)) {
-                                    spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.EAST);
-                                    spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), Direction.UP, pos);
-                                    break;
-                                }
-                        }
+                    world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, nextDir));
+                    if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), nextDir)) {
+                        spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), dir);
+                        spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), nextDir, pos);
                     }
-
                 }
-
-
-                 */
             }
         }
 

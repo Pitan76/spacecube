@@ -153,4 +153,16 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
         TunnelSideData data = getTunnelSide(type);
         return data.getRestDir();
     }
+
+    public Direction getDir(TunnelType type, BlockPos pos) {
+        if (!hasTunnelType(type)) return null;
+        TunnelSideData data = getTunnelSide(type);
+        return data.getDir(pos);
+    }
+
+    public Direction getNextDir(TunnelType type, Direction dir) {
+        if (!hasTunnelType(type)) return null;
+        TunnelSideData data = getTunnelSide(type);
+        return data.getNextDir(dir);
+    }
 }
