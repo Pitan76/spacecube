@@ -223,7 +223,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
         if (!(tunnelDef instanceof ItemTunnel)) return ItemStack.EMPTY;
         ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
-        return itemTunnel.getImportStack(0);
+        return itemTunnel.getImportStack();
     }
 
     public ItemStack getExportStack(Direction dir) {
@@ -236,7 +236,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
         if (!(tunnelDef instanceof ItemTunnel)) return ItemStack.EMPTY;
         ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
-        return itemTunnel.getExportStack(0);
+        return itemTunnel.getExportStack();
     }
 
     @Override
@@ -258,7 +258,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         // 10: WEST Dir Import Stack
         // 11: WEST Dir Export Stack
 
-        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(ItemTunnel.defaultSize * 2 * Direction.values().length, ItemStack.EMPTY);
+        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStack.EMPTY);
 
         if (!hasTunnelType(TunnelType.ITEM)) return stacks;
 
@@ -275,9 +275,8 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
                     ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
 
                     int dirindex = dirToIndex(entry.getKey());
-                    for (int i = 0; i < itemTunnel.getStackSize(); i++) {
-                        stacks.add(dirindex * 2 + i, itemTunnel.getStack(i));
-                    }
+                    stacks.add(dirindex * 2, itemTunnel.getImportStack());
+                    stacks.add(dirindex * 2 + 1, itemTunnel.getExportStack());
                 }
             }
         }

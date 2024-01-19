@@ -21,11 +21,13 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
+import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.block.SpaceCubeBlock;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.util.CubeGenerator;
+import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 import java.util.Map;
@@ -66,7 +68,22 @@ public class PersonalShrinkingDevice extends ExtendItem {
         BlockState state = world.getBlockState(event.getHit().getBlockPos());
 
         // sneaking
-        if (player.isSneaking()) return ActionResult.PASS;
+        //if (player.isSneaking()) return ActionResult.PASS;
+        if (player.isSneaking()) {
+            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(event.getHit().getBlockPos());
+            if (tunnelWallBlockEntity == null) {
+                System.out.println("[SpaceCube] Error: tunnelWallBlockEntity is null.");
+                return ActionResult.FAIL;
+            }
+
+            if (tunnelWallBlockEntity.getTunnelDef() instanceof ItemTunnel) {
+                ItemTunnel tunnel = (ItemTunnel) tunnelWallBlockEntity.getTunnelDef();
+                System.out.println("importStack: " + tunnel.getImportStack());
+                System.out.println("exportStack: " + tunnel.getExportStack());
+            }
+
+            return ActionResult.PASS;
+        }
         // Only run on the server side
         if (world.isClient()) return ActionResult.SUCCESS;
 

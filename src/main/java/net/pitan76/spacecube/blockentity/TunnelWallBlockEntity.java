@@ -190,12 +190,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     @Override
     public int[] getAvailableSlots(Direction side) {
         if (getTunnelDef() instanceof ItemTunnel) {
-            ItemTunnel tunnelDef = (ItemTunnel) getTunnelDef();
-            int[] slots = new int[tunnelDef.getStackSize()];
-            for (int i = 0; i < tunnelDef.getStackSize(); i++) {
-                slots[i] = i;
-            }
-            return slots;
+            return new int[]{0, 1};
         }
         return new int[0];
     }
