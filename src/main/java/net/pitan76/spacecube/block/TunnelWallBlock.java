@@ -1,7 +1,6 @@
 package net.pitan76.spacecube.block;
 
 import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
 import ml.pkom.mcpitanlibarch.api.block.ExtendBlockEntityProvider;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
@@ -9,6 +8,7 @@ import ml.pkom.mcpitanlibarch.api.util.TextUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -25,8 +25,6 @@ import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvider {
 
@@ -125,5 +123,23 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
     @Override
     public @Nullable BlockEntity createBlockEntity(TileCreateEvent event) {
         return new TunnelWallBlockEntity(event);
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
+            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+
+            if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
+                SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+
+                TunnelType tunnelType = tunnelWallBlockEntity.getTunnelType();
+                Direction dir = state.get(CONNECTED_SIDE);
+
+                if (spaceCubeBlockEntity.hasTunnel(tunnelType, dir))
+                    spaceCubeBlockEntity.removeTunnel(tunnelType, dir);
+            }
+        }
+        super.onBreak(world, pos, state, player);
     }
 }
