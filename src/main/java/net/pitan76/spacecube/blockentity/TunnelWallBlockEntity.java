@@ -1,33 +1,54 @@
 package net.pitan76.spacecube.blockentity;
 
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
+import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
-public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAttachmentBlockEntity {
+public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAttachmentBlockEntity, IInventory, SidedInventory {
     private BlockPos scPos;
     private TunnelType tunnelType;
     private Identifier tunnelItemId;
+
+    // Tunnelの機能定義 (Tunnel function definition)
+    public ITunnelDef tunnelDef = null;
+
+    // item tunnel用
+    // private DefaultedList<ItemStack> stacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
+
+
+    public ITunnelDef getTunnelDef() {
+        if (tunnelDef == null)
+            tunnelDef = getTunnelType().createTunnelDef(this);
+
+        return tunnelDef;
+    }
 
     public TunnelWallBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -155,5 +176,45 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
 
     public boolean existSpaceCubeBlockEntity() {
         return getSpaceCubeBlockEntity() != null;
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        if (getTunnelDef() instanceof ItemTunnel) {
+            ItemTunnel tunnelDef = (ItemTunnel) getTunnelDef();
+            return tunnelDef.getStacks();
+        }
+        return null;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        if (getTunnelDef() instanceof ItemTunnel) {
+            ItemTunnel tunnelDef = (ItemTunnel) getTunnelDef();
+            int[] slots = new int[tunnelDef.getStackSize()];
+            for (int i = 0; i < tunnelDef.getStackSize(); i++) {
+                slots[i] = i;
+            }
+            return slots;
+        }
+        return new int[0];
+    }
+
+    public Direction getDirection() {
+        SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
+        if (scBlockEntity == null) return null;
+        return scBlockEntity.getDir(getTunnelType(), getPos());
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        if (getTunnelType() != TunnelType.ITEM) return false;
+        return slot == 0;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        if (getTunnelType() != TunnelType.ITEM) return false;
+        return slot == 1;
     }
 }

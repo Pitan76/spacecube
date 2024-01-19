@@ -1,20 +1,30 @@
 package net.pitan76.spacecube.blockentity;
 
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
+import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.api.data.TunnelSideData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
+import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpaceCubeBlockEntity extends ExtendBlockEntity {
+public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInventory, IInventory {
+
     // scPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
     public BlockPos scPos = null;
 
@@ -165,5 +175,130 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
         if (!hasTunnelType(type)) return null;
         TunnelSideData data = getTunnelSide(type);
         return data.getNextDir(dir);
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        if (!hasTunnelType(TunnelType.ITEM)) return new int[0];
+        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
+        if (!data.hasTunnel(side)) return new int[0];
+        BlockEntity blockEntity = world.getMinecraftWorld().getBlockEntity(data.getTunnel(side));
+        if (!(blockEntity instanceof TunnelWallBlockEntity)) return new int[0];
+        TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
+        ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
+        if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
+        ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
+
+        int[] slots = new int[itemTunnel.getStackSize()];
+        for (int i = 0; i < itemTunnel.getStackSize(); i++) {
+            slots[i] = i;
+        }
+
+        return slots;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        if (!hasTunnelType(TunnelType.ITEM)) return false;
+
+        return slot == 0;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        if (!hasTunnelType(TunnelType.ITEM)) return false;
+
+        return slot == 1;
+    }
+
+    public ItemStack getImportStack(Direction dir) {
+        if (!hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
+        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
+        if (!data.hasTunnel(dir)) return ItemStack.EMPTY;
+        BlockEntity blockEntity = world.getMinecraftWorld().getBlockEntity(data.getTunnel(dir));
+        if (!(blockEntity instanceof TunnelWallBlockEntity)) return ItemStack.EMPTY;
+        TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
+        ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
+        if (!(tunnelDef instanceof ItemTunnel)) return ItemStack.EMPTY;
+        ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
+        return itemTunnel.getImportStack(0);
+    }
+
+    public ItemStack getExportStack(Direction dir) {
+        if (!hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
+        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
+        if (!data.hasTunnel(dir)) return ItemStack.EMPTY;
+        BlockEntity blockEntity = world.getMinecraftWorld().getBlockEntity(data.getTunnel(dir));
+        if (!(blockEntity instanceof TunnelWallBlockEntity)) return ItemStack.EMPTY;
+        TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
+        ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
+        if (!(tunnelDef instanceof ItemTunnel)) return ItemStack.EMPTY;
+        ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
+        return itemTunnel.getExportStack(0);
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        // Import Stacks = 偶数 (0, 2, 4, 6, 8, 10...)
+        // Export Stacks = 奇数 (1, 3, 5, 7, 9, 11...)
+
+        // ---- Index ----
+        // 0: UP Dir Import Stack
+        // 1: UP Dir Export Stack
+        // 2: DOWN Dir Import Stack
+        // 3: DOWN Dir Export Stack
+        // 4: NORTH Dir Import Stack
+        // 5: NORTH Dir Export Stack
+        // 6: SOUTH Dir Import Stack
+        // 7: SOUTH Dir Export Stack
+        // 8: EAST Dir Import Stack
+        // 9: EAST Dir Export Stack
+        // 10: WEST Dir Import Stack
+        // 11: WEST Dir Export Stack
+
+        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(ItemTunnel.defaultSize * 2 * Direction.values().length, ItemStack.EMPTY);
+
+        if (!hasTunnelType(TunnelType.ITEM)) return stacks;
+
+        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
+        if (!data.isEmpty()) return stacks;
+
+        World mcworld = world.getMinecraftWorld();
+        for (Map.Entry<Direction, BlockPos> entry : data.getTunnels().entrySet()) {
+            BlockEntity blockEntity = mcworld.getBlockEntity(entry.getValue());
+            if (blockEntity instanceof TunnelWallBlockEntity) {
+                TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
+                ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
+                if (tunnelDef instanceof ItemTunnel) {
+                    ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
+
+                    int dirindex = dirToIndex(entry.getKey());
+                    for (int i = 0; i < itemTunnel.getStackSize(); i++) {
+                        stacks.add(dirindex * 2 + i, itemTunnel.getStack(i));
+                    }
+                }
+            }
+        }
+
+        return stacks;
+
+    }
+
+    public static int dirToIndex(Direction dir) {
+        switch (dir) {
+            case UP:
+                return 0;
+            case DOWN:
+                return 1;
+            case NORTH:
+                return 2;
+            case SOUTH:
+                return 3;
+            case EAST:
+                return 4;
+            case WEST:
+                return 5;
+        }
+        return -1;
     }
 }

@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvider {
+
     // 今のところは使っていない (Not used for now)
     public static final DirectionProperty TUNNEL_SIDE = DirectionProperty.of("tunnel_side", Direction.values());
 
