@@ -75,12 +75,12 @@ public class TunnelSideData {
     public Direction getNextDir(Direction dir) {
         if (isFull()) return null;
         return switch (dir) {
-            case UP -> Direction.DOWN;
-            case DOWN -> Direction.NORTH;
-            case NORTH -> Direction.SOUTH;
-            case SOUTH -> Direction.WEST;
-            case WEST -> Direction.EAST;
-            case EAST -> getNextDir(Direction.EAST);
+            case UP -> (hasTunnel(Direction.DOWN)) ? getNextDir(Direction.DOWN) : Direction.DOWN;
+            case DOWN -> (hasTunnel(Direction.NORTH)) ? getNextDir(Direction.NORTH) : Direction.NORTH;
+            case NORTH -> (hasTunnel(Direction.SOUTH)) ? getNextDir(Direction.SOUTH) : Direction.SOUTH;
+            case SOUTH -> (hasTunnel(Direction.WEST)) ? getNextDir(Direction.WEST) : Direction.WEST;
+            case WEST -> (hasTunnel(Direction.EAST)) ? getNextDir(Direction.EAST) : Direction.EAST;
+            case EAST -> (hasTunnel(Direction.UP)) ? getNextDir(Direction.UP) : Direction.UP;
         };
     }
 

@@ -53,19 +53,21 @@ public class TunnelItem extends ExtendItem {
                     state = world.getBlockState(pos);
                     Direction dir = state.get(TunnelWallBlock.CONNECTED_SIDE);
 
-                    if (spaceCubeBlockEntity.tunnelIsFull(getTunnelType())) {
+                    TunnelSideData tunnelSide = spaceCubeBlockEntity.getTunnelSide(getTunnelType());
+
+                    if (tunnelSide.isFull()) {
                         event.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
                         world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultState());
                         return ActionResult.FAIL;
                     }
 
                     // Connected Sideが存在する場合は別のSideに割り当てる
-                    if (spaceCubeBlockEntity.hasTunnel(getTunnelType(), dir)) {
-                        dir = spaceCubeBlockEntity.getRestDir(getTunnelType());
+                    if (tunnelSide.hasTunnel(dir)) {
+                        dir = tunnelSide.getRestDir();
                         world.setBlockState(pos, state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
 
                     }
-                    spaceCubeBlockEntity.addTunnel(getTunnelType(), dir, pos);
+                    tunnelSide.addTunnel(dir, pos);
                 }
             }
 

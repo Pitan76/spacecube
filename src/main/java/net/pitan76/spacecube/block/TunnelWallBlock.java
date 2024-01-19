@@ -91,7 +91,8 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
 
                 if (state.contains(CONNECTED_SIDE)) {
                     Direction dir = state.get(CONNECTED_SIDE);
-                    Direction nextDir = spaceCubeBlockEntity.getNextDir(tunnelWallBlockEntity.getTunnelType(), dir);
+
+                    TunnelSideData tunnelSide = spaceCubeBlockEntity.getTunnelSide(tunnelWallBlockEntity.getTunnelType());
 
                     // すべての接続サイドが使われている場合 (If all connected sides are used)
                     if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
@@ -99,10 +100,11 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
                         return ActionResult.FAIL;
                     }
 
+                    Direction nextDir = tunnelSide.getNextDir(dir);
                     world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, nextDir));
-                    if (!spaceCubeBlockEntity.hasTunnel(tunnelWallBlockEntity.getTunnelType(), nextDir)) {
-                        spaceCubeBlockEntity.removeTunnel(tunnelWallBlockEntity.getTunnelType(), dir);
-                        spaceCubeBlockEntity.addTunnel(tunnelWallBlockEntity.getTunnelType(), nextDir, pos);
+                    if (!tunnelSide.hasTunnel(nextDir)) {
+                        tunnelSide.removeTunnel(dir);
+                        tunnelSide.addTunnel(nextDir, pos);
                     }
                 }
             }

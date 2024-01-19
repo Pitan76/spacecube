@@ -136,6 +136,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity {
     }
 
     public TunnelSideData getTunnelSide(TunnelType type) {
+        if (!tunnelSides.containsKey(type)) addTunnelType(type);
         return tunnelSides.get(type);
     }
 
