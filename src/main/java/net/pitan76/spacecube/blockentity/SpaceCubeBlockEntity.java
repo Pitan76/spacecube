@@ -200,15 +200,17 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
         if (!hasTunnelType(TunnelType.ITEM)) return false;
+        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
 
-        return slot == 0;
+        return data.hasTunnel(dir) && slot == 0;
     }
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         if (!hasTunnelType(TunnelType.ITEM)) return false;
+        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
 
-        return slot == 1;
+        return data.hasTunnel(dir) && slot == 1;
     }
 
     public ItemStack getImportStack(Direction dir) {
