@@ -180,6 +180,36 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     @Override
+    public ItemStack getStack(int slot) {
+        if (getTunnelDef() instanceof ItemTunnel) {
+            ItemTunnel tunnelDef = (ItemTunnel) getTunnelDef();
+
+            if (slot == 0) {
+                return tunnelDef.getImportStack();
+            }
+            if (slot == 1) {
+                return tunnelDef.getExportStack();
+            }
+        }
+        return IInventory.super.getStack(slot);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        IInventory.super.setStack(slot, stack);
+        if (getTunnelDef() instanceof ItemTunnel) {
+            ItemTunnel tunnelDef = (ItemTunnel) getTunnelDef();
+
+            if (slot == 0) {
+                tunnelDef.setImportStack(stack);
+            }
+            if (slot == 1) {
+                tunnelDef.setExportStack(stack);
+            }
+        }
+    }
+
+    @Override
     public DefaultedList<ItemStack> getItems() {
         if (getTunnelDef() instanceof ItemTunnel) {
             ItemTunnel tunnelDef = (ItemTunnel) getTunnelDef();

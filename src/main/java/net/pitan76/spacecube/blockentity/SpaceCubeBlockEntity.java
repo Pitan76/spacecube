@@ -220,30 +220,66 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         return data.hasTunnel(dir) && slot == dirindex * 2;
     }
 
+    @Nullable
+    public ITunnelDef getTunnelDef(TunnelType type, Direction dir) {
+        if (!hasTunnelType(type)) return null;
+        TunnelSideData data = getTunnelSide(type);
+        if (!data.hasTunnel(dir)) return null;
+        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld()).getBlockEntity(data.getTunnel(dir));
+        if (!(blockEntity instanceof TunnelWallBlockEntity)) return null;
+        TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
+        return tunnelWallBlockEntity.getTunnelDef();
+    }
+
     public ItemStack getImportStack(Direction dir) {
         if (!hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
-        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
-        if (!data.hasTunnel(dir)) return ItemStack.EMPTY;
-        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld()).getBlockEntity(data.getTunnel(dir));
-        if (!(blockEntity instanceof TunnelWallBlockEntity)) return ItemStack.EMPTY;
-        TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
-        ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
-        if (!(tunnelDef instanceof ItemTunnel)) return ItemStack.EMPTY;
-        ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
+
+        ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
+        if (itemTunnel == null) return ItemStack.EMPTY;
         return itemTunnel.getImportStack();
     }
 
     public ItemStack getExportStack(Direction dir) {
         if (!hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
-        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
-        if (!data.hasTunnel(dir)) return ItemStack.EMPTY;
-        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld()).getBlockEntity(data.getTunnel(dir));
-        if (!(blockEntity instanceof TunnelWallBlockEntity)) return ItemStack.EMPTY;
-        TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
-        ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
-        if (!(tunnelDef instanceof ItemTunnel)) return ItemStack.EMPTY;
-        ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
+
+        ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
+        if (itemTunnel == null) return ItemStack.EMPTY;
         return itemTunnel.getExportStack();
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        IInventory.super.setStack(slot, stack);
+        if (!hasTunnelType(TunnelType.ITEM)) return;
+        Direction dir = indexToDir(Math.floorDiv(slot, 2));
+
+        ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
+        if (itemTunnel == null) return;
+
+        if (slot % 2 == 0) {
+            // 偶数なのでImportStack
+            itemTunnel.setImportStack(stack);
+        } else {
+            // 奇数なのでExportStack
+            itemTunnel.setExportStack(stack);
+        }
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        if (!hasTunnelType(TunnelType.ITEM)) return IInventory.super.getStack(slot);;
+        Direction dir = indexToDir(Math.floorDiv(slot, 2));
+
+        ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
+        if (itemTunnel == null) return IInventory.super.getStack(slot);;
+
+        if (slot % 2 == 0) {
+            // 偶数なのでImportStack
+            return itemTunnel.getImportStack();
+        } else {
+            // 奇数なのでExportStack
+            return itemTunnel.getExportStack();
+        }
     }
 
     @Override
@@ -293,20 +329,26 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     }
 
     public static int dirToIndex(Direction dir) {
-        switch (dir) {
-            case UP:
-                return 0;
-            case DOWN:
-                return 1;
-            case NORTH:
-                return 2;
-            case SOUTH:
-                return 3;
-            case EAST:
-                return 4;
-            case WEST:
-                return 5;
-        }
-        return -1;
+        return switch (dir) {
+            case UP -> 0;
+            case DOWN -> 1;
+            case NORTH -> 2;
+            case SOUTH -> 3;
+            case EAST -> 4;
+            case WEST -> 5;
+            default -> -1;
+        };
+    }
+
+    public static Direction indexToDir(int index) {
+        return switch (index) {
+            case 0 -> Direction.UP;
+            case 1 -> Direction.DOWN;
+            case 2 -> Direction.NORTH;
+            case 3 -> Direction.SOUTH;
+            case 4 -> Direction.EAST;
+            case 5 -> Direction.WEST;
+            default -> null;
+        };
     }
 }
