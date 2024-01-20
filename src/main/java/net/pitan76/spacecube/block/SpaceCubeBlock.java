@@ -76,7 +76,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!world.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
-            if (player.isCreative() && !tile.isScPosNull()) {
+            if (player.isCreative() && !tile.isScRoomPosNull()) {
                 ItemStack itemStack = new ItemStack(this);
                 NbtCompound nbt = new NbtCompound();
                 tile.writeNbtOverride(nbt);
@@ -111,9 +111,9 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
                 Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath =  spaceCubeState.getSpacePosWithSCBlockPath();
 
-                BlockPos scPos = spaceCubeBlockEntity.getScPos();
-                if (spacePosWithSCBlockPath.containsKey(scPos)) {
-                    SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(scPos);
+                BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
+                if (spacePosWithSCBlockPath.containsKey(scRoomPos)) {
+                    SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(scRoomPos);
                     scBlockPath.setPos(pos);
                     scBlockPath.setDimension(world.getRegistryKey());
                 }

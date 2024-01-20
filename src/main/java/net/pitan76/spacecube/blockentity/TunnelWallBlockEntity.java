@@ -33,7 +33,7 @@ import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
 public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAttachmentBlockEntity, IInventory, SidedInventory {
-    private BlockPos scPos;
+    private BlockPos scRoomPos;
     private TunnelType tunnelType;
     private Identifier tunnelItemId;
 
@@ -75,12 +75,12 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     @Override
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
-        if (scPos != null) {
+        if (scRoomPos != null) {
             NbtCompound posNbt = new NbtCompound();
-            posNbt.putInt("x", scPos.getX());
-            posNbt.putInt("y", scPos.getY());
-            posNbt.putInt("z", scPos.getZ());
-            nbt.put("scPos", posNbt);
+            posNbt.putInt("x", scRoomPos.getX());
+            posNbt.putInt("y", scRoomPos.getY());
+            posNbt.putInt("z", scRoomPos.getZ());
+            nbt.put("scRoomPos", posNbt);
         }
         if (tunnelType != null) {
             nbt.putString("tunnelType", tunnelType.getId().toString());
@@ -93,9 +93,9 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     @Override
     public void readNbtOverride(NbtCompound nbt) {
         super.readNbtOverride(nbt);
-        if (nbt.contains("scPos")) {
-            NbtCompound posNbt = nbt.getCompound("scPos");
-            scPos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+        if (nbt.contains("scRoomPos")) {
+            NbtCompound posNbt = nbt.getCompound("scRoomPos");
+            scRoomPos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
         }
         if (nbt.contains("tunnelType")) {
             tunnelType = TunnelType.fromId(new Identifier(nbt.getString("tunnelType")));
@@ -114,14 +114,14 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         this.tunnelType = tunnelType;
     }
 
-    public void setScPos(BlockPos scPos) {
-        this.scPos = scPos;
+    public void setScRoomPos(BlockPos scRoomPos) {
+        this.scRoomPos = scRoomPos;
     }
 
     @Nullable
-    public BlockPos getScPos() {
-        if (scPos == null) return null;
-        return scPos;
+    public BlockPos getScRoomPos() {
+        if (scRoomPos == null) return null;
+        return scRoomPos;
     }
 
     public void setTunnelItem(Item tunnelItem) {
@@ -163,12 +163,12 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     public SpaceCubeBlockEntity getSpaceCubeBlockEntity() {
-        if (getScPos() == null) return null;
+        if (getScRoomPos() == null) return null;
         if (getWorld() == null) return null;
         if (getWorld().getServer() == null) return null;
 
         SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(getWorld().getServer());
-        SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScPos());
+        SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScRoomPos());
 
         BlockEntity blockEntity = getWorld().getServer().getWorld(scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
         if (!(blockEntity instanceof SpaceCubeBlockEntity)) {return null;}
@@ -195,7 +195,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
             if (scBlockEntity == null) return new int[]{0, 1};
             World mainWorld = scBlockEntity.getWorld();
             ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
-            manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getScPos().getX() >> 4, scBlockEntity.getScPos().getZ() >> 4), scBlockEntity.getScPos());
+            manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getScRoomPos().getX() >> 4, scBlockEntity.getScRoomPos().getZ() >> 4), scBlockEntity.getScRoomPos());
 
             return new int[]{0, 1};
         }

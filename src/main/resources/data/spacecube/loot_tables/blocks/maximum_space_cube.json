@@ -12,8 +12,8 @@
               "source": "block_entity",
               "ops": [
                 {
-                  "source": "scPos",
-                  "target": "BlockEntityTag.scPos",
+                  "source": "scRoomPos",
+                  "target": "BlockEntityTag.scRoomPos",
                   "op": "replace"
                 }
               ]

@@ -113,21 +113,21 @@ public class PersonalShrinkingDevice extends ExtendItem {
             if (spaceCubeWorld.getRegistryKey() == world.getRegistryKey()) {
                 // same dimension
 
-                // scPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
+                // scRoomPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
 
-                BlockPos scPos;
-                if (!spaceCubeBlockEntity.isScPosNull())
-                    scPos = spaceCubeBlockEntity.getScPos();
+                BlockPos scRoomPos;
+                if (!spaceCubeBlockEntity.isScRoomPosNull())
+                    scRoomPos = spaceCubeBlockEntity.getScRoomPos();
                 else {
                     // 新規作成のための処理 (if内) Processing for new creation (if)
 
-                    scPos = SpaceCubeUtil.getNewPos(spaceCubeState);
-                    spaceCubeBlockEntity.setScPos(scPos);
+                    scRoomPos = SpaceCubeUtil.getNewPos(spaceCubeState);
+                    spaceCubeBlockEntity.setScRoomPos(scRoomPos);
 
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
-                    CubeGenerator.generateCube(spaceCubeWorld, scPos, Blocks.SOLID_WALL, size);
+                    CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
-                    spacePosWithSCBlockPath.put(scPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
+                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
                 }
 
 
@@ -136,24 +136,24 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 spaceCubeState.addEntryPos(serverPlayer.getUuid(), serverPlayer.getBlockPos());
 
                 // Teleport the player to the space cube (プレイヤーをspace cubeにテレポート)
-                serverPlayer.teleport(scPos.getX(), scPos.getY(), scPos.getZ());
+                serverPlayer.teleport(scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ());
 
             } else {
                 // another dimension
 
-                BlockPos scPos;
-                if (!spaceCubeBlockEntity.isScPosNull())
-                    scPos = spaceCubeBlockEntity.getScPos();
+                BlockPos scRoomPos;
+                if (!spaceCubeBlockEntity.isScRoomPosNull())
+                    scRoomPos = spaceCubeBlockEntity.getScRoomPos();
                 else {
                     // 新規作成のための処理 (if内) Processing for new creation (if)
 
-                    scPos = SpaceCubeUtil.getNewPos(spaceCubeState);
-                    spaceCubeBlockEntity.setScPos(scPos);
+                    scRoomPos = SpaceCubeUtil.getNewPos(spaceCubeState);
+                    spaceCubeBlockEntity.setScRoomPos(scRoomPos);
 
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
-                    CubeGenerator.generateCube(spaceCubeWorld, scPos, Blocks.SOLID_WALL, size);
+                    CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
-                    spacePosWithSCBlockPath.put(scPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
+                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
                 }
 
 
@@ -168,7 +168,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 spaceCubeState.markDirty();
 
                 // Teleport the player to the space cube dimension (プレイヤーをspace cube dimensionにテレポート)
-                serverPlayer.teleport(spaceCubeWorld, scPos.getX(), scPos.getY(), scPos.getZ(), serverPlayer.getYaw(), serverPlayer.getPitch());
+                serverPlayer.teleport(spaceCubeWorld, scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ(), serverPlayer.getYaw(), serverPlayer.getPitch());
             }
 
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)

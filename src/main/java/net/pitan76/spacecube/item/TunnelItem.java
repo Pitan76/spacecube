@@ -41,9 +41,9 @@ public class TunnelItem extends ExtendItem {
                 tunnelWallBlockEntity.setTunnelItem(event.getStack().getItem());
                 if (world.isClient()) return ActionResult.SUCCESS;
 
-                BlockPos scPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, event.getBlockPos());
+                BlockPos scRoomPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, event.getBlockPos());
 
-                tunnelWallBlockEntity.setScPos(scPos);
+                tunnelWallBlockEntity.setScRoomPos(scRoomPos);
                 tunnelWallBlockEntity.markDirty();
                 tunnelWallBlockEntity.sync();
 

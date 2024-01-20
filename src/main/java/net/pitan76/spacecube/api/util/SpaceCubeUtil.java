@@ -46,10 +46,10 @@ public class SpaceCubeUtil {
         BlockPos nearestPos = null;
         double nearestDistance = Double.MAX_VALUE;
 
-        for (BlockPos scPos : state.getSpacePosWithSCBlockPath().keySet()) {
-            double distance = pos.getSquaredDistance(scPos.getX(), scPos.getY(), scPos.getZ());
+        for (BlockPos scRoomPos : state.getSpacePosWithSCBlockPath().keySet()) {
+            double distance = pos.getSquaredDistance(scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ());
             if (distance < nearestDistance) {
-                nearestPos = scPos;
+                nearestPos = scRoomPos;
                 nearestDistance = distance;
             }
         }

@@ -29,8 +29,8 @@ import java.util.Map;
 
 public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInventory, IInventory {
 
-    // scPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
-    public BlockPos scPos = null;
+    // scRoomPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
+    public BlockPos scRoomPos = null;
 
     // tunnel linked sides
     // TunnelType, TunnelSideData(Direction[SpaceCubeBlock Side], BlockPos[Tunnel Position])
@@ -44,31 +44,31 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         super(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull(), event);
     }
 
-    public void setScPos(BlockPos scPos) {
-        this.scPos = scPos;
+    public void setScRoomPos(BlockPos scRoomPos) {
+        this.scRoomPos = scRoomPos;
     }
 
-    public BlockPos getScPos() {
-        return scPos;
+    public BlockPos getScRoomPos() {
+        return scRoomPos;
     }
 
-    public boolean isScPosNull() {
-        return scPos == null;
+    public boolean isScRoomPosNull() {
+        return scRoomPos == null;
     }
 
     @Override
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
-        if (!isScPosNull()) {
-            // scPos
+        if (!isScRoomPosNull()) {
+            // scRoomPos
             // - x: int
             // - y: int
             // - z: int
-            NbtCompound scPos_nbt = new NbtCompound();
-            scPos_nbt.putInt("x", scPos.getX());
-            scPos_nbt.putInt("y", scPos.getY());
-            scPos_nbt.putInt("z", scPos.getZ());
-            nbt.put("scPos", scPos_nbt);
+            NbtCompound scRoomPos_nbt = new NbtCompound();
+            scRoomPos_nbt.putInt("x", scRoomPos.getX());
+            scRoomPos_nbt.putInt("y", scRoomPos.getY());
+            scRoomPos_nbt.putInt("z", scRoomPos.getZ());
+            nbt.put("scRoomPos", scRoomPos_nbt);
         }
         if (tunnelSides != null) {
             // tunnels
@@ -97,12 +97,12 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     @Override
     public void readNbtOverride(NbtCompound nbt) {
         super.readNbtOverride(nbt);
-        if (nbt.contains("scPos")) {
-            NbtCompound scPos_nbt = nbt.getCompound("scPos");
-            int x = scPos_nbt.getInt("x");
-            int y = scPos_nbt.getInt("y");
-            int z = scPos_nbt.getInt("z");
-            scPos = new BlockPos(x, y, z);
+        if (nbt.contains("scRoomPos")) {
+            NbtCompound scRoomPos_nbt = nbt.getCompound("scRoomPos");
+            int x = scRoomPos_nbt.getInt("x");
+            int y = scRoomPos_nbt.getInt("y");
+            int z = scRoomPos_nbt.getInt("z");
+            scRoomPos = new BlockPos(x, y, z);
         }
         if (nbt.contains("tunnels")) {
             NbtCompound tunnels_nbt = nbt.getCompound("tunnels");
