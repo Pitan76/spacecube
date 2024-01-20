@@ -24,6 +24,7 @@ public class ItemTunnel implements ITunnelDef {
 
     public static int defaultSize = 2;
 
+    // 一時的な保管場所であり、保存されないことに注意 (Temporary storage and not saved)
     private final DefaultedList<ItemStack> stacks = DefaultedList.ofSize(defaultSize, ItemStack.EMPTY);
 
     public ItemStack getExportStack() {
