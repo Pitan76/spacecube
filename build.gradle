@@ -33,7 +33,7 @@ dependencies {
 
     modImplementation "alexiil.mc.lib:libblockattributes-all:${project.libblockattribute_version}"
 
-    modImplementation("TechReborn:energy:${project.tr_energy_version}")
+    modImplementation("techreborn:energy:${project.tr_energy_version}")
 
     modImplementation 'RebornCore:RebornCore-1.18:+'
     modImplementation 'TechReborn:TechReborn-1.18:+'
