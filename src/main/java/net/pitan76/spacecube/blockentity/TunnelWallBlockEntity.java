@@ -19,6 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
@@ -27,7 +28,7 @@ import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
-import net.pitan76.spacecube.api.util.SpaceCubeUtil;
+import net.pitan76.spacecube.world.ChunkLoaderManager;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
@@ -162,14 +163,13 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     public SpaceCubeBlockEntity getSpaceCubeBlockEntity() {
-        World mcWorld = world.getMinecraftWorld();
         if (getScPos() == null) return null;
-        if (mcWorld == null) return null;
+        if (getWorld() == null) return null;
 
-        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(mcWorld.getServer());
+        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(getWorld().getServer());
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScPos());
 
-        BlockEntity blockEntity = mcWorld.getServer().getWorld(scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
+        BlockEntity blockEntity = getWorld().getServer().getWorld(scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
         if (!(blockEntity instanceof SpaceCubeBlockEntity)) {return null;}
         return (SpaceCubeBlockEntity) blockEntity;
     }
@@ -190,8 +190,15 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     @Override
     public int[] getAvailableSlots(Direction side) {
         if (getTunnelDef() instanceof ItemTunnel) {
+            SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
+            if (scBlockEntity == null) return new int[]{0, 1};
+            World mainWorld = scBlockEntity.getWorld();
+            ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
+            manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getScPos().getX() >> 4, scBlockEntity.getScPos().getZ() >> 4), scBlockEntity.getScPos());
+
             return new int[]{0, 1};
         }
+
         return new int[0];
     }
 

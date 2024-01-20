@@ -28,6 +28,10 @@ public class SpaceCubeState extends PersistentState {
     // Note that the left BlockPos is fixed and the right SCBlockPath is temporarily saved (the right SCBlockPath will be deleted or replaced)
     private final Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = new HashMap<>();
 
+    public SpaceCubeState() {
+        super();
+    }
+
     public static SpaceCubeState create(NbtCompound nbt) {
         return new SpaceCubeState(nbt);
     }
@@ -100,10 +104,6 @@ public class SpaceCubeState extends PersistentState {
 
     }
 
-    public SpaceCubeState() {
-        super();
-    }
-
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         NbtCompound players_nbt = new NbtCompound();
@@ -166,7 +166,6 @@ public class SpaceCubeState extends PersistentState {
             spacePosWithSCBlockPathList_nbt.add(spacePosWithSCBlockPath_nbt);
         }
         nbt.put("spacePosWithSCBlockPathList", spacePosWithSCBlockPathList_nbt);
-
 
         return nbt;
     }

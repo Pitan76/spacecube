@@ -4,10 +4,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.pitan76.spacecube.Items;
 import net.pitan76.spacecube.SpaceCube;
-import net.pitan76.spacecube.api.tunnel.TunnelType;
-import net.pitan76.spacecube.item.TunnelItem;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 

@@ -12,15 +12,16 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
-import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.TunnelSideData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
+import net.pitan76.spacecube.world.ChunkLoaderManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -186,11 +187,15 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!hasTunnelType(TunnelType.ITEM)) return new int[0];
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
         if (!data.hasTunnel(side)) return new int[0];
-        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld()).getBlockEntity(data.getTunnel(side));
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld());
+        BlockEntity blockEntity = spaceCubeWorld.getBlockEntity(data.getTunnel(side));
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return new int[0];
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
+
+        ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
+        manager.loadChunk(spaceCubeWorld, new ChunkPos(data.getTunnel(side).getX() >> 4, data.getTunnel(side).getZ() >> 4), getPos());
 
         int dirindex = dirToIndex(side);
         return new int[]{dirindex * 2, dirindex * 2 + 1};
