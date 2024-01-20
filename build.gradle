@@ -37,10 +37,13 @@ dependencies {
 
     modImplementation("teamreborn:energy:${project.tr_energy_version}")
 
+
+
     modImplementation 'RebornCore:RebornCore-1.18:+'
     modImplementation 'TechReborn:TechReborn-1.18:+'
-
     modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+    modImplementation "alexiil.mc.mod:simplepipes-all:0.7.2"
+
 }
 
 processResources {
