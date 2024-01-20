@@ -17,5 +17,8 @@
   "item.spacecube.item_tunnel": "アイテムトンネル",
 
   "tooltip.spacecube.personal_shrinking_device": "§aスペースキューブを右クリックしてスペースキューブ (部屋) に入ります。",
-  "message.spacecube.tunnel_full": "§cこのタイプのトンネルは既に最大数です。"
+  "message.spacecube.tunnel_full": "§cこのタイプのトンネルは既に最大数です。",
+
+  "title.spacecube.config": "Space Cubeの設定",
+  "category.spacecube.general": "一般"
 }

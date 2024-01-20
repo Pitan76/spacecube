@@ -26,6 +26,8 @@ dependencies {
 
     modImplementation "ml.pkom:mcpitanlibarch-fabric${rootProject.mcpitanlib_version}"
 
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
     modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
         exclude(group: "net.fabricmc")
         exclude(group: "net.fabricmc.fabric-api")

@@ -20,6 +20,9 @@
     ],
     "main": [
       "net.pitan76.spacecube.SpaceCube"
+    ],
+    "modmenu": [
+      "net.pitan76.spacecube.client.compat.ModMenuAddon"
     ]
   },
   "mixins": [

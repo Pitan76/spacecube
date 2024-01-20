@@ -3,6 +3,7 @@ package net.pitan76.spacecube;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -24,6 +25,8 @@ public class SpaceCube implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Config.init(FabricLoader.getInstance().getConfigDir().toFile());
+
         // Register the creative tab
         registry.registerItemGroup(id("creative_tab"), () -> SPACE_CUBE_CREATIVE_TAB);
 
