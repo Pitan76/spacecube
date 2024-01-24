@@ -195,7 +195,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
 
         ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
-        manager.loadChunk(spaceCubeWorld, new ChunkPos(data.getTunnel(side).getX() >> 4, data.getTunnel(side).getZ() >> 4), getPos());
+        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
 
         int dirindex = dirToIndex(side);
         return new int[]{dirindex * 2, dirindex * 2 + 1};
