@@ -36,10 +36,12 @@ public class ItemTunnel implements ITunnelDef {
     }
 
     public void setExportStack(ItemStack stack) {
+        System.out.println("setExportStack" + stack);
         stacks.set(1, stack);
     }
 
     public void setImportStack(ItemStack stack) {
+        System.out.println("setImportStack" + stack);
         stacks.set(0, stack);
     }
 

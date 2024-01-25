@@ -194,11 +194,12 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
 
-        ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
-        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
+        //ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
+        //manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
 
         int dirindex = dirToIndex(side);
-        return new int[]{dirindex * 2, dirindex * 2 + 1};
+
+        return new int[]{dirindex * 2, (dirindex * 2 + 1)};
     }
 
     @Override
@@ -232,19 +233,11 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     }
 
     public ItemStack getImportStack(Direction dir) {
-        if (!hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
-
-        ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
-        if (itemTunnel == null) return ItemStack.EMPTY;
-        return itemTunnel.getImportStack();
+        return getStack(dirToIndex(dir) * 2);
     }
 
     public ItemStack getExportStack(Direction dir) {
-        if (!hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
-
-        ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
-        if (itemTunnel == null) return ItemStack.EMPTY;
-        return itemTunnel.getExportStack();
+        return getStack(dirToIndex(dir) * 2 + 1);
     }
 
     @Override
@@ -275,9 +268,11 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
 
         if (slot % 2 == 0) {
             // 偶数なのでImportStack
+            //System.out.println("getStack: " + itemTunnel.getImportStack());
             return itemTunnel.getImportStack();
         } else {
             // 奇数なのでExportStack
+            //System.out.println("getStack: " + itemTunnel.getExportStack());
             return itemTunnel.getExportStack();
         }
     }
