@@ -69,6 +69,9 @@ public class TunnelItem extends ExtendItem {
                     }
                     tunnelSide.addTunnel(dir, pos);
                 }
+
+                // Chunk Loader
+                tunnelWallBlockEntity.loadChunk();
             }
 
             event.getStack().decrement(1);

@@ -98,6 +98,8 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         if (nbt.contains("scRoomPos")) {
             NbtCompound posNbt = nbt.getCompound("scRoomPos");
             scRoomPos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+
+            loadChunk();
         }
         if (nbt.contains("tunnelType")) {
             tunnelType = TunnelType.fromId(new Identifier(nbt.getString("tunnelType")));
@@ -107,6 +109,15 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         }
 
         getTunnelDef().readNbt(nbt);
+    }
+
+    public void loadChunk() {
+        SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
+        if (scBlockEntity != null) {
+            World mainWorld = scBlockEntity.getWorld();
+            ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
+            manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getPos().getX() >> 4, scBlockEntity.getPos().getZ() >> 4), scBlockEntity.getScRoomPos());
+        }
     }
 
     public TunnelType getTunnelType() {
@@ -225,12 +236,6 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     @Override
     public int[] getAvailableSlots(Direction side) {
         if (getTunnelDef() instanceof ItemTunnel) {
-            SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
-            if (scBlockEntity == null) return new int[]{0, 1};
-            World mainWorld = scBlockEntity.getWorld();
-            ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
-            manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getPos().getX() >> 4, scBlockEntity.getPos().getZ() >> 4), scBlockEntity.getScRoomPos());
-
             return new int[]{0, 1};
         }
 

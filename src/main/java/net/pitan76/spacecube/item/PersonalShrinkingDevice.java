@@ -128,6 +128,10 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
                     spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
+
+                    // Chunk Loader
+                    spaceCubeBlockEntity.loadChunk();
+
                 }
 
 
@@ -154,6 +158,9 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
                     spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
+
+                    // Chunk Loader
+                    spaceCubeBlockEntity.loadChunk();
                 }
 
 

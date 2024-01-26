@@ -21,5 +21,7 @@
 
   "title.spacecube.config": "Space Cubeの設定",
   "category.spacecube.general": "一般",
-  "option.spacecube.energy.rebornEnergyConversionRate": "RebornEnergyのエネルギー変換率"
+
+  "option.spacecube.energy.rebornEnergyConversionRate": "RebornEnergyのエネルギー変換率",
+  "option.spacecube.chunkloader": "チャンクローダーを有効にする"
 }

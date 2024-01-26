@@ -103,6 +103,8 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
             int y = scRoomPos_nbt.getInt("y");
             int z = scRoomPos_nbt.getInt("z");
             scRoomPos = new BlockPos(x, y, z);
+
+            loadChunk();
         }
         if (nbt.contains("tunnels")) {
             NbtCompound tunnels_nbt = nbt.getCompound("tunnels");
@@ -120,6 +122,12 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
                 tunnelSides.put(tunnelType, data);
             }
         }
+    }
+
+    public void loadChunk() {
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld());
+        ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
+        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
     }
 
     public Map<TunnelType, TunnelSideData> getTunnelSides() {
@@ -193,9 +201,6 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
-
-        ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
-        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
 
         int dirindex = dirToIndex(side);
 
