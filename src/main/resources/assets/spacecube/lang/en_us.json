@@ -21,5 +21,6 @@
   "message.spacecube.tunnel_full": "§cThis type of tunnel is already full.",
 
   "title.spacecube.config": "Space Cube Config",
-  "category.spacecube.general": "General"
+  "category.spacecube.general": "General",
+  "option.spacecube.energy.rebornEnergyConversionRate": "RebornEnergy's Energy Conversion Rate"
 }

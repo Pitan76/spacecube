@@ -20,5 +20,6 @@
   "message.spacecube.tunnel_full": "§cこのタイプのトンネルは既に最大数です。",
 
   "title.spacecube.config": "Space Cubeの設定",
-  "category.spacecube.general": "一般"
+  "category.spacecube.general": "一般",
+  "option.spacecube.energy.rebornEnergyConversionRate": "RebornEnergyのエネルギー変換率"
 }

@@ -19,7 +19,7 @@ public class Config {
         initialized = true;
         setConfigDir(configDir);
 
-        //config.setInt("test", 0);
+        config.setDouble("energy.rebornEnergyConversionRate", 1.0);
 
         if (FileControl.fileExists(getConfigFile()))
             config.load(getConfigFile());

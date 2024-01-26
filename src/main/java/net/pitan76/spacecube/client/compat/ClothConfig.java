@@ -23,12 +23,12 @@ public class ClothConfig {
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         ConfigCategory general = builder.getOrCreateCategory(TextUtil.translatable("category.spacecube.general"));
 
-        /*
-        general.addEntry(entryBuilder.startIntField(TextUtil.translatable("option.spacecube.test"), config.getInt("test"))
-                .setDefaultValue(0)
-                .setSaveConsumer(newValue -> config.setInt("test", newValue))
+
+        general.addEntry(entryBuilder.startDoubleField(TextUtil.translatable("option.spacecube.energy.rebornEnergyConversionRate"), config.getDouble("energy.rebornEnergyConversionRate"))
+                .setDefaultValue(1.0)
+                .setSaveConsumer(newValue -> config.setDouble("energy.rebornEnergyConversionRate", newValue))
                 .build());
-         */
+
         return builder.build();
     }
 }
