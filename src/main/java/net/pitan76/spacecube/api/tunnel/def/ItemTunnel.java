@@ -1,6 +1,7 @@
 package net.pitan76.spacecube.api.tunnel.def;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
@@ -36,12 +37,10 @@ public class ItemTunnel implements ITunnelDef {
     }
 
     public void setExportStack(ItemStack stack) {
-        System.out.println("setExportStack" + stack);
         stacks.set(1, stack);
     }
 
     public void setImportStack(ItemStack stack) {
-        System.out.println("setImportStack" + stack);
         stacks.set(0, stack);
     }
 
@@ -51,5 +50,23 @@ public class ItemTunnel implements ITunnelDef {
 
     public DefaultedList<ItemStack> getStacks() {
         return stacks;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        if (nbt == null) return;
+        if (nbt.contains("importStack"))
+           setImportStack(ItemStack.fromNbt(nbt.getCompound("importStack")));
+        if (nbt.contains("exportStack"))
+            setExportStack(ItemStack.fromNbt(nbt.getCompound("exportStack")));
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        if (nbt == null) nbt = new NbtCompound();
+        if (!getImportStack().isEmpty())
+            nbt.put("importStack", getImportStack().writeNbt(new NbtCompound()));
+        if (!getExportStack().isEmpty())
+            nbt.put("exportStack", getExportStack().writeNbt(new NbtCompound()));
     }
 }

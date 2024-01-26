@@ -88,6 +88,8 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         if (tunnelItemId != null) {
             nbt.putString("tunnelItem", tunnelItemId.toString());
         }
+
+        getTunnelDef().writeNbt(nbt);
     }
 
     @Override
@@ -103,6 +105,8 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         if (nbt.contains("tunnelItem")) {
             tunnelItemId = new Identifier(nbt.getString("tunnelItem"));
         }
+
+        getTunnelDef().readNbt(nbt);
     }
 
     public TunnelType getTunnelType() {
@@ -226,6 +230,9 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
             World mainWorld = scBlockEntity.getWorld();
             //ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
             //manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getPos().getX() >> 4, scBlockEntity.getPos().getZ() >> 4), scBlockEntity.getScRoomPos());
+            //for (int i = 0; i < 12; i++) {
+            //    System.out.println("getstack " + i + ": " + getSpaceCubeBlockEntity().getStack(i));
+            //}
 
             return new int[]{0, 1};
         }

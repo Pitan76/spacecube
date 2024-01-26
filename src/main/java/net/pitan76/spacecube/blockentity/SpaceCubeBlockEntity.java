@@ -199,6 +199,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
 
         int dirindex = dirToIndex(side);
 
+
         return new int[]{dirindex * 2, (dirindex * 2 + 1)};
     }
 
