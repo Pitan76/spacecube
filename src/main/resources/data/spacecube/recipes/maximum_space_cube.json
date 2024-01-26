@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#C#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "spacecube:wall"
+    },
+    "C": {
+      "item": "minecraft:netherite_block"
+    }
+  },
+  "result": {
+    "item": "spacecube:maximum_space_cube",
+    "count": 1
+  }
+}
