@@ -23,6 +23,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
+import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
@@ -112,6 +113,8 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     public void loadChunk() {
+        if (!Config.enabledChunkLoader()) return;
+
         SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
         if (scBlockEntity != null) {
             World mainWorld = scBlockEntity.getWorld();
