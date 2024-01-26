@@ -13,8 +13,13 @@ public class RebornEnergyRegister {
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 ITunnelDef def = ((TunnelWallBlockEntity) blockEntity).getTunnelDef();
-                if (def instanceof EnergyTunnel)
-                    return new TunnelEnergyStorage((EnergyTunnel) def);
+                if (def instanceof EnergyTunnel) {
+                    EnergyTunnel energyTunnel = (EnergyTunnel) def;
+                    if (!energyTunnel.hasEnergyStorage()) energyTunnel.setEnergyStorage(new TREnergyStorage(energyTunnel));
+
+                    if (energyTunnel.getEnergyStorage() instanceof TREnergyStorage)
+                        return (TREnergyStorage) energyTunnel.getEnergyStorage();
+                }
             }
 
             return null;
@@ -23,9 +28,14 @@ public class RebornEnergyRegister {
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
-                ITunnelDef def = scBlockEntity.getTunnelDef(TunnelType.FLUID, dir);
-                if (def instanceof EnergyTunnel)
-                    return new TunnelEnergyStorage((EnergyTunnel) def);
+                ITunnelDef def = scBlockEntity.getTunnelDef(TunnelType.ENERGY, dir);
+                if (def instanceof EnergyTunnel) {
+                    EnergyTunnel energyTunnel = (EnergyTunnel) def;
+                    if (!energyTunnel.hasEnergyStorage()) energyTunnel.setEnergyStorage(new TREnergyStorage(energyTunnel));
+
+                    if (energyTunnel.getEnergyStorage() instanceof TREnergyStorage)
+                        return (TREnergyStorage) energyTunnel.getEnergyStorage();
+                }
             }
 
             return null;

@@ -38,4 +38,14 @@ public class Config {
     public static File getConfigDir() {
         return configDir;
     }
+
+    public static double getRebornEnergyConversionRate() {
+        try {
+            return config.getDouble("energy.rebornEnergyConversionRate");
+        } catch (NullPointerException e) {
+            config.setDouble("energy.rebornEnergyConversionRate", 1.0);
+            config.save(getConfigFile());
+        }
+        return 1.0;
+    }
 }

@@ -3,6 +3,7 @@ package net.pitan76.spacecube.api.tunnel.def;
 import net.minecraft.nbt.NbtCompound;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
+import net.pitan76.spacecube.compat.TunnelEnergyStorage;
 
 public class EnergyTunnel implements ITunnelDef {
     private TunnelWallBlockEntity blockEntity = null;
@@ -19,6 +20,20 @@ public class EnergyTunnel implements ITunnelDef {
     @Override
     public TunnelWallBlockEntity getBlockEntity() {
         return blockEntity;
+    }
+
+    public TunnelEnergyStorage energyStorage = null;
+
+    public TunnelEnergyStorage getEnergyStorage() {
+        return energyStorage;
+    }
+
+    public void setEnergyStorage(TunnelEnergyStorage energyStorage) {
+        this.energyStorage = energyStorage;
+    }
+
+    public boolean hasEnergyStorage() {
+        return energyStorage != null;
     }
 
     public long energy = 0;
