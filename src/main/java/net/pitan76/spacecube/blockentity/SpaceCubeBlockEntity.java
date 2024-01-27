@@ -60,7 +60,9 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     @Override
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
+        System.out.println("writeNbtOverride");
         if (!isScRoomPosNull()) {
+            System.out.println("writeNbtOverride: " + scRoomPos);
             // scRoomPos
             // - x: int
             // - y: int
@@ -99,6 +101,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     public void readNbtOverride(NbtCompound nbt) {
         super.readNbtOverride(nbt);
         if (nbt.contains("scRoomPos")) {
+            System.out.println("readNbtOverride: " + nbt.getCompound("scRoomPos"));
             NbtCompound scRoomPos_nbt = nbt.getCompound("scRoomPos");
             int x = scRoomPos_nbt.getInt("x");
             int y = scRoomPos_nbt.getInt("y");
@@ -127,8 +130,11 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
 
     public void loadChunk() {
         if (!Config.enabledChunkLoader()) return;
+        if (!(getWorld() instanceof ServerWorld)) return;
 
-        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld());
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) getWorld());
+        if (spaceCubeWorld == null) return;
+
         ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
         manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
     }
