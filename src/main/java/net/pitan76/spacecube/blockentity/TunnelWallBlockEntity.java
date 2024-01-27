@@ -121,7 +121,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
             World mainWorld = scBlockEntity.getWorld();
             if (mainWorld == null) return;
             ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
-            manager.loadChunk(world.getMinecraftWorld(), new ChunkPos(scBlockEntity.getPos()), getScRoomPos());
+            manager.loadChunk(mainWorld, new ChunkPos(scBlockEntity.getPos()), getScRoomPos());
         }
     }
 

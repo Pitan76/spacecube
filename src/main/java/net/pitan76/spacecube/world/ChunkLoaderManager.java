@@ -18,7 +18,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.Validate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,7 +64,7 @@ public class ChunkLoaderManager extends PersistentState {
 
     public Optional<LoadedChunk> getLoadedChunk(World world, ChunkPos chunkPos, BlockPos chunkLoader){
         return loadedChunks.stream()
-                .filter(loadedChunk -> loadedChunk.getWorld().equals(getWorldName(world)))
+                .filter(loadedChunk -> loadedChunk.getWorld().equals(getWorldId(world)))
                 .filter(loadedChunk -> loadedChunk.getChunk().equals(chunkPos))
                 .filter(loadedChunk -> loadedChunk.getChunkLoader().equals(chunkLoader))
                 .findFirst();
@@ -73,14 +72,14 @@ public class ChunkLoaderManager extends PersistentState {
 
     public Optional<LoadedChunk> getLoadedChunk(World world, ChunkPos chunkPos){
         return loadedChunks.stream()
-                .filter(loadedChunk -> loadedChunk.getWorld().equals(getWorldName(world)))
+                .filter(loadedChunk -> loadedChunk.getWorld().equals(getWorldId(world)))
                 .filter(loadedChunk -> loadedChunk.getChunk().equals(chunkPos))
                 .findFirst();
     }
 
     public List<LoadedChunk> getLoadedChunks(World world, BlockPos chunkLoader){
         return loadedChunks.stream()
-                .filter(loadedChunk -> loadedChunk.getWorld().equals(getWorldName(world)))
+                .filter(loadedChunk -> loadedChunk.getWorld().equals(getWorldId(world)))
                 .filter(loadedChunk -> loadedChunk.getChunkLoader().equals(chunkLoader))
                 .collect(Collectors.toList());
     }
@@ -96,7 +95,7 @@ public class ChunkLoaderManager extends PersistentState {
 
     public void loadChunk(World world, ChunkPos chunkPos, BlockPos chunkLoader){
         if (isChunkLoaded(world, chunkPos, chunkLoader)) return;
-        LoadedChunk loadedChunk = new LoadedChunk(chunkPos, getWorldName(world), chunkLoader);
+        LoadedChunk loadedChunk = new LoadedChunk(chunkPos, getWorldId(world), chunkLoader);
         loadedChunks.add(loadedChunk);
 
         loadChunk((ServerWorld) world, loadedChunk);
@@ -109,8 +108,8 @@ public class ChunkLoaderManager extends PersistentState {
     }
 
     public void unloadChunk(World world, ChunkPos chunkPos, BlockPos chunkLoader){
+        if (!isChunkLoaded(world, chunkPos, chunkLoader)) return;
         Optional<LoadedChunk> optionalLoadedChunk = getLoadedChunk(world, chunkPos, chunkLoader);
-        Validate.isTrue(optionalLoadedChunk.isPresent(), "chunk is not loaded");
 
         LoadedChunk loadedChunk = optionalLoadedChunk.get();
 
@@ -123,7 +122,7 @@ public class ChunkLoaderManager extends PersistentState {
         markDirty();
     }
 
-    public static Identifier getWorldName(World world){
+    public static Identifier getWorldId(World world){
         return world.getRegistryKey().getValue();
     }
 
