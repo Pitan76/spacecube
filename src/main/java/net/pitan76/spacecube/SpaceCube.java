@@ -29,7 +29,6 @@ public class SpaceCube implements ModInitializer {
     public static final RegistryKey<World> SPACE_CUBE_DIMENSION_WORLD_KEY = RegistryKey.of(Registry.WORLD_KEY, id("space_cube_dimension"));
 
     // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)
-    // TODO: Recipeを追加する (Add recipe)
 
     @Override
     public void onInitialize() {

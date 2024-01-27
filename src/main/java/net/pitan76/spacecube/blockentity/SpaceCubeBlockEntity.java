@@ -129,6 +129,11 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     }
 
     public void addTicket() {
+        addTicketSpaceCubeWorld();
+        addTicketMainWorld();
+    }
+
+    public void addTicketSpaceCubeWorld() {
         if (ticketedChunkSpaceCubeWorld) return;
 
         if (!Config.enabledChunkLoader()) return;
@@ -140,6 +145,20 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         ChunkPos chunkPos = new ChunkPos(getScRoomPos());
         spaceCubeWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
         ticketedChunkSpaceCubeWorld = true;
+    }
+
+    public void addTicketMainWorld() {
+        if (ticketedChunkMainWorld) return;
+
+        if (!Config.enabledChunkLoader()) return;
+        if (!(getWorld() instanceof ServerWorld)) return;
+
+        World mainWorld = getWorld();
+        if (!(mainWorld instanceof ServerWorld)) return;
+
+        ChunkPos chunkPos = new ChunkPos(getPos());
+        ((ServerWorld) mainWorld).getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+        ticketedChunkMainWorld = true;
     }
 
     public Map<TunnelType, TunnelSideData> getTunnelSides() {

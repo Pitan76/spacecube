@@ -119,14 +119,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
         
         if (scBlockEntity != null) {
-            if (scBlockEntity.ticketedChunkMainWorld) return;
-            
-            World mainWorld = scBlockEntity.getWorld();
-            if (!(mainWorld instanceof ServerWorld)) return;
-
-            ChunkPos chunkPos = new ChunkPos(scBlockEntity.getPos());
-            ((ServerWorld) mainWorld).getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
-            scBlockEntity.ticketedChunkMainWorld = true;
+            scBlockEntity.addTicket();
         }
     }
 
