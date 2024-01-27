@@ -133,7 +133,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (spaceCubeWorld == null) return;
 
         ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
-        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos().getX() >> 4, getScRoomPos().getZ() >> 4), getPos());
+        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos()), getPos());
     }
 
     public Map<TunnelType, TunnelSideData> getTunnelSides() {
