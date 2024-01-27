@@ -60,9 +60,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     @Override
     public void writeNbtOverride(NbtCompound nbt) {
         super.writeNbtOverride(nbt);
-        System.out.println("writeNbtOverride");
         if (!isScRoomPosNull()) {
-            System.out.println("writeNbtOverride: " + scRoomPos);
             // scRoomPos
             // - x: int
             // - y: int
@@ -101,7 +99,6 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     public void readNbtOverride(NbtCompound nbt) {
         super.readNbtOverride(nbt);
         if (nbt.contains("scRoomPos")) {
-            System.out.println("readNbtOverride: " + nbt.getCompound("scRoomPos"));
             NbtCompound scRoomPos_nbt = nbt.getCompound("scRoomPos");
             int x = scRoomPos_nbt.getInt("x");
             int y = scRoomPos_nbt.getInt("y");
@@ -212,7 +209,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
 
         int dirindex = dirToIndex(side);
-
+        loadChunk();
 
         return new int[]{dirindex * 2, (dirindex * 2 + 1)};
     }
@@ -283,11 +280,9 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
 
         if (slot % 2 == 0) {
             // 偶数なのでImportStack
-            //System.out.println("getStack: " + itemTunnel.getImportStack());
             return itemTunnel.getImportStack();
         } else {
             // 奇数なのでExportStack
-            //System.out.println("getStack: " + itemTunnel.getExportStack());
             return itemTunnel.getExportStack();
         }
     }

@@ -28,7 +28,7 @@ public class ChunkLoaderManager extends PersistentState {
     public static Codec<List<LoadedChunk>> CODEC = Codec.list(LoadedChunk.CODEC);
 
     private static final ChunkTicketType<ChunkPos> CHUNK_LOADER = ChunkTicketType.create("spacecube:chunk_loader", Comparator.comparingLong(ChunkPos::toLong));
-    private static final int RADIUS = 1;
+    private static final int RADIUS = 2;
 
     public ChunkLoaderManager() {
         super();
