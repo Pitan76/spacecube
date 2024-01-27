@@ -29,7 +29,7 @@ import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
-import net.pitan76.spacecube.world.ChunkLoaderManager;
+import net.pitan76.spacecube.world.ChunkTicketTypes;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
@@ -100,7 +100,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
             NbtCompound posNbt = nbt.getCompound("scRoomPos");
             scRoomPos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
 
-            loadChunk();
+            addTicket();
         }
         if (nbt.contains("tunnelType")) {
             tunnelType = TunnelType.fromId(new Identifier(nbt.getString("tunnelType")));
@@ -112,16 +112,21 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         getTunnelDef().readNbt(nbt);
     }
 
-    public void loadChunk() {
+    public void addTicket() {
         if (!Config.enabledChunkLoader()) return;
         if (!(getWorld() instanceof ServerWorld)) return;
 
         SpaceCubeBlockEntity scBlockEntity = getSpaceCubeBlockEntity();
+        
         if (scBlockEntity != null) {
+            if (scBlockEntity.ticketedChunkMainWorld) return;
+            
             World mainWorld = scBlockEntity.getWorld();
-            if (mainWorld == null) return;
-            ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(mainWorld.getServer());
-            manager.loadChunk(mainWorld, new ChunkPos(scBlockEntity.getPos()), getScRoomPos());
+            if (!(mainWorld instanceof ServerWorld)) return;
+
+            ChunkPos chunkPos = new ChunkPos(scBlockEntity.getPos());
+            ((ServerWorld) mainWorld).getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+            scBlockEntity.ticketedChunkMainWorld = true;
         }
     }
 
@@ -244,7 +249,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
             return new int[]{0, 1};
         }
 
-        loadChunk();
+        addTicket();
 
         return new int[0];
     }

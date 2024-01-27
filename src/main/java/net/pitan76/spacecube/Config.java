@@ -21,6 +21,7 @@ public class Config {
 
         config.setDouble("energy.rebornEnergyConversionRate", 1.0);
         config.setBoolean("chunkloader", true);
+        config.setInt("chunkloader.radius", 2);
 
         if (FileControl.fileExists(getConfigFile()))
             config.load(getConfigFile());
@@ -58,5 +59,15 @@ public class Config {
             config.save(getConfigFile());
         }
         return true;
+    }
+
+    public static int getChunkLoaderRadius() {
+        try {
+            return config.getInt("chunkloader.radius");
+        } catch (NullPointerException e) {
+            config.setInt("chunkloader.radius", 2);
+            config.save(getConfigFile());
+        }
+        return 2;
     }
 }

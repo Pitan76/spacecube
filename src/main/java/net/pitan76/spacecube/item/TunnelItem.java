@@ -71,7 +71,7 @@ public class TunnelItem extends ExtendItem {
                 }
 
                 // Chunk Loader
-                tunnelWallBlockEntity.loadChunk();
+                tunnelWallBlockEntity.addTicket();
             }
 
             event.getStack().decrement(1);

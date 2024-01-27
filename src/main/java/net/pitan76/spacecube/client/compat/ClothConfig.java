@@ -33,6 +33,10 @@ public class ClothConfig {
                 .setDefaultValue(true)
                 .setSaveConsumer(newValue -> config.setBoolean("chunkloader", newValue))
                 .build());
+        general.addEntry(entryBuilder.startIntField(TextUtil.translatable("option.spacecube.chunkloader.radius"), config.getInt("chunkloader.radius"))
+                .setDefaultValue(2)
+                .setSaveConsumer(newValue -> config.setInt("chunkloader.radius", newValue))
+                .build());
 
         return builder.build();
     }

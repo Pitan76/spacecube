@@ -130,7 +130,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
 
                     // Chunk Loader
-                    spaceCubeBlockEntity.loadChunk();
+                    spaceCubeBlockEntity.addTicket();
 
                 }
 
@@ -160,7 +160,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), world.getRegistryKey()));
 
                     // Chunk Loader
-                    spaceCubeBlockEntity.loadChunk();
+                    spaceCubeBlockEntity.addTicket();
                 }
 
 

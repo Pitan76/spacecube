@@ -24,5 +24,6 @@
   "category.spacecube.general": "General",
 
   "option.spacecube.energy.rebornEnergyConversionRate": "RebornEnergy's Energy Conversion Rate",
-  "option.spacecube.chunkloader": "Enable Chunk Loader"
+  "option.spacecube.chunkloader": "Enable Chunk Loader",
+  "option.spacecube.chunkloader.radius": "Chunk Loader Chunk Radius"
 }

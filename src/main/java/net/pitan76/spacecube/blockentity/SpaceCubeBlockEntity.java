@@ -22,7 +22,7 @@ import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
-import net.pitan76.spacecube.world.ChunkLoaderManager;
+import net.pitan76.spacecube.world.ChunkTicketTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -36,6 +36,9 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     // tunnel linked sides
     // TunnelType, TunnelSideData(Direction[SpaceCubeBlock Side], BlockPos[Tunnel Position])
     private final Map<TunnelType, TunnelSideData> tunnelSides = new HashMap<>();
+
+    public boolean ticketedChunkSpaceCubeWorld = false;
+    public boolean ticketedChunkMainWorld = false;
 
     public SpaceCubeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -105,7 +108,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
             int z = scRoomPos_nbt.getInt("z");
             scRoomPos = new BlockPos(x, y, z);
 
-            loadChunk();
+            addTicket();
         }
         if (nbt.contains("tunnels")) {
             NbtCompound tunnels_nbt = nbt.getCompound("tunnels");
@@ -125,15 +128,18 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         }
     }
 
-    public void loadChunk() {
+    public void addTicket() {
+        if (ticketedChunkSpaceCubeWorld) return;
+
         if (!Config.enabledChunkLoader()) return;
         if (!(getWorld() instanceof ServerWorld)) return;
 
         ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) getWorld());
         if (spaceCubeWorld == null) return;
 
-        ChunkLoaderManager manager = ChunkLoaderManager.getOrCreate(spaceCubeWorld.getServer());
-        manager.loadChunk(spaceCubeWorld, new ChunkPos(getScRoomPos()), getPos());
+        ChunkPos chunkPos = new ChunkPos(getScRoomPos());
+        spaceCubeWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+        ticketedChunkSpaceCubeWorld = true;
     }
 
     public Map<TunnelType, TunnelSideData> getTunnelSides() {
@@ -209,7 +215,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
 
         int dirindex = dirToIndex(side);
-        loadChunk();
+        addTicket();
 
         return new int[]{dirindex * 2, (dirindex * 2 + 1)};
     }
