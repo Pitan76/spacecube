@@ -5,8 +5,12 @@ import ml.pkom.mcpitanlibarch.api.command.CommandSettings;
 import ml.pkom.mcpitanlibarch.api.command.LiteralCommand;
 import ml.pkom.mcpitanlibarch.api.event.ServerCommandEvent;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.item.PersonalShrinkingDevice;
+
+import java.util.Optional;
 
 public class SpaceCubeCommand extends LiteralCommand {
     @Override
@@ -30,21 +34,34 @@ public class SpaceCubeCommand extends LiteralCommand {
 
             @Override
             public void execute(ServerCommandEvent event) {
-                event.sendSuccess(TextUtil.literal("Reloading..."), false);
+                event.sendSuccess(TextUtil.literal("[SpaceCube] Reloading..."), false);
                 if (Config.reload()) {
-                    event.sendSuccess(TextUtil.literal("Reloaded!"), false);
+                    event.sendSuccess(TextUtil.literal("[SpaceCube] Reloaded!"), false);
                 } else {
-                    event.sendFailure(TextUtil.literal("Failed to reload!"));
+                    event.sendFailure(TextUtil.literal("[SpaceCube] Failed to reload!"));
                 }
             }
         });
 
         addArgumentCommand("config", new ConfigCommand());
+
+        addArgumentCommand("version", new LiteralCommand() {
+            @Override
+            public void execute(ServerCommandEvent event) {
+                Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer("spacecube");
+                if (modContainer.isEmpty()) {
+                    event.sendFailure(TextUtil.literal("[SpaceCube] Failed to get version!"));
+                    return;
+                }
+                event.sendSuccess(TextUtil.literal("[SpaceCube] v" + modContainer.get().getMetadata().getVersion()), false);
+            }
+        });
     }
 
     @Override
     public void execute(ServerCommandEvent event) {
         event.sendSuccess(TextUtil.literal("[SpaceCube]"
+                + "\n- /spacecube version...Show version"
                 + "\n- /spacecube reload...Reload config"
                 + "\n- /spacecube config set [Key] [Value]...Set config"
                 + "\n- /spacecube config get [Key]...Get config"
