@@ -1,5 +1,6 @@
 package net.pitan76.spacecube;
 
+import ml.pkom.mcpitanlibarch.api.command.CommandRegistry;
 import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
 import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
 import net.fabricmc.api.ModInitializer;
@@ -16,6 +17,7 @@ import net.pitan76.spacecube.api.tunnel.def.FluidTunnel;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
+import net.pitan76.spacecube.cmd.SpaceCubeCommand;
 import net.pitan76.spacecube.compat.RebornEnergyRegister;
 
 public class SpaceCube implements ModInitializer {
@@ -43,12 +45,14 @@ public class SpaceCube implements ModInitializer {
         Items.init();
         BlockEntities.init();
 
+        registerFluidStorage();
+        registerEnergyStorage();
+
+        CommandRegistry.register("spacecube", new SpaceCubeCommand());
+
         // 1.16.5対応のため (1.16.5の動作は想定していないけどまあ、動けば嬉しいな（笑）)
         // For 1.16.5 support (I don't expect 1.16.5 to work, but I'm happy if it does (lol))
         registry.allRegister();
-
-        registerFluidStorage();
-        registerEnergyStorage();
     }
 
     public static void registerEnergyStorage() {

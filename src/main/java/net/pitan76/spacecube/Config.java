@@ -19,9 +19,7 @@ public class Config {
         initialized = true;
         setConfigDir(configDir);
 
-        config.setDouble("energy.rebornEnergyConversionRate", 1.0);
-        config.setBoolean("chunkloader", true);
-        config.setInt("chunkloader.radius", 2);
+        defaultConfig();
 
         if (FileControl.fileExists(getConfigFile()))
             config.load(getConfigFile());
@@ -39,6 +37,24 @@ public class Config {
 
     public static File getConfigDir() {
         return configDir;
+    }
+
+    public static boolean reload() {
+        if (FileControl.fileExists(getConfigFile())) {
+            config.load(getConfigFile());
+            return true;
+        }
+        return false;
+    }
+
+    public static void defaultConfig() {
+        config.setDouble("energy.rebornEnergyConversionRate", 1.0);
+        config.setBoolean("chunkloader", true);
+        config.setInt("chunkloader.radius", 2);
+    }
+
+    public static void save() {
+        config.save(getConfigFile());
     }
 
     public static double getRebornEnergyConversionRate() {
