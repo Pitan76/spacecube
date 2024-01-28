@@ -25,6 +25,9 @@ public class Config {
             config.load(getConfigFile());
         else
             config.save(getConfigFile());
+
+        // 既存の設定以外をデフォルト設定にする (Set to default settings except for existing settings)
+        defaultNotExistConfigOnly();
     }
 
     public static File getConfigFile() {
@@ -51,6 +54,17 @@ public class Config {
         config.setDouble("energy.rebornEnergyConversionRate", 1.0);
         config.setBoolean("chunkloader", true);
         config.setInt("chunkloader.radius", 2);
+    }
+
+    public static void defaultNotExistConfigOnly() {
+        if (!config.configMap.containsKey("energy.rebornEnergyConversionRate"))
+            config.setDouble("energy.rebornEnergyConversionRate", 1.0);
+
+        if (!config.configMap.containsKey("chunkloader"))
+            config.setBoolean("chunkloader", true);
+
+        if (!config.configMap.containsKey("chunkloader.radius"))
+            config.setInt("chunkloader.radius", 2);
     }
 
     public static void save() {
