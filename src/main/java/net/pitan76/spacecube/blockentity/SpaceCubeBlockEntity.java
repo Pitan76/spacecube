@@ -359,26 +359,40 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     }
 
     public static int dirToIndex(Direction dir) {
-        return switch (dir) {
-            case UP -> 0;
-            case DOWN -> 1;
-            case NORTH -> 2;
-            case SOUTH -> 3;
-            case EAST -> 4;
-            case WEST -> 5;
-            default -> -1;
-        };
+        switch (dir) {
+            case UP:
+                return 0;
+            case DOWN:
+                return 1;
+            case NORTH:
+                return 2;
+            case SOUTH:
+                return 3;
+            case EAST:
+                return 4;
+            case WEST:
+                return 5;
+            default:
+                return -1;
+        }
     }
 
     public static Direction indexToDir(int index) {
-        return switch (index) {
-            case 0 -> Direction.UP;
-            case 1 -> Direction.DOWN;
-            case 2 -> Direction.NORTH;
-            case 3 -> Direction.SOUTH;
-            case 4 -> Direction.EAST;
-            case 5 -> Direction.WEST;
-            default -> null;
-        };
+        switch (index) {
+            case 0:
+                return Direction.UP;
+            case 1:
+                return Direction.DOWN;
+            case 2:
+                return Direction.NORTH;
+            case 3:
+                return Direction.SOUTH;
+            case 4:
+                return Direction.EAST;
+            case 5:
+                return Direction.WEST;
+            default:
+                return null;
+        }
     }
 }

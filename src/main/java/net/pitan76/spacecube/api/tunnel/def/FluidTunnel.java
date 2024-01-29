@@ -27,7 +27,7 @@ public class FluidTunnel implements ITunnelDef {
         return blockEntity;
     }
 
-    private final SingleVariantStorage<FluidVariant> fluidStorage = new SingleVariantStorage<>() {
+    private final SingleVariantStorage<FluidVariant> fluidStorage = new SingleVariantStorage<FluidVariant>() {
         @Override
         public FluidVariant getBlankVariant() {
             return FluidVariant.blank();

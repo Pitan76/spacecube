@@ -52,14 +52,20 @@ public class TunnelType {
     }
 
     public static TunnelType fromId(Identifier id) {
-        return switch (id.toString()) {
-            case "spacecube:none" -> NONE;
-            case "spacecube:energy_tunnel" -> ENERGY;
-            case "spacecube:fluid_tunnel" -> FLUID;
-            case "spacecube:item_tunnel" -> ITEM;
-            case "spacecube:redstone_tunnel" -> REDSTONE;
-            default -> NONE;
-        };
+        switch (id.toString()) {
+            case "spacecube:none":
+                return NONE;
+            case "spacecube:energy_tunnel":
+                return ENERGY;
+            case "spacecube:fluid_tunnel":
+                return FLUID;
+            case "spacecube:item_tunnel":
+                return ITEM;
+            case "spacecube:redstone_tunnel":
+                return REDSTONE;
+            default:
+                return NONE;
+        }
     }
 
     @FunctionalInterface

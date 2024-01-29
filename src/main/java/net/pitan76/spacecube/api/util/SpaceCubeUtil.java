@@ -26,17 +26,24 @@ public class SpaceCubeUtil {
         // ○ が 0, 64, 0 として考えて周辺にキューブを設置していくよ
         // ○ is considered to be 0, 64, 0 and cubes are placed around it
 
-        return switch (mod) {
-            case 0 -> new BlockPos(div * 1024, 64, div * 1024);
-            case 1 -> new BlockPos(div * -1024, 64, div * 1024);
-            case 2 -> new BlockPos(div * 1024 + 1024, 64, div * 1024);
-            case 3 -> new BlockPos(div * 1024, 64, div * 1024 + 1024);
-            case 4 -> new BlockPos(div * -1024 - 1024, 64, div * 1024);
-            case 5 -> new BlockPos(div * -1024, 64, div * 1024 - 1024);
+        switch (mod) {
+            case 0:
+                return new BlockPos(div * 1024, 64, div * 1024);
+            case 1:
+                return new BlockPos(div * -1024, 64, div * 1024);
+            case 2:
+                return new BlockPos(div * 1024 + 1024, 64, div * 1024);
+            case 3:
+                return new BlockPos(div * 1024, 64, div * 1024 + 1024);
+            case 4:
+                return new BlockPos(div * -1024 - 1024, 64, div * 1024);
+            case 5:
+                return new BlockPos(div * -1024, 64, div * 1024 - 1024);
 
             // まぁたぶんないけど念のために
-            default -> new BlockPos(0, 64, 0);
-        };
+            default:
+                return new BlockPos(0, 64, 0);
+        }
     }
 
     // 新規のスペースキューブ(部屋)の座標を取得する
@@ -61,17 +68,24 @@ public class SpaceCubeUtil {
 
 
 
-        return switch (mod) {
-            case 0 -> new BlockPos(div * 1024, 64, div * 1024);
-            case 1 -> new BlockPos(div * -1024, 64, div * 1024);
-            case 2 -> new BlockPos(div * 1024 + 1024, 64, div * 1024);
-            case 3 -> new BlockPos(div * 1024, 64, div * 1024 + 1024);
-            case 4 -> new BlockPos(div * -1024 - 1024, 64, div * 1024);
-            case 5 -> new BlockPos(div * -1024, 64, div * 1024 - 1024);
+        switch (mod) {
+            case 0:
+                return new BlockPos(div * 1024, 64, div * 1024);
+            case 1:
+                return new BlockPos(div * -1024, 64, div * 1024);
+            case 2:
+                return new BlockPos(div * 1024 + 1024, 64, div * 1024);
+            case 3:
+                return new BlockPos(div * 1024, 64, div * 1024 + 1024);
+            case 4:
+                return new BlockPos(div * -1024 - 1024, 64, div * 1024);
+            case 5:
+                return new BlockPos(div * -1024, 64, div * 1024 - 1024);
 
             // まぁたぶんないけど念のために
-            default -> new BlockPos(0, 64, 0);
-        };
+            default:
+                return new BlockPos(0, 64, 0);
+        }
     }
 
     // 最も近いスペースキューブの座標を取得する (スペースキューブがない場合は null を返す)
@@ -110,12 +124,18 @@ public class SpaceCubeUtil {
 
     // plan: include MCPitanLib
     public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t, boolean swingHand) {
-        return switch (result) {
-            case PASS -> TypedActionResult.pass(t);
-            case SUCCESS -> TypedActionResult.success(t, swingHand);
-            case FAIL -> TypedActionResult.fail(t);
-            case CONSUME, CONSUME_PARTIAL -> TypedActionResult.consume(t);
-        };
+        switch (result) {
+            case PASS:
+                return TypedActionResult.pass(t);
+            case SUCCESS:
+                return TypedActionResult.success(t, swingHand);
+            case FAIL:
+                return TypedActionResult.fail(t);
+            case CONSUME:
+            case CONSUME_PARTIAL:
+                return TypedActionResult.consume(t);
+        }
+        return TypedActionResult.pass(t);
     }
 
     public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t) {

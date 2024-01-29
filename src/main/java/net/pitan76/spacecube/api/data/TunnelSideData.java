@@ -74,14 +74,21 @@ public class TunnelSideData {
 
     public Direction getNextDir(Direction dir) {
         if (isFull()) return null;
-        return switch (dir) {
-            case UP -> (hasTunnel(Direction.DOWN)) ? getNextDir(Direction.DOWN) : Direction.DOWN;
-            case DOWN -> (hasTunnel(Direction.NORTH)) ? getNextDir(Direction.NORTH) : Direction.NORTH;
-            case NORTH -> (hasTunnel(Direction.SOUTH)) ? getNextDir(Direction.SOUTH) : Direction.SOUTH;
-            case SOUTH -> (hasTunnel(Direction.WEST)) ? getNextDir(Direction.WEST) : Direction.WEST;
-            case WEST -> (hasTunnel(Direction.EAST)) ? getNextDir(Direction.EAST) : Direction.EAST;
-            case EAST -> (hasTunnel(Direction.UP)) ? getNextDir(Direction.UP) : Direction.UP;
-        };
+        switch (dir) {
+            case UP:
+                return (hasTunnel(Direction.DOWN)) ? getNextDir(Direction.DOWN) : Direction.DOWN;
+            case DOWN:
+                return (hasTunnel(Direction.NORTH)) ? getNextDir(Direction.NORTH) : Direction.NORTH;
+            case NORTH:
+                return (hasTunnel(Direction.SOUTH)) ? getNextDir(Direction.SOUTH) : Direction.SOUTH;
+            case SOUTH:
+                return (hasTunnel(Direction.WEST)) ? getNextDir(Direction.WEST) : Direction.WEST;
+            case WEST:
+                return (hasTunnel(Direction.EAST)) ? getNextDir(Direction.EAST) : Direction.EAST;
+            case EAST:
+                return (hasTunnel(Direction.UP)) ? getNextDir(Direction.UP) : Direction.UP;
+        }
+        return null;
     }
 
     public Direction getDir(BlockPos pos) {

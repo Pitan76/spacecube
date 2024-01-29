@@ -49,7 +49,7 @@ public class SpaceCubeCommand extends LiteralCommand {
             @Override
             public void execute(ServerCommandEvent event) {
                 Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer("spacecube");
-                if (modContainer.isEmpty()) {
+                if (!modContainer.isPresent()) {
                     event.sendFailure(TextUtil.literal("[SpaceCube] Failed to get version!"));
                     return;
                 }
