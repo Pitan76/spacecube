@@ -29,9 +29,9 @@ public class ClothConfig {
                 .setSaveConsumer(newValue -> config.setDouble("energy.rebornEnergyConversionRate", newValue))
                 .build());
 
-        general.addEntry(entryBuilder.startBooleanToggle(TextUtil.translatable("option.spacecube.chunkloader"), config.getBoolean("chunkloader"))
+        general.addEntry(entryBuilder.startBooleanToggle(TextUtil.translatable("option.spacecube.chunkloader"), config.getBoolean("chunkloader.enabled"))
                 .setDefaultValue(true)
-                .setSaveConsumer(newValue -> config.setBoolean("chunkloader", newValue))
+                .setSaveConsumer(newValue -> config.setBoolean("chunkloader.enabled", newValue))
                 .build());
         general.addEntry(entryBuilder.startIntField(TextUtil.translatable("option.spacecube.chunkloader.radius"), config.getInt("chunkloader.radius"))
                 .setDefaultValue(2)

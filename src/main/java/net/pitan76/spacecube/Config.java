@@ -52,18 +52,18 @@ public class Config {
 
     public static void defaultConfig() {
         config.setDouble("energy.rebornEnergyConversionRate", 1.0);
-        config.setBoolean("chunkloader", true);
+        config.setBoolean("chunkloader.enabled", true);
         config.setInt("chunkloader.radius", 2);
     }
 
     public static void defaultNotExistConfigOnly() {
-        if (!config.configMap.containsKey("energy.rebornEnergyConversionRate"))
+        if (!config.has("energy.rebornEnergyConversionRate"))
             config.setDouble("energy.rebornEnergyConversionRate", 1.0);
 
-        if (!config.configMap.containsKey("chunkloader"))
-            config.setBoolean("chunkloader", true);
+        if (!config.has("chunkloader.enabled"))
+            config.setBoolean("chunkloader.enabled", true);
 
-        if (!config.configMap.containsKey("chunkloader.radius"))
+        if (!config.has("chunkloader.radius"))
             config.setInt("chunkloader.radius", 2);
     }
 
@@ -83,9 +83,9 @@ public class Config {
 
     public static boolean enabledChunkLoader() {
         try {
-            return config.getBoolean("chunkloader");
+            return config.getBoolean("chunkloader.enabled");
         } catch (NullPointerException e) {
-            config.setBoolean("chunkloader", true);
+            config.setBoolean("chunkloader.enabled", true);
             config.save(getConfigFile());
         }
         return true;
