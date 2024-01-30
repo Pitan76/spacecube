@@ -1,6 +1,8 @@
 plugins {
     id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
+    id 'com.matthewprenger.cursegradle' version '1.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 version = project.mod_version
@@ -104,4 +106,64 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+
+curseforge {
+    if (System.getenv("CURSEFORGE_TOKEN") != null) {
+        apiKey = System.getenv("CURSEFORGE_TOKEN")
+        project {
+            id = '964401'
+            changelog = "MCPitanLib version: " + mcpitanlib_version.split(":")[1]
+            releaseType = 'release'
+            addGameVersion '1.18.2'
+            addGameVersion '1.19'
+            addGameVersion '1.19.1'
+            addGameVersion '1.19.2'
+            addGameVersion '1.19.3'
+            addGameVersion '1.19.4'
+            addGameVersion '1.20'
+            addGameVersion '1.20.1'
+            addGameVersion '1.20.2'
+            addGameVersion "Fabric"
+            relations {
+                requiredDependency 'fabric-api'
+                requiredDependency 'mcpitanlibarch'
+                requiredDependency 'cloth-config'
+                optionalDependency 'modmenu'
+                optionalDependency 'reborncore'
+            }
+
+            mainArtifact(remapJar)
+        }
+        options {
+            forgeGradleIntegration = false
+        }
+    }
+}
+
+import com.modrinth.minotaur.dependencies.ModDependency
+
+modrinth {
+    if (System.getenv("MODRINTH_TOKEN") != null) {
+        token = System.getenv("MODRINTH_TOKEN")
+        projectId = 'H5uBVVRE'
+        versionNumber = project.mod_version
+        uploadFile = remapJar
+        gameVersions = ['1.18.2', '1.19', '1.19.1', '1.19.2', '1.19.3', '1.19.4', '1.20', '1.20.1', '1.20.2']
+        versionType = 'release'
+        loaders = ['fabric']
+        changelog = "Fix bugs\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
+        dependencies = [
+                new ModDependency('P7dR8mSH', 'required'),  // Fabric API
+                new ModDependency('uNRoUnGT', 'required'),  // MCPitanLibarch
+                new ModDependency('9s6osm5g', 'required'),  // Cloth Config
+                new ModDependency('mOgUt4GM', 'optional')   // Mod Menu
+        ]
+    }
+}
+
+task publishToModSites {
+    publishToModSites.dependsOn modrinth
+    publishToModSites.dependsOn curseforge
 }
