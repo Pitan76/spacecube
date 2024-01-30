@@ -56,7 +56,7 @@ public class ItemTunnel implements ITunnelDef {
     public void readNbt(NbtCompound nbt) {
         if (nbt == null) return;
         if (nbt.contains("importStack"))
-           setImportStack(ItemStack.fromNbt(nbt.getCompound("importStack")));
+            setImportStack(ItemStack.fromNbt(nbt.getCompound("importStack")));
         if (nbt.contains("exportStack"))
             setExportStack(ItemStack.fromNbt(nbt.getCompound("exportStack")));
     }

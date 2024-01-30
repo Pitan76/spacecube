@@ -2,8 +2,10 @@ package net.pitan76.spacecube.blockentity;
 
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
+import ml.pkom.mcpitanlibarch.api.packet.UpdatePacketType;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
 import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,14 +14,10 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
@@ -29,7 +27,6 @@ import net.pitan76.spacecube.api.data.TunnelWallBlockEntityRenderAttachmentData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
-import net.pitan76.spacecube.world.ChunkTicketTypes;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,17 +50,16 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     public TunnelWallBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+        super(type, new TileCreateEvent(pos, state));
     }
 
     public TunnelWallBlockEntity(TileCreateEvent event) {
         super(BlockEntities.TUNNEL_WALL_BLOCK_ENTITY.getOrNull(), event);
     }
 
-    @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public UpdatePacketType getUpdatePacketType() {
+        return UpdatePacketType.BLOCK_ENTITY_UPDATE_S2C;
     }
 
     @Override
@@ -188,7 +184,7 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
         SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(getWorld().getServer());
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScRoomPos());
 
-        BlockEntity blockEntity = getWorld().getServer().getWorld(scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
+        BlockEntity blockEntity = WorldUtil.getWorld(getWorld(), scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
         if (!(blockEntity instanceof SpaceCubeBlockEntity)) {return null;}
         return (SpaceCubeBlockEntity) blockEntity;
     }

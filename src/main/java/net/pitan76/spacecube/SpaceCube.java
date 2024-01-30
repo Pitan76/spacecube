@@ -9,8 +9,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+
 import net.minecraft.world.World;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.FluidTunnel;
@@ -28,7 +27,7 @@ public class SpaceCube implements ModInitializer {
     public static final ArchRegistry registry = ArchRegistry.createRegistry(MOD_ID);
 
     public static final ItemGroup SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1)).build();
-    public static final RegistryKey<World> SPACE_CUBE_DIMENSION_WORLD_KEY = RegistryKey.of(Registry.WORLD_KEY, id("space_cube_dimension"));
+    public static final Identifier SPACE_CUBE_DIMENSION_WORLD_KEY = id("space_cube_dimension");
 
     // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)
     // TODO: アップグレーダーの実装 (Implementation of upgrader)

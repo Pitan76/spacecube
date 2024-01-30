@@ -7,6 +7,7 @@ import ml.pkom.mcpitanlibarch.api.entity.Player;
 import ml.pkom.mcpitanlibarch.api.event.block.BlockUseEvent;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -115,7 +116,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 if (spacePosWithSCBlockPath.containsKey(scRoomPos)) {
                     SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(scRoomPos);
                     scBlockPath.setPos(pos);
-                    scBlockPath.setDimension(world.getRegistryKey());
+                    scBlockPath.setDimension(WorldUtil.getWorldId(world));
                 }
             }
         }

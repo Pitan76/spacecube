@@ -3,6 +3,7 @@ package net.pitan76.spacecube.blockentity;
 import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
 import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
 import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.TunnelSideData;
+import net.pitan76.spacecube.api.list.TunnelIODefaultedList;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
@@ -41,7 +43,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
     public boolean ticketedChunkMainWorld = false;
 
     public SpaceCubeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+        super(type, new TileCreateEvent(pos, state));
     }
 
     public SpaceCubeBlockEntity(TileCreateEvent event) {
@@ -143,7 +145,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (spaceCubeWorld == null) return;
 
         ChunkPos chunkPos = new ChunkPos(getScRoomPos());
-        spaceCubeWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
         ticketedChunkSpaceCubeWorld = true;
     }
 
@@ -157,7 +159,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!(mainWorld instanceof ServerWorld)) return;
 
         ChunkPos chunkPos = new ChunkPos(getPos());
-        ((ServerWorld) mainWorld).getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+        WorldUtil.addTicket(((ServerWorld) mainWorld), ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
         ticketedChunkMainWorld = true;
     }
 
@@ -331,31 +333,10 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         // 10: WEST Dir Import Stack
         // 11: WEST Dir Export Stack
 
-        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStack.EMPTY);
-
-        if (!hasTunnelType(TunnelType.ITEM)) return stacks;
-
-        TunnelSideData data = getTunnelSide(TunnelType.ITEM);
-        if (data.isEmpty()) return stacks;
-
-        World scWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld());
-        for (Map.Entry<Direction, BlockPos> entry : data.getTunnels().entrySet()) {
-            BlockEntity blockEntity = scWorld.getBlockEntity(entry.getValue());
-            if (blockEntity instanceof TunnelWallBlockEntity) {
-                TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
-                ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
-                if (tunnelDef instanceof ItemTunnel) {
-                    ItemTunnel itemTunnel = (ItemTunnel) tunnelDef;
-                    int dirindex = dirToIndex(entry.getKey());
-
-                    stacks.set(dirindex * 2, itemTunnel.getImportStack());
-                    stacks.set(dirindex * 2 + 1, itemTunnel.getExportStack());
-                }
-            }
-        }
+        TunnelIODefaultedList stacks = TunnelIODefaultedList.ofSize(this);
+        if (!hasTunnelType(TunnelType.ITEM)) return DefaultedList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStack.EMPTY);
 
         return stacks;
-
     }
 
     public static int dirToIndex(Direction dir) {

@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.api.data;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -16,16 +16,16 @@ public class SCPlayerData {
     private List<BlockPos> entryPosList;
 
     // プレイヤーが入っていたワールド World where the player was
-    private RegistryKey<World> worldKey;
+    private Identifier dimension;
 
-    public SCPlayerData(UUID uuid, List<BlockPos> entryPosList, RegistryKey<World> worldKey) {
+    public SCPlayerData(UUID uuid, List<BlockPos> entryPosList, Identifier dimension) {
         this.uuid = uuid;
         this.entryPosList = entryPosList;
-        this.worldKey = worldKey;
+        this.dimension = dimension;
     }
 
-    public SCPlayerData(UUID uuid, RegistryKey<World> worldKey) {
-        this(uuid, new ArrayList<>(), worldKey);
+    public SCPlayerData(UUID uuid, Identifier dimension) {
+        this(uuid, new ArrayList<>(), dimension);
     }
 
     public UUID getUuid() {
@@ -36,8 +36,8 @@ public class SCPlayerData {
         return entryPosList;
     }
 
-    public RegistryKey<World> getWorldKey() {
-        return worldKey;
+    public Identifier getDimension() {
+        return dimension;
     }
 
     public void setUuid(UUID uuid) {
@@ -48,7 +48,7 @@ public class SCPlayerData {
         this.entryPosList = entryPosList;
     }
 
-    public void setWorldKey(RegistryKey<World> worldKey) {
-        this.worldKey = worldKey;
+    public void setDimension(Identifier dimension) {
+        this.dimension = dimension;
     }
 }

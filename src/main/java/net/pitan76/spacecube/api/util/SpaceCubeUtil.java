@@ -1,5 +1,7 @@
 package net.pitan76.spacecube.api.util;
 
+import ml.pkom.mcpitanlibarch.api.util.ActionResultUtil;
+import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
@@ -11,62 +13,20 @@ import org.jetbrains.annotations.Nullable;
 public class SpaceCubeUtil {
 
     // 新規のスペースキューブ(部屋)の座標を取得する
-    public static BlockPos getNewPosOld(SpaceCubeState state) {
-        // スペースキューブの数を取得する
-        int scCount = state.getSpacePosWithSCBlockPath().size() + 1;
-
-        // 6個ごとに座標を変える
-        int mod = Math.floorMod(scCount, 6);
-        int div = Math.floorDiv(scCount, 6);
-        //     □
-        //   □ □ □
-        // □ □ ○ □ □
-        //   □ □ □
-        //     □
-        // ○ が 0, 64, 0 として考えて周辺にキューブを設置していくよ
-        // ○ is considered to be 0, 64, 0 and cubes are placed around it
-
-        switch (mod) {
-            case 0:
-                return new BlockPos(div * 1024, 64, div * 1024);
-            case 1:
-                return new BlockPos(div * -1024, 64, div * 1024);
-            case 2:
-                return new BlockPos(div * 1024 + 1024, 64, div * 1024);
-            case 3:
-                return new BlockPos(div * 1024, 64, div * 1024 + 1024);
-            case 4:
-                return new BlockPos(div * -1024 - 1024, 64, div * 1024);
-            case 5:
-                return new BlockPos(div * -1024, 64, div * 1024 - 1024);
-
-            // まぁたぶんないけど念のために
-            default:
-                return new BlockPos(0, 64, 0);
-        }
-    }
-
-    // 新規のスペースキューブ(部屋)の座標を取得する
     public static BlockPos getNewPos(SpaceCubeState state) {
         // スペースキューブの数を取得する
         int scCount = state.getSpacePosWithSCBlockPath().size() + 1;
 
-        
-
-
-
-        // 6個ごとに座標を変える
-        int mod = Math.floorMod(scCount, 6);
-        int div = Math.floorDiv(scCount, 6);
+        // 4個ごとに座標を変える
+        int mod = Math.floorMod(scCount, 4);
+        int div = Math.floorDiv(scCount, 4);
         //     □
-        //   □ □ □
+        //     □
         // □ □ ○ □ □
-        //   □ □ □
+        //     □
         //     □
         // ○ が 0, 64, 0 として考えて周辺にキューブを設置していくよ
         // ○ is considered to be 0, 64, 0 and cubes are placed around it
-
-
 
         switch (mod) {
             case 0:
@@ -77,10 +37,6 @@ public class SpaceCubeUtil {
                 return new BlockPos(div * 1024 + 1024, 64, div * 1024);
             case 3:
                 return new BlockPos(div * 1024, 64, div * 1024 + 1024);
-            case 4:
-                return new BlockPos(div * -1024 - 1024, 64, div * 1024);
-            case 5:
-                return new BlockPos(div * -1024, 64, div * 1024 - 1024);
 
             // まぁたぶんないけど念のために
             default:
@@ -124,18 +80,7 @@ public class SpaceCubeUtil {
 
     // plan: include MCPitanLib
     public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t, boolean swingHand) {
-        switch (result) {
-            case PASS:
-                return TypedActionResult.pass(t);
-            case SUCCESS:
-                return TypedActionResult.success(t, swingHand);
-            case FAIL:
-                return TypedActionResult.fail(t);
-            case CONSUME:
-            case CONSUME_PARTIAL:
-                return TypedActionResult.consume(t);
-        }
-        return TypedActionResult.pass(t);
+        return ActionResultUtil.typedActionResult(result, t, swingHand);
     }
 
     public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t) {
@@ -143,12 +88,12 @@ public class SpaceCubeUtil {
     }
 
     public static <T> ActionResult actionResult(TypedActionResult<T> result) {
-        return result.getResult();
+        return ActionResultUtil.actionResult(result);
     }
 
     // ----
 
     public static ServerWorld getSpaceCubeWorld(ServerWorld world) {
-        return world.getServer().getWorld(SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
+        return (ServerWorld) WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
     }
 }

@@ -1,14 +1,14 @@
 package net.pitan76.spacecube.api.data;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 public class SCBlockPath {
     public BlockPos pos;
-    public RegistryKey<World> dimension;
+    public Identifier dimension;
 
-    public SCBlockPath(BlockPos blockPos, RegistryKey<World> dimension) {
+    public SCBlockPath(BlockPos blockPos, Identifier dimension) {
         this.pos = blockPos;
         this.dimension = dimension;
     }
@@ -17,7 +17,7 @@ public class SCBlockPath {
 
     }
 
-    public void setDimension(RegistryKey<World> dimension) {
+    public void setDimension(Identifier dimension) {
         this.dimension = dimension;
     }
 
@@ -25,7 +25,7 @@ public class SCBlockPath {
         this.pos = pos;
     }
 
-    public RegistryKey<World> getDimension() {
+    public Identifier getDimension() {
         return dimension;
     }
 

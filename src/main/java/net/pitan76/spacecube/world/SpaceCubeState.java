@@ -1,14 +1,12 @@
 package net.pitan76.spacecube.world;
 
 import ml.pkom.mcpitanlibarch.api.util.PersistentStateUtil;
+import ml.pkom.mcpitanlibarch.api.world.CompatiblePersistentState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -19,7 +17,7 @@ import java.util.*;
 
 // ディメンションに保存するデータとかを管理できるPersistentStateを使ってみる
 // Use PersistentState to manage data to be saved in dimension
-public class SpaceCubeState extends PersistentState {
+public class SpaceCubeState extends CompatiblePersistentState {
 
     // Player's EntryPos list
     private final Map<UUID, SCPlayerData> playerDataMap = new HashMap<>();
@@ -29,15 +27,11 @@ public class SpaceCubeState extends PersistentState {
     private final Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = new HashMap<>();
 
     public SpaceCubeState() {
-        super();
+        super("spacecube");
     }
 
-    public static SpaceCubeState create(NbtCompound nbt) {
-        return new SpaceCubeState(nbt);
-    }
-
-    public SpaceCubeState(NbtCompound nbt) {
-        this();
+    @Override
+    public void readNbt(NbtCompound nbt) {
         NbtCompound players_nbt = nbt.getCompound("players");
 
         // Read players NBT
@@ -62,9 +56,7 @@ public class SpaceCubeState extends PersistentState {
             if (players_nbt.contains("dimension"))
                 dimensionId = new Identifier(players_nbt.getString("dimension"));
 
-            RegistryKey<World> worldKey = RegistryKey.of(Registry.WORLD_KEY, dimensionId);
-
-            SCPlayerData playerData = new SCPlayerData(uuid, entryPosList, worldKey);
+            SCPlayerData playerData = new SCPlayerData(uuid, entryPosList, dimensionId);
             playerDataMap.put(uuid, playerData);
         }
 
@@ -94,14 +86,20 @@ public class SpaceCubeState extends PersistentState {
 
                 scBlockPath.setPos(new BlockPos(x, y, z));
 
-                RegistryKey<World> worldKey = RegistryKey.of(Registry.WORLD_KEY, new Identifier(scBlockPath_nbt.getString("dimension")));
-
-                scBlockPath.setDimension(worldKey);
+                scBlockPath.setDimension(new Identifier(scBlockPath_nbt.getString("dimension")));
             }
 
             spacePosWithSCBlockPath.put(spacePos, scBlockPath);
         }
+    }
 
+    public static SpaceCubeState create(NbtCompound nbt) {
+        return new SpaceCubeState(nbt);
+    }
+
+    public SpaceCubeState(NbtCompound nbt) {
+        this();
+        readNbt(nbt);
     }
 
     @Override
@@ -128,8 +126,7 @@ public class SpaceCubeState extends PersistentState {
             player_nbt.put("entryPosList", entryPosList_nbt);
 
             // Dimension
-            RegistryKey<World> worldKey = entry.getValue().getWorldKey();
-            player_nbt.putString("dimension", worldKey.getValue().toString());
+            player_nbt.putString("dimension",  entry.getValue().getDimension().toString());
 
             players_nbt.put(uuid.toString(), player_nbt);
         }
@@ -159,7 +156,7 @@ public class SpaceCubeState extends PersistentState {
                 scBlockPath_nbt.putInt("x", scBlockPathPos.getX());
                 scBlockPath_nbt.putInt("y", scBlockPathPos.getY());
                 scBlockPath_nbt.putInt("z", scBlockPathPos.getZ());
-                scBlockPath_nbt.putString("dimension", scBlockPath.getDimension().getValue().toString());
+                scBlockPath_nbt.putString("dimension", scBlockPath.getDimension().toString());
                 spacePosWithSCBlockPath_nbt.put("scBlockPath", scBlockPath_nbt);
             }
 
@@ -194,18 +191,18 @@ public class SpaceCubeState extends PersistentState {
             List<BlockPos> entryPosList = playerDataMap.get(uuid).getEntryPosList();
             entryPosList.add(blockPos);
         } else {
-            SCPlayerData playerData = new SCPlayerData(uuid, new ArrayList<>(Collections.singletonList(blockPos)), World.OVERWORLD);
+            SCPlayerData playerData = new SCPlayerData(uuid, new ArrayList<>(Collections.singletonList(blockPos)), new Identifier("overworld"));
             playerDataMap.put(uuid, playerData);
         }
     }
 
     // 最初に追加するときはこっちを使う (Use this when adding for the first time)
-    public void addEntryPos(UUID uuid, BlockPos blockPos, RegistryKey<World> worldKey) {
+    public void addEntryPos(UUID uuid, BlockPos blockPos, Identifier worldId) {
         if (playerDataMap.containsKey(uuid)) {
             List<BlockPos> entryPosList = getEntryPosList(uuid);
             entryPosList.add(blockPos);
         } else {
-            SCPlayerData playerData = new SCPlayerData(uuid, new ArrayList<>(Collections.singletonList(blockPos)), worldKey);
+            SCPlayerData playerData = new SCPlayerData(uuid, new ArrayList<>(Collections.singletonList(blockPos)), worldId);
             playerDataMap.put(uuid, playerData);
         }
     }
@@ -260,8 +257,8 @@ public class SpaceCubeState extends PersistentState {
         return 0;
     }
 
-    public RegistryKey<World> getWorldKey(UUID uuid) {
-        if (!existPlayerData(uuid)) return World.OVERWORLD;
-        return playerDataMap.get(uuid).getWorldKey();
+    public Identifier getWorldId(UUID uuid) {
+        if (!existPlayerData(uuid)) return new Identifier("overworld");
+        return playerDataMap.get(uuid).getDimension();
     }
 }
