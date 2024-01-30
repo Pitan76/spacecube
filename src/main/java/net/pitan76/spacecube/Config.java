@@ -27,7 +27,7 @@ public class Config {
             config.save(getConfigFile());
 
         // 既存の設定以外をデフォルト設定にする (Set to default settings except for existing settings)
-        defaultNotExistConfigOnly();
+        fixConfig();
     }
 
     public static File getConfigFile() {
@@ -56,7 +56,11 @@ public class Config {
         config.setInt("chunkloader.radius", 2);
     }
 
-    public static void defaultNotExistConfigOnly() {
+    public static void fixConfig() {
+        if (config.has("chunkloader")) {
+            config.configMap.remove("chunkloader");
+        }
+
         if (!config.has("energy.rebornEnergyConversionRate"))
             config.setDouble("energy.rebornEnergyConversionRate", 1.0);
 
