@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "spacecube:item/large_upgrader"
+    "layer0": "spacecube:item/upgrader/large_upgrader"
   }
 }

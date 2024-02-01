@@ -59,9 +59,12 @@ public class SpaceCubeUtil {
             }
         }
 
+        if (nearestPos == null) return null;
+
         return new BlockPos(nearestPos.getX(), 64, nearestPos.getZ());
     }
 
+    @Nullable
     public static BlockPos getNearestPos(ServerWorld world, BlockPos pos) {
         return getNearestPos(SpaceCubeState.getOrCreate(world.getServer()), pos);
     }

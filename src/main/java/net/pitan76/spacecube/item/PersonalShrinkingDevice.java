@@ -76,11 +76,13 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 return ActionResult.FAIL;
             }
 
+            /*
             if (tunnelWallBlockEntity.getTunnelDef() instanceof ItemTunnel) {
                 ItemTunnel tunnel = (ItemTunnel) tunnelWallBlockEntity.getTunnelDef();
                 //System.out.println("importStack: " + tunnel.getImportStack());
                 //System.out.println("exportStack: " + tunnel.getExportStack());
             }
+             */
 
             return ActionResult.PASS;
         }

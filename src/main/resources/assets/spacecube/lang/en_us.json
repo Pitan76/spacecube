@@ -15,6 +15,12 @@
   "item.spacecube.energy_tunnel": "Energy Tunnel",
   "item.spacecube.fluid_tunnel": "Fluid Tunnel",
   "item.spacecube.item_tunnel": "Item Tunnel",
+  "item.spacecube.redstone_tunnel": "Redstone Tunnel",
+  "item.spacecube.small_upgrader": "Small Upgrader",
+  "item.spacecube.normal_upgrader": "Normal Upgrader",
+  "item.spacecube.large_upgrader": "Large Upgrader",
+  "item.spacecube.giant_upgrader": "Giant Upgrader",
+  "item.spacecube.maximum_upgrader": "Maximum Upgrader",
 
   "tooltip.spacecube.space_cube_block.size": "§aInternal Size: %s",
   "tooltip.spacecube.personal_shrinking_device": "§aRight click on Space Cube to enter Space Cube (Room).",

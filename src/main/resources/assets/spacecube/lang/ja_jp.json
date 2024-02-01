@@ -15,6 +15,13 @@
   "item.spacecube.energy_tunnel": "エネルギートンネル",
   "item.spacecube.fluid_tunnel": "液体トンネル",
   "item.spacecube.item_tunnel": "アイテムトンネル",
+  "item.spacecube.redstone_tunnel": "レッドストーントンネル",
+  "item.spacecube.small_upgrader": "小アップグレーダー",
+  "item.spacecube.normal_upgrader": "通常アップグレーダー",
+  "item.spacecube.large_upgrader": "大アップグレーダー",
+  "item.spacecube.giant_upgrader": "巨大アップグレーダー",
+  "item.spacecube.maximum_upgrader": "最大アップグレーダー",
+
 
   "tooltip.spacecube.personal_shrinking_device": "§aスペースキューブを右クリックしてスペースキューブ (部屋) に入ります。",
   "message.spacecube.tunnel_full": "§cこのタイプのトンネルは既に最大数です。",

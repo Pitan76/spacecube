@@ -11,12 +11,12 @@ import net.pitan76.spacecube.block.WallBlock;
 import java.util.function.Supplier;
 
 public class Blocks {
-    public static ExtendBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 2);
-    public static ExtendBlock SMALL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 3);
-    public static ExtendBlock NORMAL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 4);
-    public static ExtendBlock LARGE_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 5);
-    public static ExtendBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 6);
-    public static ExtendBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 7);
+    public static SpaceCubeBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 2);
+    public static SpaceCubeBlock SMALL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 3);
+    public static SpaceCubeBlock NORMAL_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 4);
+    public static SpaceCubeBlock LARGE_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 5);
+    public static SpaceCubeBlock GIANT_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 6);
+    public static SpaceCubeBlock MAXIMUM_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 7);
 
     public static ExtendBlock TUNNEL_WALL = new TunnelWallBlock(new CompatibleBlockSettings().luminance((state) -> 15).strength(-1.0F, 3600000.0F));
     public static ExtendBlock SOLID_WALL = new WallBlock(new CompatibleBlockSettings().luminance((state) -> 15).strength(-1.0F, 3600000.0F));

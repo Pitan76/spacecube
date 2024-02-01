@@ -25,6 +25,12 @@ public class Items {
     public static Item FLUID_TUNNEL = new FluidTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("fluid_tunnel")));
     public static Item ITEM_TUNNEL = new ItemTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("item_tunnel")));
 
+    public static Item SMALL_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("small_upgrader")), 3);
+    public static Item NORMAL_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("normal_upgrader")), 4);
+    public static Item LARGE_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("large_upgrader")), 5);
+    public static Item GIANT_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("giant_upgrader")), 6);
+    public static Item MAXIMUM_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("maximum_upgrader")), 7);
+
     public static void init() {
         register(SpaceCube.id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
         register(SpaceCube.id("small_space_cube"), () -> SMALL_SPCAE_CUBE);
@@ -41,6 +47,12 @@ public class Items {
         register(SpaceCube.id("energy_tunnel"), () -> ENERGY_TUNNEL);
         register(SpaceCube.id("fluid_tunnel"), () -> FLUID_TUNNEL);
         register(SpaceCube.id("item_tunnel"), () -> ITEM_TUNNEL);
+
+        register(SpaceCube.id("small_upgrader"), () -> SMALL_UPGRADER);
+        register(SpaceCube.id("normal_upgrader"), () -> NORMAL_UPGRADER);
+        register(SpaceCube.id("large_upgrader"), () -> LARGE_UPGRADER);
+        register(SpaceCube.id("giant_upgrader"), () -> GIANT_UPGRADER);
+        register(SpaceCube.id("maximum_upgrader"), () -> MAXIMUM_UPGRADER);
     }
 
     public static void register(Identifier identifier, Supplier<Item> supplier) {

@@ -14,6 +14,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -24,10 +25,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.pitan76.spacecube.BlockEntities;
+import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.item.PersonalShrinkingDevice;
+import net.pitan76.spacecube.item.SpaceCubeUpgrader;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +49,25 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         return size;
     }
 
+    public static SpaceCubeBlock getSpaceCubeBlockFromSize(int size) {
+        switch (size) {
+            case 2:
+                return Blocks.TINY_SPCAE_CUBE;
+            case 3:
+                return Blocks.SMALL_SPCAE_CUBE;
+            case 4:
+                return Blocks.NORMAL_SPCAE_CUBE;
+            case 5:
+                return Blocks.LARGE_SPCAE_CUBE;
+            case 6:
+                return Blocks.GIANT_SPCAE_CUBE;
+            case 7:
+                return Blocks.MAXIMUM_SPCAE_CUBE;
+            default:
+                return Blocks.NORMAL_SPCAE_CUBE;
+        }
+    }
+
     @Override
     public ActionResult onRightClick(BlockUseEvent event) {
         Player player = event.getPlayer();
@@ -61,7 +83,9 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         // プレイヤーがPersonalShrinkingDeviceを持っている場合はイベントをパス
         //    → Process on the PersonalShrinkingDevice side
         //    → PersonalShrinkingDevice側で処理
-        if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof PersonalShrinkingDevice) return ActionResult.PASS;
+        Item handItem = player.getStackInHand(Hand.MAIN_HAND).getItem();
+        if (handItem instanceof PersonalShrinkingDevice) return ActionResult.PASS;
+        if (handItem instanceof SpaceCubeUpgrader) return ActionResult.PASS;
 
         return ActionResult.SUCCESS;
     }
