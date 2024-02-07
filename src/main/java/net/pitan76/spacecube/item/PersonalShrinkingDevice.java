@@ -23,12 +23,10 @@ import net.minecraft.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
-import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.api.util.CubeGenerator;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.block.SpaceCubeBlock;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
-import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 import java.util.Map;
