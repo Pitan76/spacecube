@@ -70,13 +70,13 @@ public class PersonalShrinkingDevice extends ExtendItem {
         // sneaking
         //if (player.isSneaking()) return ActionResult.PASS;
         if (player.isSneaking()) {
+
+            /*
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(event.getHit().getBlockPos());
             if (tunnelWallBlockEntity == null) {
                 System.out.println("[SpaceCube] Error: tunnelWallBlockEntity is null.");
                 return ActionResult.FAIL;
             }
-
-            /*
             if (tunnelWallBlockEntity.getTunnelDef() instanceof ItemTunnel) {
                 ItemTunnel tunnel = (ItemTunnel) tunnelWallBlockEntity.getTunnelDef();
                 //System.out.println("importStack: " + tunnel.getImportStack());
