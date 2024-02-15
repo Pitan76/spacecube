@@ -26,7 +26,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "ml.pkom:mcpitanlibarch-fabric${rootProject.mcpitanlib_version}"
+    modImplementation "net.pitan76:mcpitanlib-fabric${rootProject.mcpitanlib_version}"
+    include "net.pitan76:mcpitanlib_checker-fabric:${rootProject.mcpitanlib_checker_version}"
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
@@ -120,18 +121,15 @@ curseforge {
             addGameVersion '1.19'
             addGameVersion '1.19.1'
             addGameVersion '1.19.2'
-            addGameVersion '1.19.3'
-            addGameVersion '1.19.4'
             addGameVersion '1.20'
             addGameVersion '1.20.1'
-            addGameVersion '1.20.2'
             addGameVersion '1.20.3'
             addGameVersion '1.20.4'
             addGameVersion "Fabric"
             relations {
                 requiredDependency 'fabric-api'
                 requiredDependency 'mcpitanlibarch'
-                requiredDependency 'cloth-config'
+                optionalDependency 'cloth-config'
                 optionalDependency 'modmenu'
                 optionalDependency 'reborncore'
             }
@@ -152,14 +150,14 @@ modrinth {
         projectId = 'H5uBVVRE'
         versionNumber = project.mod_version
         uploadFile = remapJar
-        gameVersions = ['1.18.2', '1.19', '1.19.1', '1.19.2', '1.19.3', '1.19.4', '1.20', '1.20.1', '1.20.2', '1.20.3', '1.20.4']
+        gameVersions = ['1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4']
         versionType = 'release'
         loaders = ['fabric']
         changelog = "Add Upgraders\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
         dependencies = [
                 new ModDependency('P7dR8mSH', 'required'),  // Fabric API
-                new ModDependency('uNRoUnGT', 'required'),  // MCPitanLibarch
-                new ModDependency('9s6osm5g', 'required'),  // Cloth Config
+                new ModDependency('uNRoUnGT', 'required'),  // mcpitanlib
+                new ModDependency('9s6osm5g', 'optional'),  // Cloth Config
                 new ModDependency('mOgUt4GM', 'optional')   // Mod Menu
         ]
     }

@@ -1,7 +1,7 @@
 package net.pitan76.spacecube;
 
-import ml.pkom.mcpitanlibarch.api.block.CompatibleBlockSettings;
-import ml.pkom.mcpitanlibarch.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.ExtendBlock;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.pitan76.spacecube.block.SpaceCubeBlock;

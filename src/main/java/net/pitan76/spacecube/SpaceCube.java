@@ -1,8 +1,7 @@
 package net.pitan76.spacecube;
 
-import ml.pkom.mcpitanlibarch.api.command.CommandRegistry;
-import ml.pkom.mcpitanlibarch.api.item.CreativeTabBuilder;
-import ml.pkom.mcpitanlibarch.api.registry.ArchRegistry;
+import net.pitan76.mcpitanlib.api.command.CommandRegistry;
+import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
@@ -10,7 +9,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.FluidTunnel;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
@@ -24,7 +23,7 @@ public class SpaceCube implements ModInitializer {
     public static final String MOD_ID = "spacecube";
 
     // MCPitanLibの独自のレジストリ MCPitanLib's own registry
-    public static final ArchRegistry registry = ArchRegistry.createRegistry(MOD_ID);
+    public static final CompatRegistry registry = CompatRegistry.createRegistry(MOD_ID);
 
     public static final ItemGroup SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1)).build();
     public static final Identifier SPACE_CUBE_DIMENSION_WORLD_KEY = id("space_cube_dimension");

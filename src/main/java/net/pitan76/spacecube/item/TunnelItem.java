@@ -1,9 +1,9 @@
 package net.pitan76.spacecube.item;
 
-import ml.pkom.mcpitanlibarch.api.event.item.ItemUseOnBlockEvent;
-import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
-import ml.pkom.mcpitanlibarch.api.item.ExtendItem;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;

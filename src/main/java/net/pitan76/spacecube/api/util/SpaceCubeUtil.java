@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.api.util;
 
-import ml.pkom.mcpitanlibarch.api.util.ActionResultUtil;
-import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;

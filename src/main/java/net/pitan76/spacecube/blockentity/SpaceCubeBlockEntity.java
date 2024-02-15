@@ -1,9 +1,9 @@
 package net.pitan76.spacecube.blockentity;
 
-import ml.pkom.mcpitanlibarch.api.event.block.TileCreateEvent;
-import ml.pkom.mcpitanlibarch.api.gui.inventory.IInventory;
-import ml.pkom.mcpitanlibarch.api.tile.ExtendBlockEntity;
-import ml.pkom.mcpitanlibarch.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

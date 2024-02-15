@@ -1,12 +1,12 @@
 package net.pitan76.spacecube.cmd;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import ml.pkom.mcpitanlibarch.api.command.CommandSettings;
-import ml.pkom.mcpitanlibarch.api.command.LiteralCommand;
-import ml.pkom.mcpitanlibarch.api.command.argument.StringCommand;
-import ml.pkom.mcpitanlibarch.api.event.ServerCommandEvent;
-import ml.pkom.mcpitanlibarch.api.event.StringCommandEvent;
-import ml.pkom.mcpitanlibarch.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.command.CommandSettings;
+import net.pitan76.mcpitanlib.api.command.LiteralCommand;
+import net.pitan76.mcpitanlib.api.command.argument.StringCommand;
+import net.pitan76.mcpitanlib.api.event.ServerCommandEvent;
+import net.pitan76.mcpitanlib.api.event.StringCommandEvent;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.spacecube.Config;
 
 public class ConfigCommand extends LiteralCommand {

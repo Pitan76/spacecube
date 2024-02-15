@@ -1,7 +1,7 @@
 package net.pitan76.spacecube;
 
-import ml.pkom.mcpitanlibarch.api.item.CompatibleItemSettings;
-import ml.pkom.mcpitanlibarch.api.util.ItemUtil;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.pitan76.spacecube.item.*;

@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.world;
 
-import ml.pkom.mcpitanlibarch.api.util.PersistentStateUtil;
-import ml.pkom.mcpitanlibarch.api.world.CompatiblePersistentState;
+import net.pitan76.mcpitanlib.api.util.PersistentStateUtil;
+import net.pitan76.mcpitanlib.api.world.CompatiblePersistentState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
