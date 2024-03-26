@@ -289,6 +289,6 @@ public class PersonalShrinkingDevice extends ExtendItem {
     @Override
     public void appendTooltip(ItemAppendTooltipEvent event) {
         super.appendTooltip(event);
-        event.getTooltip().add(TextUtil.translatable("tooltip.spacecube.personal_shrinking_device"));
+        event.addTooltip(TextUtil.translatable("tooltip.spacecube.personal_shrinking_device"));
     }
 }

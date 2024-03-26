@@ -3,6 +3,7 @@ package net.pitan76.spacecube.blockentity;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
+import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
 import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -30,7 +31,7 @@ import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
-public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAttachmentBlockEntity, IInventory, SidedInventory {
+public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAttachmentBlockEntity, IInventory, SidedInventory {
     private BlockPos scRoomPos;
     private TunnelType tunnelType;
     private Identifier tunnelItemId;
@@ -167,13 +168,11 @@ public class TunnelWallBlockEntity extends ExtendBlockEntity implements RenderAt
     }
 
     public void sync() {
-        World mcWorld = world.getMinecraftWorld();
+        if (world == null) return;
+        if (world.isClient()) return;
+        if (!(world instanceof ServerWorld)) return;
 
-        if (mcWorld == null) return;
-        if (mcWorld.isClient()) return;
-        if (!(mcWorld instanceof ServerWorld)) return;
-
-        ((ServerWorld) world.getMinecraftWorld()).getChunkManager().markForUpdate(getPos());
+        ((ServerWorld) world).getChunkManager().markForUpdate(getPos());
     }
 
     public SpaceCubeBlockEntity getSpaceCubeBlockEntity() {

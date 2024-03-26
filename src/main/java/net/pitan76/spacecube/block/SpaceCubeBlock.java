@@ -1,19 +1,8 @@
 package net.pitan76.spacecube.block;
 
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
-import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
-import net.pitan76.mcpitanlib.api.entity.Player;
-import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
-import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -24,7 +13,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.pitan76.spacecube.BlockEntities;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.event.block.*;
+import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
@@ -96,12 +92,15 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        World world = e.getWorld();
+        BlockPos pos = e.getPos();
+
         // Creative only - サバイバルは getPickStack() で処理 (Survival is handled by getPickStack() )
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!world.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
-            if (player.isCreative() && !tile.isScRoomPosNull()) {
+            if (e.player.isCreative() && !tile.isScRoomPosNull()) {
                 ItemStack itemStack = new ItemStack(this);
                 NbtCompound nbt = new NbtCompound();
                 tile.writeNbtOverride(nbt);
@@ -115,11 +114,15 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 world.spawnEntity(itemEntity);
             }
         }
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(e);
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void onPlaced(BlockPlacedEvent e) {
+        World world = e.getWorld();
+        BlockPos pos = e.getPos();
+        ItemStack stack = e.getStack();
+
         if (!world.isClient() && stack.hasNbt()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof SpaceCubeBlockEntity) {
@@ -144,16 +147,18 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 }
             }
         }
-        super.onPlaced(world, pos, state, placer, stack);
+        super.onPlaced(e);
     }
 
     @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getPickStack(world, pos, state);
+    public ItemStack getPickStack(PickStackEvent e) {
+        ItemStack stack = super.getPickStack(e);
         try {
-            world.getBlockEntity(pos, BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()).ifPresent(blockEntity -> blockEntity.setStackNbt(stack));
-        } catch (NullPointerException e) {
-            System.out.println("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + pos.toString());
+            if (e.hasBlockEntity()) {
+                e.getBlockEntity().setStackNbt(stack);
+            }
+        } catch (NullPointerException exception) {
+            System.out.println("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + e.pos.toString());
         }
         return stack;
     }

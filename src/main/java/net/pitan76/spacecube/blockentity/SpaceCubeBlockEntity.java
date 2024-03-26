@@ -2,6 +2,7 @@ package net.pitan76.spacecube.blockentity;
 
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInventory, IInventory {
+public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInventory, IInventory {
 
     // scRoomPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
     public BlockPos scRoomPos = null;
@@ -228,7 +229,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!hasTunnelType(TunnelType.ITEM)) return new int[0];
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
         if (!data.hasTunnel(side)) return new int[0];
-        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld());
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
         BlockEntity blockEntity = spaceCubeWorld.getBlockEntity(data.getTunnel(side));
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return new int[0];
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
@@ -265,7 +266,7 @@ public class SpaceCubeBlockEntity extends ExtendBlockEntity implements SidedInve
         if (!hasTunnelType(type)) return null;
         TunnelSideData data = getTunnelSide(type);
         if (!data.hasTunnel(dir)) return null;
-        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getMinecraftWorld()).getBlockEntity(data.getTunnel(dir));
+        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world).getBlockEntity(data.getTunnel(dir));
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return null;
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         return tunnelWallBlockEntity.getTunnelDef();
