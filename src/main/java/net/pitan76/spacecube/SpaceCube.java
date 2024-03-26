@@ -5,7 +5,6 @@ import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -25,7 +24,7 @@ public class SpaceCube implements ModInitializer {
     // MCPitanLibの独自のレジストリ MCPitanLib's own registry
     public static final CompatRegistry registry = CompatRegistry.createRegistry(MOD_ID);
 
-    public static final ItemGroup SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1)).build();
+    public static final CreativeTabBuilder SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1));
     public static final Identifier SPACE_CUBE_DIMENSION_WORLD_KEY = id("space_cube_dimension");
 
     // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)
@@ -36,7 +35,7 @@ public class SpaceCube implements ModInitializer {
         Config.init(FabricLoader.getInstance().getConfigDir().toFile());
 
         // Register the creative tab
-        registry.registerItemGroup(id("creative_tab"), () -> SPACE_CUBE_CREATIVE_TAB);
+        registry.registerItemGroup(SPACE_CUBE_CREATIVE_TAB);
 
         // Register the block, item and block entity
         Blocks.init();

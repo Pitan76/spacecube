@@ -1,17 +1,9 @@
 package net.pitan76.spacecube.block;
 
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
-import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
-import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -19,6 +11,14 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
+import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
+import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.TunnelSideData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
@@ -113,11 +113,11 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(TUNNEL_SIDE);
-        builder.add(CONNECTED_SIDE);
-        builder.add(POWERED);
-        super.appendProperties(builder);
+    public void appendProperties(AppendPropertiesArgs args) {
+        args.addProperty(TUNNEL_SIDE);
+        args.addProperty(CONNECTED_SIDE);
+        args.addProperty(POWERED);
+        super.appendProperties(args);
     }
 
     @Override
@@ -126,7 +126,10 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockBreakResult onBreak(BlockBreakEvent e) {
+        World world = e.getWorld();
+        BlockPos pos = e.getPos();
+
         if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
 
@@ -134,12 +137,12 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
                 SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
 
                 TunnelType tunnelType = tunnelWallBlockEntity.getTunnelType();
-                Direction dir = state.get(CONNECTED_SIDE);
+                Direction dir = e.state.get(CONNECTED_SIDE);
 
                 if (spaceCubeBlockEntity.hasTunnel(tunnelType, dir))
                     spaceCubeBlockEntity.removeTunnel(tunnelType, dir);
             }
         }
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(e);
     }
 }

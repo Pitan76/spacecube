@@ -9,27 +9,27 @@ import net.pitan76.spacecube.item.*;
 import java.util.function.Supplier;
 
 public class Items {
-    public static Item TINY_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.TINY_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("tiny_space_cube")));
-    public static Item SMALL_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.SMALL_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("small_space_cube")));
-    public static Item NORMAL_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.NORMAL_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("normal_space_cube")));
-    public static Item LARGE_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.LARGE_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("large_space_cube")));
-    public static Item GIANT_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.GIANT_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("giant_space_cube")));
-    public static Item MAXIMUM_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.MAXIMUM_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("maximum_space_cube")));
+    public static Item TINY_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.TINY_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item SMALL_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.SMALL_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item NORMAL_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.NORMAL_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item LARGE_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.LARGE_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item GIANT_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.GIANT_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item MAXIMUM_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.MAXIMUM_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
 
-    public static Item PERSONAL_SHRINKING_DEVICE = new PersonalShrinkingDevice(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("personal_shrinking_device")));
+    public static Item PERSONAL_SHRINKING_DEVICE = new PersonalShrinkingDevice(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
 
-    public static Item SOLID_WALL = ItemUtil.ofBlock(Blocks.SOLID_WALL, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("solid_wall")));
-    public static Item WALL = ItemUtil.ofBlock(Blocks.WALL, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("wall")));
+    public static Item SOLID_WALL = ItemUtil.ofBlock(Blocks.SOLID_WALL, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item WALL = ItemUtil.ofBlock(Blocks.WALL, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
 
-    public static Item ENERGY_TUNNEL = new EnergyTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("energy_tunnel")));
-    public static Item FLUID_TUNNEL = new FluidTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("fluid_tunnel")));
-    public static Item ITEM_TUNNEL = new ItemTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("item_tunnel")));
+    public static Item ENERGY_TUNNEL = new EnergyTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item FLUID_TUNNEL = new FluidTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item ITEM_TUNNEL = new ItemTunnelItem(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
 
-    public static Item SMALL_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("small_upgrader")), 3);
-    public static Item NORMAL_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("normal_upgrader")), 4);
-    public static Item LARGE_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("large_upgrader")), 5);
-    public static Item GIANT_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("giant_upgrader")), 6);
-    public static Item MAXIMUM_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB, SpaceCube.id("maximum_upgrader")), 7);
+    public static Item SMALL_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 3);
+    public static Item NORMAL_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 4);
+    public static Item LARGE_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 5);
+    public static Item GIANT_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 6);
+    public static Item MAXIMUM_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 7);
 
     public static void init() {
         register(SpaceCube.id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
