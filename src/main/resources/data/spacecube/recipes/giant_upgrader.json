@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "C#C",
+    "CCC"
+  ],
+  "key": {
+    "#": {
+      "item": "spacecube:wall"
+    },
+    "C": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "spacecube:giant_upgrader",
+    "count": 1
+  }
+}
