@@ -1,17 +1,14 @@
 package net.pitan76.spacecube.block;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.ExtendBlock;
@@ -19,9 +16,14 @@ import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
+import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
@@ -30,7 +32,6 @@ import net.pitan76.spacecube.item.SpaceCubeUpgrader;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
 
 public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProvider {
@@ -97,13 +98,13 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         BlockPos pos = e.getPos();
 
         // Creative only - サバイバルは getPickStack() で処理 (Survival is handled by getPickStack() )
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!world.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
+        BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
+        if (!e.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
             if (e.player.isCreative() && !tile.isScRoomPosNull()) {
                 ItemStack itemStack = new ItemStack(this);
-                NbtCompound nbt = new NbtCompound();
-                tile.writeNbtOverride(nbt);
+                NbtCompound nbt = NbtUtil.create();
+                tile.writeNbt(new WriteNbtArgs(nbt));
 
                 // if there is a BlockEntityTag, set nbt to the item (BlockEntityTagが存在する際はnbtをアイテムにセット)
                 if (!nbt.isEmpty())
@@ -111,7 +112,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
                 ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack);
                 itemEntity.setToDefaultPickupDelay();
-                world.spawnEntity(itemEntity);
+                WorldUtil.spawnEntity(world, itemEntity);
             }
         }
         return super.onBreak(e);
@@ -123,8 +124,8 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         BlockPos pos = e.getPos();
         ItemStack stack = e.getStack();
 
-        if (!world.isClient() && stack.hasNbt()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!e.isClient() && stack.hasNbt()) {
+            BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
 
@@ -133,7 +134,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
                 ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
                 if (spaceCubeWorld == null) {
-                    System.out.println("[SpaceCube] Error: spaceCubeWorld is null.");
+                    SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
                 }
 
                 SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
@@ -143,7 +144,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 if (spacePosWithSCBlockPath.containsKey(scRoomPos)) {
                     SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(scRoomPos);
                     scBlockPath.setPos(pos);
-                    scBlockPath.setDimension(WorldUtil.getWorldId(world));
+                    scBlockPath.setDimension(CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world)));
                 }
             }
         }
@@ -158,15 +159,15 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 e.getBlockEntity().setStackNbt(stack);
             }
         } catch (NullPointerException exception) {
-            System.out.println("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + e.pos.toString());
+            SpaceCube.INSTANCE.error("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + e.pos.toString());
         }
         return stack;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-        super.appendTooltip(stack, world, tooltip, options);
+    public void appendTooltip(ItemAppendTooltipEvent e) {
+        super.appendTooltip(e);
         int side = size * 2 - 1;
-        tooltip.add(TextUtil.translatable("tooltip.spacecube.space_cube_block.size",  side + "x" + side + "x" + side));
+        e.addTooltip(TextUtil.translatable("tooltip.spacecube.space_cube_block.size",  side + "x" + side + "x" + side));
     }
 }

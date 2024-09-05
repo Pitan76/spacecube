@@ -1,13 +1,5 @@
 package net.pitan76.spacecube.item;
 
-import net.pitan76.mcpitanlib.api.entity.Player;
-import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
-import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
-import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
@@ -17,6 +9,17 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
+import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.util.CubeGenerator;
@@ -84,7 +87,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
             SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(spacePos);
 
             BlockPos placedPos = scBlockPath.getPos();
-            World placedWorld = WorldUtil.getWorld(world, scBlockPath.getDimension());
+            World placedWorld = WorldUtil.getWorld(world, scBlockPath.getDimension().toMinecraft());
             BlockState state = placedWorld.getBlockState(placedPos);
             if (state.getBlock() instanceof SpaceCubeBlock) {
                 ActionResult result = upgradeSpaceCube(placedWorld, placedPos, state, event.stack);
@@ -101,12 +104,12 @@ public class SpaceCubeUpgrader extends ExtendItem {
     public ActionResult upgradeSpaceCube(World world, BlockPos pos, BlockState state, ItemStack stack) {
         SpaceCubeBlock spaceCubeBlock = (SpaceCubeBlock) state.getBlock();
         if (spaceCubeBlock.getSize() < size) {
-            NbtCompound nbt = new NbtCompound();
+            NbtCompound nbt = NbtUtil.create();
 
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
-                scBlockEntity.writeNbtOverride(nbt);
+                scBlockEntity.writeNbt(new WriteNbtArgs(nbt));
             }
 
             BlockState newState = SpaceCubeBlock.getSpaceCubeBlockFromSize(size).getDefaultState();
@@ -115,7 +118,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
             BlockEntity newBlockEntity = world.getBlockEntity(pos);
             if (newBlockEntity instanceof SpaceCubeBlockEntity && !nbt.isEmpty()) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) newBlockEntity;
-                scBlockEntity.readNbtOverride(nbt);
+                scBlockEntity.readNbt(new ReadNbtArgs(nbt));
                 if (scBlockEntity.scRoomPos != null) {
                     ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
                     if (spaceCubeWorld == null) {

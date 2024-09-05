@@ -1,8 +1,7 @@
 package net.pitan76.spacecube.api.data;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +15,15 @@ public class SCPlayerData {
     private List<BlockPos> entryPosList;
 
     // プレイヤーが入っていたワールド World where the player was
-    private Identifier dimension;
+    private CompatIdentifier dimension;
 
-    public SCPlayerData(UUID uuid, List<BlockPos> entryPosList, Identifier dimension) {
+    public SCPlayerData(UUID uuid, List<BlockPos> entryPosList, CompatIdentifier dimension) {
         this.uuid = uuid;
         this.entryPosList = entryPosList;
         this.dimension = dimension;
     }
 
-    public SCPlayerData(UUID uuid, Identifier dimension) {
+    public SCPlayerData(UUID uuid, CompatIdentifier dimension) {
         this(uuid, new ArrayList<>(), dimension);
     }
 
@@ -36,7 +35,7 @@ public class SCPlayerData {
         return entryPosList;
     }
 
-    public Identifier getDimension() {
+    public CompatIdentifier getDimension() {
         return dimension;
     }
 
@@ -48,7 +47,7 @@ public class SCPlayerData {
         this.entryPosList = entryPosList;
     }
 
-    public void setDimension(Identifier dimension) {
+    public void setDimension(CompatIdentifier dimension) {
         this.dimension = dimension;
     }
 }

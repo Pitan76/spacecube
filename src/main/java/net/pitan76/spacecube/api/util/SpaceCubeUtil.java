@@ -1,11 +1,11 @@
 package net.pitan76.spacecube.api.util;
 
-import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
@@ -97,6 +97,6 @@ public class SpaceCubeUtil {
     // ----
 
     public static ServerWorld getSpaceCubeWorld(ServerWorld world) {
-        return (ServerWorld) WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
+        return (ServerWorld) WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.toMinecraft());
     }
 }

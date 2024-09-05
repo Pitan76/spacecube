@@ -1,14 +1,16 @@
 package net.pitan76.spacecube;
 
+import net.minecraft.block.Block;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.ExtendBlock;
-import net.minecraft.block.Block;
-import net.minecraft.util.Identifier;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.spacecube.block.SpaceCubeBlock;
 import net.pitan76.spacecube.block.TunnelWallBlock;
 import net.pitan76.spacecube.block.WallBlock;
 
 import java.util.function.Supplier;
+
+import static net.pitan76.spacecube.SpaceCube.registry;
 
 public class Blocks {
     public static SpaceCubeBlock TINY_SPCAE_CUBE = new SpaceCubeBlock(new CompatibleBlockSettings().strength(5.0F, 6.0F), 2);
@@ -23,19 +25,19 @@ public class Blocks {
     public static ExtendBlock WALL = new WallBlock(new CompatibleBlockSettings().strength(3.0F, 6.0F));
 
     public static void init() {
-        register(SpaceCube.id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
-        register(SpaceCube.id("small_space_cube"), () -> SMALL_SPCAE_CUBE);
-        register(SpaceCube.id("normal_space_cube"), () -> NORMAL_SPCAE_CUBE);
-        register(SpaceCube.id("large_space_cube"), () -> LARGE_SPCAE_CUBE);
-        register(SpaceCube.id("giant_space_cube"), () -> GIANT_SPCAE_CUBE);
-        register(SpaceCube.id("maximum_space_cube"), () -> MAXIMUM_SPCAE_CUBE);
+        register(SpaceCube._id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
+        register(SpaceCube._id("small_space_cube"), () -> SMALL_SPCAE_CUBE);
+        register(SpaceCube._id("normal_space_cube"), () -> NORMAL_SPCAE_CUBE);
+        register(SpaceCube._id("large_space_cube"), () -> LARGE_SPCAE_CUBE);
+        register(SpaceCube._id("giant_space_cube"), () -> GIANT_SPCAE_CUBE);
+        register(SpaceCube._id("maximum_space_cube"), () -> MAXIMUM_SPCAE_CUBE);
 
-        register(SpaceCube.id("tunnel_wall"), () -> TUNNEL_WALL);
-        register(SpaceCube.id("solid_wall"), () -> SOLID_WALL);
-        register(SpaceCube.id("wall"), () -> WALL);
+        register(SpaceCube._id("tunnel_wall"), () -> TUNNEL_WALL);
+        register(SpaceCube._id("solid_wall"), () -> SOLID_WALL);
+        register(SpaceCube._id("wall"), () -> WALL);
     }
 
-    public static void register(Identifier identifier, Supplier<Block> supplier) {
-        SpaceCube.registry.registerBlock(identifier, supplier);
+    public static void register(CompatIdentifier identifier, Supplier<Block> supplier) {
+        registry.registerBlock(identifier, supplier);
     }
 }

@@ -1,12 +1,12 @@
 package net.pitan76.spacecube.cmd;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.pitan76.mcpitanlib.api.command.CommandSettings;
 import net.pitan76.mcpitanlib.api.command.LiteralCommand;
 import net.pitan76.mcpitanlib.api.event.ServerCommandEvent;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.item.PersonalShrinkingDevice;
 

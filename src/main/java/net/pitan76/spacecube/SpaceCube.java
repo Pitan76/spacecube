@@ -1,14 +1,13 @@
 package net.pitan76.spacecube;
 
-import net.pitan76.mcpitanlib.api.command.CommandRegistry;
-import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
-import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
+import net.pitan76.mcpitanlib.api.command.CommandRegistry;
+import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
+import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.fabric.ExtendModInitializer;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.FluidTunnel;
 import net.pitan76.spacecube.api.tunnel.def.ITunnelDef;
@@ -17,21 +16,27 @@ import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import net.pitan76.spacecube.cmd.SpaceCubeCommand;
 import net.pitan76.spacecube.compat.RebornEnergyRegister;
 
-public class SpaceCube implements ModInitializer {
+public class SpaceCube extends ExtendModInitializer {
 
     public static final String MOD_ID = "spacecube";
+    public static final String MOD_NAME = "Space Cube";
+
+    public static SpaceCube INSTANCE;
 
     // MCPitanLibの独自のレジストリ MCPitanLib's own registry
-    public static final CompatRegistry registry = CompatRegistry.createRegistry(MOD_ID);
+    public static CompatRegistryV2 registry;
 
-    public static final CreativeTabBuilder SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1));
-    public static final Identifier SPACE_CUBE_DIMENSION_WORLD_KEY = id("space_cube_dimension");
+    public static final CreativeTabBuilder SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(_id("creative_tab")).setIcon(() -> new ItemStack(Items.NORMAL_SPCAE_CUBE, 1));
+    public static final CompatIdentifier SPACE_CUBE_DIMENSION_WORLD_KEY = _id("space_cube_dimension");
 
     // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)
     // TODO: アップグレーダーの実装 (Implementation of upgrader)
 
     @Override
-    public void onInitialize() {
+    public void init() {
+        INSTANCE = this;
+        registry = super.registry;
+
         Config.init(FabricLoader.getInstance().getConfigDir().toFile());
 
         // Register the creative tab
@@ -46,10 +51,11 @@ public class SpaceCube implements ModInitializer {
         registerEnergyStorage();
 
         CommandRegistry.register("spacecube", new SpaceCubeCommand());
+    }
 
-        // 1.16.5対応のため (1.16.5の動作は想定していないけどまあ、動けば嬉しいな（笑）)
-        // For 1.16.5 support (I don't expect 1.16.5 to work, but I'm happy if it does (lol))
-        registry.allRegister();
+    @Override
+    public String getId() {
+        return "";
     }
 
     public static void registerEnergyStorage() {
@@ -83,8 +89,8 @@ public class SpaceCube implements ModInitializer {
 
     }
 
-    public static Identifier id(String id) {
-        return new Identifier(MOD_ID, id);
+    public static CompatIdentifier _id(String id) {
+        return CompatIdentifier.of(MOD_ID, id);
     }
 
 }

@@ -1,9 +1,5 @@
 package net.pitan76.spacecube.item;
 
-import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -11,10 +7,14 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.TunnelSideData;
-import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
+import net.pitan76.spacecube.api.util.SpaceCubeUtil;
 import net.pitan76.spacecube.block.TunnelWallBlock;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;

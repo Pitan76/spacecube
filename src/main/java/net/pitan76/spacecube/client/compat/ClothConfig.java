@@ -3,9 +3,9 @@ package net.pitan76.spacecube.client.compat;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.minecraft.client.gui.screen.Screen;
 import net.pitan76.easyapi.FileControl;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.minecraft.client.gui.screen.Screen;
 
 import static net.pitan76.spacecube.Config.*;
 

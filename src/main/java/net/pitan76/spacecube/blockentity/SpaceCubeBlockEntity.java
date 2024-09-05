@@ -1,10 +1,5 @@
 package net.pitan76.spacecube.blockentity;
 
-import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
-import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
-import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -17,6 +12,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.TunnelSideData;
@@ -64,14 +66,16 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
     }
 
     @Override
-    public void writeNbtOverride(NbtCompound nbt) {
-        super.writeNbtOverride(nbt);
+    public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
+        NbtCompound nbt = args.getNbt();
+
         if (!isScRoomPosNull()) {
             // scRoomPos
             // - x: int
             // - y: int
             // - z: int
-            NbtCompound scRoomPos_nbt = new NbtCompound();
+            NbtCompound scRoomPos_nbt = NbtUtil.create();
             scRoomPos_nbt.putInt("x", scRoomPos.getX());
             scRoomPos_nbt.putInt("y", scRoomPos.getY());
             scRoomPos_nbt.putInt("z", scRoomPos.getZ());
@@ -84,12 +88,12 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
             //   - x: int
             //   - y: int
             //   - z: int
-            NbtCompound tunnels_nbt = new NbtCompound();
+            NbtCompound tunnels_nbt = NbtUtil.create();
             for (TunnelType type : tunnelSides.keySet()) {
                 TunnelSideData data = getTunnelSide(type);
-                NbtCompound data_nbt = new NbtCompound();
+                NbtCompound data_nbt = NbtUtil.create();
                 for (Map.Entry<Direction, BlockPos> entry : data.getTunnels().entrySet()) {
-                    NbtCompound tunnel_nbt = new NbtCompound();
+                    NbtCompound tunnel_nbt = NbtUtil.create();
                     tunnel_nbt.putInt("x", entry.getValue().getX());
                     tunnel_nbt.putInt("y", entry.getValue().getY());
                     tunnel_nbt.putInt("z", entry.getValue().getZ());
@@ -102,8 +106,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
     }
 
     @Override
-    public void readNbtOverride(NbtCompound nbt) {
-        super.readNbtOverride(nbt);
+    public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
+        NbtCompound nbt = args.getNbt();
+
         if (nbt.contains("scRoomPos")) {
             NbtCompound scRoomPos_nbt = nbt.getCompound("scRoomPos");
             int x = scRoomPos_nbt.getInt("x");

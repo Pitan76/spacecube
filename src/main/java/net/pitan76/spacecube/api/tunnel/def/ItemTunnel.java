@@ -3,6 +3,7 @@ package net.pitan76.spacecube.api.tunnel.def;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 
@@ -63,7 +64,7 @@ public class ItemTunnel implements ITunnelDef {
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        if (nbt == null) nbt = new NbtCompound();
+        if (nbt == null) nbt = NbtUtil.create();
         if (!getImportStack().isEmpty())
             nbt.put("importStack", getImportStack().writeNbt(new NbtCompound()));
         if (!getExportStack().isEmpty())

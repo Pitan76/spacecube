@@ -1,12 +1,5 @@
 package net.pitan76.spacecube.blockentity;
 
-import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
-import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
-import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
-import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
-import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntity;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,7 +13,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
+import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.ItemUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -34,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAttachmentBlockEntity, IInventory, SidedInventory {
     private BlockPos scRoomPos;
     private TunnelType tunnelType;
-    private Identifier tunnelItemId;
+    private CompatIdentifier tunnelItemId;
 
     // Tunnelの機能定義 (Tunnel function definition)
     public ITunnelDef tunnelDef = null;
@@ -66,15 +68,17 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbt = super.toInitialChunkDataNbt();
-        writeNbtOverride(nbt);
+        writeNbt(new WriteNbtArgs(nbt));
         return nbt;
     }
 
     @Override
-    public void writeNbtOverride(NbtCompound nbt) {
-        super.writeNbtOverride(nbt);
+    public void writeNbt(WriteNbtArgs args) {
+        super.writeNbt(args);
+        NbtCompound nbt = args.getNbt();
+        
         if (scRoomPos != null) {
-            NbtCompound posNbt = new NbtCompound();
+            NbtCompound posNbt = NbtUtil.create();
             posNbt.putInt("x", scRoomPos.getX());
             posNbt.putInt("y", scRoomPos.getY());
             posNbt.putInt("z", scRoomPos.getZ());
@@ -91,8 +95,10 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     }
 
     @Override
-    public void readNbtOverride(NbtCompound nbt) {
-        super.readNbtOverride(nbt);
+    public void readNbt(ReadNbtArgs args) {
+        super.readNbt(args);
+        NbtCompound nbt = args.getNbt();
+        
         if (nbt.contains("scRoomPos")) {
             NbtCompound posNbt = nbt.getCompound("scRoomPos");
             scRoomPos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
@@ -100,10 +106,10 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
             addTicket();
         }
         if (nbt.contains("tunnelType")) {
-            tunnelType = TunnelType.fromId(new Identifier(nbt.getString("tunnelType")));
+            tunnelType = TunnelType.fromId(CompatIdentifier.of(nbt.getString("tunnelType")));
         }
         if (nbt.contains("tunnelItem")) {
-            tunnelItemId = new Identifier(nbt.getString("tunnelItem"));
+            tunnelItemId = CompatIdentifier.of(nbt.getString("tunnelItem"));
         }
 
         getTunnelDef().readNbt(nbt);
@@ -146,17 +152,21 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     @Nullable
     public Item getTunnelItem() {
         if (tunnelItemId == null) return null;
-        return ItemUtil.fromId(getTunnelItemId());
+        return ItemUtil.fromId(getTunnelItemId().toMinecraft());
     }
 
     @Nullable
-    public Identifier getTunnelItemId() {
+    public CompatIdentifier getTunnelItemId() {
         if (tunnelItemId == null) return null;
         return tunnelItemId;
     }
 
-    public void setTunnelItemId(Identifier tunnelItemId) {
+    public void setTunnelItemId(CompatIdentifier tunnelItemId) {
         this.tunnelItemId = tunnelItemId;
+    }
+
+    public void setTunnelItemId(Identifier tunnelItemId) {
+        setTunnelItemId(CompatIdentifier.fromMinecraft(tunnelItemId));
     }
 
     @Override
@@ -183,7 +193,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
         SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(getWorld().getServer());
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScRoomPos());
 
-        BlockEntity blockEntity = WorldUtil.getWorld(getWorld(), scBlockPath.getDimension()).getBlockEntity(scBlockPath.getPos());
+        BlockEntity blockEntity = WorldUtil.getWorld(getWorld(), scBlockPath.getDimension().toMinecraft()).getBlockEntity(scBlockPath.getPos());
         if (!(blockEntity instanceof SpaceCubeBlockEntity)) {return null;}
         return (SpaceCubeBlockEntity) blockEntity;
     }

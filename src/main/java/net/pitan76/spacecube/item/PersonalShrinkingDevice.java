@@ -1,14 +1,5 @@
 package net.pitan76.spacecube.item;
 
-import net.pitan76.mcpitanlib.api.entity.Player;
-import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
-import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
-import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
-import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,10 +7,19 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.entity.Player;
+import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
+import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
+import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -127,7 +127,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
                     CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
-                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), WorldUtil.getWorldId(world)));
+                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world))));
 
                     // Chunk Loader
                     spaceCubeBlockEntity.addTicket();
@@ -157,7 +157,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
                     CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
-                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), WorldUtil.getWorldId(world)));
+                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world))));
 
                     // Chunk Loader
                     spaceCubeBlockEntity.addTicket();
@@ -170,7 +170,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 // 念のため
                 spaceCubeState.removeEntryPosList(serverPlayer.getUuid());
 
-                spaceCubeState.addEntryPos(serverPlayer.getUuid(), serverPlayer.getBlockPos(), WorldUtil.getWorldId(world));
+                spaceCubeState.addEntryPos(serverPlayer.getUuid(), serverPlayer.getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world)));
 
                 spaceCubeState.markDirty();
 
@@ -213,9 +213,9 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 // another dimension
 
                 // set world of return world (帰りのワールドを代入)
-                Identifier worldId = spaceCubeState.getWorldId(uuid);
+                CompatIdentifier worldId = spaceCubeState.getWorldId(uuid);
 
-                ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, worldId);
+                ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, worldId.toMinecraft());
 
                 if (returnWorld == null) {
                     System.out.println("[SpaceCube] Error: player's world is null.");
@@ -253,7 +253,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
             if (pos != null) {
                 Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
                 SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(pos);
-                ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, scBlockPath.getDimension());
+                ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, scBlockPath.getDimension().toMinecraft());
 
                 if (returnWorld == null) {
                     System.out.println("[SpaceCube] Error: player's world is null.");

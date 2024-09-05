@@ -1,12 +1,14 @@
 package net.pitan76.spacecube;
 
-import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
+import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.pitan76.spacecube.item.*;
 
 import java.util.function.Supplier;
+
+import static net.pitan76.spacecube.SpaceCube.registry;
 
 public class Items {
     public static Item TINY_SPCAE_CUBE = ItemUtil.ofBlock(Blocks.TINY_SPCAE_CUBE, CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
@@ -32,30 +34,30 @@ public class Items {
     public static Item MAXIMUM_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of().addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 7);
 
     public static void init() {
-        register(SpaceCube.id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
-        register(SpaceCube.id("small_space_cube"), () -> SMALL_SPCAE_CUBE);
-        register(SpaceCube.id("normal_space_cube"), () -> NORMAL_SPCAE_CUBE);
-        register(SpaceCube.id("large_space_cube"), () -> LARGE_SPCAE_CUBE);
-        register(SpaceCube.id("giant_space_cube"), () -> GIANT_SPCAE_CUBE);
-        register(SpaceCube.id("maximum_space_cube"), () -> MAXIMUM_SPCAE_CUBE);
+        register(SpaceCube._id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
+        register(SpaceCube._id("small_space_cube"), () -> SMALL_SPCAE_CUBE);
+        register(SpaceCube._id("normal_space_cube"), () -> NORMAL_SPCAE_CUBE);
+        register(SpaceCube._id("large_space_cube"), () -> LARGE_SPCAE_CUBE);
+        register(SpaceCube._id("giant_space_cube"), () -> GIANT_SPCAE_CUBE);
+        register(SpaceCube._id("maximum_space_cube"), () -> MAXIMUM_SPCAE_CUBE);
 
-        register(SpaceCube.id("personal_shrinking_device"), () -> PERSONAL_SHRINKING_DEVICE);
+        register(SpaceCube._id("personal_shrinking_device"), () -> PERSONAL_SHRINKING_DEVICE);
 
-        register(SpaceCube.id("solid_wall"), () -> SOLID_WALL);
-        register(SpaceCube.id("wall"), () -> WALL);
+        register(SpaceCube._id("solid_wall"), () -> SOLID_WALL);
+        register(SpaceCube._id("wall"), () -> WALL);
 
-        register(SpaceCube.id("energy_tunnel"), () -> ENERGY_TUNNEL);
-        register(SpaceCube.id("fluid_tunnel"), () -> FLUID_TUNNEL);
-        register(SpaceCube.id("item_tunnel"), () -> ITEM_TUNNEL);
+        register(SpaceCube._id("energy_tunnel"), () -> ENERGY_TUNNEL);
+        register(SpaceCube._id("fluid_tunnel"), () -> FLUID_TUNNEL);
+        register(SpaceCube._id("item_tunnel"), () -> ITEM_TUNNEL);
 
-        register(SpaceCube.id("small_upgrader"), () -> SMALL_UPGRADER);
-        register(SpaceCube.id("normal_upgrader"), () -> NORMAL_UPGRADER);
-        register(SpaceCube.id("large_upgrader"), () -> LARGE_UPGRADER);
-        register(SpaceCube.id("giant_upgrader"), () -> GIANT_UPGRADER);
-        register(SpaceCube.id("maximum_upgrader"), () -> MAXIMUM_UPGRADER);
+        register(SpaceCube._id("small_upgrader"), () -> SMALL_UPGRADER);
+        register(SpaceCube._id("normal_upgrader"), () -> NORMAL_UPGRADER);
+        register(SpaceCube._id("large_upgrader"), () -> LARGE_UPGRADER);
+        register(SpaceCube._id("giant_upgrader"), () -> GIANT_UPGRADER);
+        register(SpaceCube._id("maximum_upgrader"), () -> MAXIMUM_UPGRADER);
     }
 
-    public static void register(Identifier identifier, Supplier<Item> supplier) {
-        SpaceCube.registry.registerItem(identifier, supplier);
+    public static void register(CompatIdentifier identifier, Supplier<Item> supplier) {
+        registry.registerItem(identifier, supplier);
     }
 }
