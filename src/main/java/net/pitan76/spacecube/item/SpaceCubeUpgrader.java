@@ -16,11 +16,9 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
-import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.spacecube.Blocks;
+import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.util.CubeGenerator;
 import net.pitan76.spacecube.api.util.SpaceCubeUtil;
@@ -106,7 +104,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
         if (spaceCubeBlock.getSize() < size) {
             NbtCompound nbt = NbtUtil.create();
 
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+            BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 scBlockEntity.writeNbt(new WriteNbtArgs(nbt));
@@ -122,7 +120,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
                 if (scBlockEntity.scRoomPos != null) {
                     ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
                     if (spaceCubeWorld == null) {
-                        System.out.println("[SpaceCube] Error: spaceCubeWorld is null.");
+                        SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
                         return ActionResult.FAIL;
                     }
 
@@ -132,7 +130,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
             }
 
 
-            stack.decrement(1);
+            ItemStackUtil.decrementCount(stack, 1);
             return ActionResult.CONSUME;
         }
         return ActionResult.PASS;

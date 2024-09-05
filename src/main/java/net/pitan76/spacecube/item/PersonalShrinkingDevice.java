@@ -60,10 +60,10 @@ public class PersonalShrinkingDevice extends ExtendItem {
     }
 
     @Override
-    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent event) {
-        Player player = event.getPlayer();
-        World world = event.getWorld();
-        BlockState state = world.getBlockState(event.getHit().getBlockPos());
+    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
+        Player player = e.getPlayer();
+        World world = e.getWorld();
+        BlockState state = world.getBlockState(e.getBlockPos());
 
         // sneaking
         //if (player.isSneaking()) return ActionResult.PASS;
@@ -72,7 +72,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
             /*
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(event.getHit().getBlockPos());
             if (tunnelWallBlockEntity == null) {
-                System.out.println("[SpaceCube] Error: tunnelWallBlockEntity is null.");
+                SpaceCube.INSTANCE.error("[SpaceCube] Error: tunnelWallBlockEntity is null.");
                 return ActionResult.FAIL;
             }
             if (tunnelWallBlockEntity.getTunnelDef() instanceof ItemTunnel) {
@@ -92,7 +92,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
             // set world of space cube dimension (space cube dimensionのワールドを代入)
             ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
             if (spaceCubeWorld == null) {
-                System.out.println("[SpaceCube] Error: spaceCubeWorld is null.");
+                SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
                 return ActionResult.FAIL;
             }
 
@@ -104,9 +104,9 @@ public class PersonalShrinkingDevice extends ExtendItem {
             // Map of SpaceCube (room) coordinates in SpaceCubeDimension and Space Cube Block coordinates
             Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
 
-            SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) world.getBlockEntity(event.getHit().getBlockPos());
+            SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) e.getBlockEntity();
             if (spaceCubeBlockEntity == null) {
-                System.out.println("[SpaceCube] Error: spaceCubeBlockEntity is null.");
+                SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeBlockEntity is null.");
                 return ActionResult.FAIL;
             }
 
@@ -127,7 +127,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
                     CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
-                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world))));
+                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(e.getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world))));
 
                     // Chunk Loader
                     spaceCubeBlockEntity.addTicket();
@@ -157,7 +157,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                     // Generate a hollow cube with Solid Space Cube Wall (Solid Space Cube Wallで空洞のキューブを生成)
                     CubeGenerator.generateCube(spaceCubeWorld, scRoomPos, Blocks.SOLID_WALL, size);
 
-                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(event.getHit().getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world))));
+                    spacePosWithSCBlockPath.put(scRoomPos, new SCBlockPath(e.getBlockPos(), CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world))));
 
                     // Chunk Loader
                     spaceCubeBlockEntity.addTicket();
@@ -218,7 +218,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, worldId.toMinecraft());
 
                 if (returnWorld == null) {
-                    System.out.println("[SpaceCube] Error: player's world is null.");
+                    SpaceCube.INSTANCE.error("[SpaceCube] Error: player's world is null.");
                     return ActionResult.PASS;
                 }
 
@@ -256,7 +256,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, scBlockPath.getDimension().toMinecraft());
 
                 if (returnWorld == null) {
-                    System.out.println("[SpaceCube] Error: player's world is null.");
+                    SpaceCube.INSTANCE.error("[SpaceCube] Error: player's world is null.");
                     return ActionResult.PASS;
                 }
 
