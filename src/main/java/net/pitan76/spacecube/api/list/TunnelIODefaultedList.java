@@ -3,6 +3,7 @@ package net.pitan76.spacecube.api.list;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
@@ -25,7 +26,7 @@ public class TunnelIODefaultedList extends DefaultedList<ItemStack> {
 
 
     public static TunnelIODefaultedList ofSize(SpaceCubeBlockEntity entity) {
-        return ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStack.EMPTY, entity);
+        return ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStackUtil.empty(), entity);
     }
 
 
@@ -38,11 +39,11 @@ public class TunnelIODefaultedList extends DefaultedList<ItemStack> {
 
     @Override
     public ItemStack set(int index, ItemStack stack) {
-        if (!blockEntity.hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
+        if (!blockEntity.hasTunnelType(TunnelType.ITEM)) return ItemStackUtil.empty();
         Direction dir = indexToDir(Math.floorDiv(index, 2));
 
         ItemTunnel itemTunnel = (ItemTunnel) blockEntity.getTunnelDef(TunnelType.ITEM, dir);
-        if (itemTunnel == null) return ItemStack.EMPTY;
+        if (itemTunnel == null) return ItemStackUtil.empty();
 
         if (index % 2 == 0) {
             // 偶数なのでImportStack
@@ -56,11 +57,11 @@ public class TunnelIODefaultedList extends DefaultedList<ItemStack> {
 
     @Override
     public ItemStack get(int index) {
-        if (!blockEntity.hasTunnelType(TunnelType.ITEM)) return ItemStack.EMPTY;
+        if (!blockEntity.hasTunnelType(TunnelType.ITEM)) return ItemStackUtil.empty();
         Direction dir = indexToDir(Math.floorDiv(index, 2));
 
         ItemTunnel itemTunnel = (ItemTunnel) blockEntity.getTunnelDef(TunnelType.ITEM, dir);
-        if (itemTunnel == null) return ItemStack.EMPTY;
+        if (itemTunnel == null) return ItemStackUtil.empty();
 
         if (index % 2 == 0) {
             // 偶数なのでImportStack

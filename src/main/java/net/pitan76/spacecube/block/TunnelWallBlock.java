@@ -3,7 +3,6 @@ package net.pitan76.spacecube.block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -18,7 +17,9 @@ import net.pitan76.mcpitanlib.api.event.block.BlockBreakEvent;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.TunnelSideData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
@@ -39,7 +40,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
 
     public TunnelWallBlock(CompatibleBlockSettings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(CONNECTED_SIDE, Direction.UP).with(TUNNEL_SIDE, Direction.UP).with(POWERED, false));
+        setNewDefaultState(getNewDefaultState().with(CONNECTED_SIDE, Direction.UP).with(TUNNEL_SIDE, Direction.UP).with(POWERED, false));
     }
 
     public static TunnelType getTunnelType(World world, BlockPos pos) {
@@ -48,21 +49,21 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent event) {
-        World world = event.getWorld();
-        BlockPos pos = event.getPos();
+    public ActionResult onRightClick(BlockUseEvent e) {
+        World world = e.getWorld();
+        BlockPos pos = e.getPos();
 
-        if (world.isClient()) return ActionResult.SUCCESS;
+        if (e.isClient()) return ActionResult.SUCCESS;
 
-        BlockState state = world.getBlockState(pos);
+        BlockState state = WorldUtil.getBlockState(world, pos);
 
-        if (event.getPlayer().isSneaking()) {
+        if (e.isSneaking()) {
             // トンネルをはがす
-            if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
+            if (e.getBlockEntity() instanceof TunnelWallBlockEntity) {
                 TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
                 Item item = tunnelWallBlockEntity.getTunnelItem();
                 if (item != null) {
-                    event.getPlayer().giveStack(new ItemStack(item, 1));
+                    e.getPlayer().giveStack(ItemStackUtil.create(item, 1));
                 }
 
                 if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
@@ -75,12 +76,12 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
                         spaceCubeBlockEntity.removeTunnel(tunnelType, dir);
                 }
             }
-            world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultState());
+            WorldUtil.setBlockState(world, pos, Blocks.SOLID_WALL.getNewDefaultState());
 
             return ActionResult.SUCCESS;
         }
 
-        if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
+        if (e.getBlockEntity() instanceof TunnelWallBlockEntity) {
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
 
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
@@ -95,12 +96,12 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
 
                     // すべての接続サイドが使われている場合 (If all connected sides are used)
                     if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
-                        event.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                        e.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
                         return ActionResult.FAIL;
                     }
 
                     Direction nextDir = tunnelSide.getNextDir(dir);
-                    world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, nextDir));
+                    WorldUtil.setBlockState(world, pos, WorldUtil.getBlockState(world, pos).with(CONNECTED_SIDE, nextDir));
                     if (!tunnelSide.hasTunnel(nextDir)) {
                         tunnelSide.removeTunnel(dir);
                         tunnelSide.addTunnel(nextDir, pos);
@@ -109,7 +110,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             }
         }
 
-        return super.onRightClick(event);
+        return super.onRightClick(e);
     }
 
     @Override

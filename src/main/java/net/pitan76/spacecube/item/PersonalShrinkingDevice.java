@@ -51,7 +51,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
 
         // Process when the player's world is space cube dimension
         // プレイヤーのワールドがspace cube dimensionの場合の処理
-        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.equals(WorldUtil.getWorldId(world))) {
+        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.toMinecraft().equals(WorldUtil.getWorldId(world))) {
             ActionResult result = tpPrevCubeOrWorld(world, player);
             ActionResultUtil.typedActionResult(result, event.stack);
         }
@@ -183,7 +183,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
 
             return ActionResult.SUCCESS;
         }
-        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.equals(WorldUtil.getWorldId(world))) {
+        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.toMinecraft().equals(WorldUtil.getWorldId(world))) {
             return tpPrevCubeOrWorld(world, player);
         }
 

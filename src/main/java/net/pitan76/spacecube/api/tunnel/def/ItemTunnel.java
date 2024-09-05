@@ -3,6 +3,7 @@ package net.pitan76.spacecube.api.tunnel.def;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
@@ -27,7 +28,7 @@ public class ItemTunnel implements ITunnelDef {
     public static int defaultSize = 2;
 
     // 一時的な保管場所であり、保存されないことに注意 (Temporary storage and not saved)
-    private final DefaultedList<ItemStack> stacks = DefaultedList.ofSize(defaultSize, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> stacks = DefaultedList.ofSize(defaultSize, ItemStackUtil.empty());
 
     public ItemStack getExportStack() {
         return stacks.get(1);

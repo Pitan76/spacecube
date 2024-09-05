@@ -17,6 +17,7 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.BlockEntities;
@@ -306,11 +307,11 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
 
     @Override
     public ItemStack getStack(int slot) {
-        if (!hasTunnelType(TunnelType.ITEM)) return IInventory.super.getStack(slot);;
+        if (!hasTunnelType(TunnelType.ITEM)) return IInventory.super.getStack(slot);
         Direction dir = indexToDir(Math.floorDiv(slot, 2));
 
         ItemTunnel itemTunnel = (ItemTunnel) getTunnelDef(TunnelType.ITEM, dir);
-        if (itemTunnel == null) return IInventory.super.getStack(slot);;
+        if (itemTunnel == null) return IInventory.super.getStack(slot);
 
         if (slot % 2 == 0) {
             // 偶数なのでImportStack
@@ -341,7 +342,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
         // 11: WEST Dir Export Stack
 
         TunnelIODefaultedList stacks = TunnelIODefaultedList.ofSize(this);
-        if (!hasTunnelType(TunnelType.ITEM)) return DefaultedList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStack.EMPTY);
+        if (!hasTunnelType(TunnelType.ITEM)) return DefaultedList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStackUtil.empty());
 
         return stacks;
     }

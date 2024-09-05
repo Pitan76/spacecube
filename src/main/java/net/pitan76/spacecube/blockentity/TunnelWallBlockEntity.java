@@ -42,7 +42,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     public ITunnelDef tunnelDef = null;
 
     // item tunnel用
-    // private DefaultedList<ItemStack> stacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    // private DefaultedList<ItemStack> stacks = DefaultedList.ofSize(1, ItemStackUtil.empty());
 
 
     public ITunnelDef getTunnelDef() {

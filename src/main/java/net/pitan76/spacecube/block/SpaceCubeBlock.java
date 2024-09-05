@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
@@ -17,11 +16,9 @@ import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
-import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -66,21 +63,20 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent event) {
-        Player player = event.getPlayer();
-        World world = event.getWorld();
+    public ActionResult onRightClick(BlockUseEvent e) {
+        Player player = e.getPlayer();
 
         // If the player is sneaking, pass the event
         // プレイヤーがスニークしている場合はイベントをパス
-        if (player.isSneaking()) return ActionResult.PASS;
+        if (e.isSneaking()) return ActionResult.PASS;
         // Only run on the server side (サーバー側のみで実行)
-        if (world.isClient()) return ActionResult.SUCCESS;
+        if (e.isClient()) return ActionResult.SUCCESS;
 
         // If the player is holding a PersonalShrinkingDevice, pass the event
         // プレイヤーがPersonalShrinkingDeviceを持っている場合はイベントをパス
         //    → Process on the PersonalShrinkingDevice side
         //    → PersonalShrinkingDevice側で処理
-        Item handItem = player.getStackInHand(Hand.MAIN_HAND).getItem();
+        Item handItem = player.getMainHandStack().getItem();
         if (handItem instanceof PersonalShrinkingDevice) return ActionResult.PASS;
         if (handItem instanceof SpaceCubeUpgrader) return ActionResult.PASS;
 
@@ -88,8 +84,8 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(TileCreateEvent event) {
-        return new SpaceCubeBlockEntity(event);
+    public @Nullable BlockEntity createBlockEntity(TileCreateEvent e) {
+        return new SpaceCubeBlockEntity(e);
     }
 
     @Override
@@ -102,7 +98,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         if (!e.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
             if (e.player.isCreative() && !tile.isScRoomPosNull()) {
-                ItemStack itemStack = new ItemStack(this);
+                ItemStack itemStack = ItemStackUtil.create(this.asItem());
                 NbtCompound nbt = NbtUtil.create();
                 tile.writeNbt(new WriteNbtArgs(nbt));
 
@@ -130,7 +126,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
 
                 NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-                spaceCubeBlockEntity.readNbtOverride(nbt);
+                spaceCubeBlockEntity.readNbt(new ReadNbtArgs(nbt));
 
                 ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
                 if (spaceCubeWorld == null) {
