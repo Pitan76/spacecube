@@ -44,7 +44,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
     }
 
     public static TunnelType getTunnelType(World world, BlockPos pos) {
-        TunnelWallBlockEntity blockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+        TunnelWallBlockEntity blockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
         return blockEntity == null ? TunnelType.NONE : blockEntity.getTunnelType();
     }
 
@@ -60,7 +60,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
         if (e.isSneaking()) {
             // トンネルをはがす
             if (e.getBlockEntity() instanceof TunnelWallBlockEntity) {
-                TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+                TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
                 Item item = tunnelWallBlockEntity.getTunnelItem();
                 if (item != null) {
                     e.getPlayer().giveStack(ItemStackUtil.create(item, 1));
@@ -82,7 +82,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
         }
 
         if (e.getBlockEntity() instanceof TunnelWallBlockEntity) {
-            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
 
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
@@ -132,7 +132,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
         BlockPos pos = e.getPos();
 
         if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
-            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(pos);
+            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
 
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();

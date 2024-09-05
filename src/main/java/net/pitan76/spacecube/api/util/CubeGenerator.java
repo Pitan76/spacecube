@@ -3,6 +3,7 @@ package net.pitan76.spacecube.api.util;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 
 public class CubeGenerator {
 
@@ -34,7 +35,7 @@ public class CubeGenerator {
                     // 壁の座標のとき (When it's a wall coordinate)
                     if (i == x - width || i == x + width || j == y || j == y + height * 2 || k == z - depth || k == z + depth) {
                         // ブロックおく (Place block)
-                        world.setBlockState(new BlockPos(i, j, k), block.getDefaultState());
+                        WorldUtil.setBlockState(world, new BlockPos(i, j, k), block.getDefaultState());
                     }
                 }
             }

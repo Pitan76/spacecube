@@ -44,7 +44,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
     public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent event) {
         World world = event.getWorld();
         BlockPos pos = event.getBlockPos();
-        BlockState state = world.getBlockState(pos);
+        BlockState state = WorldUtil.getBlockState(world, pos);
         Player player = event.getPlayer();
 
         if (state.getBlock() instanceof SpaceCubeBlock) {
@@ -111,9 +111,9 @@ public class SpaceCubeUpgrader extends ExtendItem {
             }
 
             BlockState newState = SpaceCubeBlock.getSpaceCubeBlockFromSize(size).getDefaultState();
-            world.setBlockState(pos, newState);
+            WorldUtil.setBlockState(world, pos, newState);
 
-            BlockEntity newBlockEntity = world.getBlockEntity(pos);
+            BlockEntity newBlockEntity = WorldUtil.getBlockEntity(world, pos);
             if (newBlockEntity instanceof SpaceCubeBlockEntity && !nbt.isEmpty()) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) newBlockEntity;
                 scBlockEntity.readNbt(new ReadNbtArgs(nbt));

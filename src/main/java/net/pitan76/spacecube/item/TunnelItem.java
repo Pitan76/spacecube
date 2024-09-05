@@ -10,7 +10,9 @@ import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.api.data.TunnelSideData;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
@@ -26,22 +28,22 @@ public class TunnelItem extends ExtendItem {
     }
 
     @Override
-    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent event) {
-        World world = event.getWorld();
-        BlockPos pos = event.getBlockPos();
-        BlockState state = world.getBlockState(pos);
+    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
+        World world = e.getWorld();
+        BlockPos pos = e.getBlockPos();
+        BlockState state = WorldUtil.getBlockState(world, pos);
 
         if (state.getBlock() == Blocks.SOLID_WALL) {
-            world.setBlockState(pos, Blocks.TUNNEL_WALL.getDefaultState().with(TunnelWallBlock.CONNECTED_SIDE, Direction.UP));
+            WorldUtil.setBlockState(world, pos, Blocks.TUNNEL_WALL.getDefaultState().with(TunnelWallBlock.CONNECTED_SIDE, Direction.UP));
 
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+            BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
                 tunnelWallBlockEntity.setTunnelType(getTunnelType());
-                tunnelWallBlockEntity.setTunnelItem(event.getStack().getItem());
+                tunnelWallBlockEntity.setTunnelItem(e.getStack().getItem());
                 if (world.isClient()) return ActionResult.SUCCESS;
 
-                BlockPos scRoomPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, event.getBlockPos());
+                BlockPos scRoomPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, e.getBlockPos());
 
                 tunnelWallBlockEntity.setScRoomPos(scRoomPos);
                 tunnelWallBlockEntity.markDirty();
@@ -50,21 +52,21 @@ public class TunnelItem extends ExtendItem {
                 if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
                     SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
 
-                    state = world.getBlockState(pos);
+                    state = WorldUtil.getBlockState(world, pos);
                     Direction dir = state.get(TunnelWallBlock.CONNECTED_SIDE);
 
                     TunnelSideData tunnelSide = spaceCubeBlockEntity.getTunnelSide(getTunnelType());
 
                     if (tunnelSide.isFull()) {
-                        event.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                        world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultState());
+                        e.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
+                        WorldUtil.setBlockState(world, pos, Blocks.SOLID_WALL.getDefaultState());
                         return ActionResult.FAIL;
                     }
 
                     // Connected Sideが存在する場合は別のSideに割り当てる
                     if (tunnelSide.hasTunnel(dir)) {
                         dir = tunnelSide.getRestDir();
-                        world.setBlockState(pos, state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
+                        WorldUtil.setBlockState(world, pos, state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
 
                     }
                     tunnelSide.addTunnel(dir, pos);
@@ -74,7 +76,7 @@ public class TunnelItem extends ExtendItem {
                 tunnelWallBlockEntity.addTicket();
             }
 
-            event.getStack().decrement(1);
+            ItemStackUtil.decrementCount(e.getStack(), 1);
 
             return ActionResult.CONSUME;
         }
