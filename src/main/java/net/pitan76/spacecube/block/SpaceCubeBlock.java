@@ -103,6 +103,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
                 NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
                 tile.writeNbt(new WriteNbtArgs(nbt));
+                // Todo: use New MCPitanLib API
                 NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()));
                 BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
 
