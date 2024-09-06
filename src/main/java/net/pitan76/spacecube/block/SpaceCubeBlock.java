@@ -19,6 +19,7 @@ import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
+import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -99,12 +100,11 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
             if (e.player.isCreative() && !tile.isScRoomPosNull()) {
                 ItemStack stack = ItemStackUtil.create(this);
-                NbtCompound nbt = NbtUtil.create();
-                tile.writeNbt(new WriteNbtArgs(nbt));
 
-                // if there is a BlockEntityTag, set nbt to the item (BlockEntityTagが存在する際はnbtをアイテムにセット)
-                if (!nbt.isEmpty())
-                    BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, tile);
+                NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
+                tile.writeNbt(new WriteNbtArgs(nbt));
+                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()));
+                BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
 
                 ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
                 ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
