@@ -70,7 +70,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
         if (player.isSneaking()) {
 
             /*
-            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) world.getBlockEntity(event.getHit().getBlockPos());
+            TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, event.getHit().getBlockPos());
             if (tunnelWallBlockEntity == null) {
                 SpaceCube.INSTANCE.error("[SpaceCube] Error: tunnelWallBlockEntity is null.");
                 return ActionResult.FAIL;

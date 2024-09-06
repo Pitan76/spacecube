@@ -67,7 +67,6 @@ public class TunnelItem extends ExtendItem {
                     if (tunnelSide.hasTunnel(dir)) {
                         dir = tunnelSide.getRestDir();
                         WorldUtil.setBlockState(world, pos, state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
-
                     }
                     tunnelSide.addTunnel(dir, pos);
                 }
@@ -77,7 +76,6 @@ public class TunnelItem extends ExtendItem {
             }
 
             ItemStackUtil.decrementCount(e.getStack(), 1);
-
             return ActionResult.CONSUME;
         }
 

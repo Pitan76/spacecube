@@ -1,12 +1,12 @@
 package net.pitan76.spacecube;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 import net.pitan76.mcpitanlib.fabric.ExtendModInitializer;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.FluidTunnel;
@@ -37,7 +37,7 @@ public class SpaceCube extends ExtendModInitializer {
         INSTANCE = this;
         registry = super.registry;
 
-        Config.init(FabricLoader.getInstance().getConfigDir().toFile());
+        Config.init(PlatformUtil.getConfigFolder().toFile());
 
         // Register the creative tab
         registry.registerItemGroup(SPACE_CUBE_CREATIVE_TAB);
@@ -55,11 +55,16 @@ public class SpaceCube extends ExtendModInitializer {
 
     @Override
     public String getId() {
-        return "";
+        return MOD_ID;
+    }
+
+    @Override
+    public String getName() {
+        return MOD_NAME;
     }
 
     public static void registerEnergyStorage() {
-        if (FabricLoader.getInstance().isModLoaded("team_reborn_energy")) {
+        if (PlatformUtil.isModLoaded("team_reborn_energy")) {
             RebornEnergyRegister.init();
         }
     }
@@ -92,5 +97,4 @@ public class SpaceCube extends ExtendModInitializer {
     public static CompatIdentifier _id(String id) {
         return CompatIdentifier.of(MOD_ID, id);
     }
-
 }

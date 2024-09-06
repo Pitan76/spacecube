@@ -23,6 +23,7 @@ import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -56,8 +57,8 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
         super(type, new TileCreateEvent(pos, state));
     }
 
-    public TunnelWallBlockEntity(TileCreateEvent event) {
-        super(BlockEntities.TUNNEL_WALL_BLOCK_ENTITY.getOrNull(), event);
+    public TunnelWallBlockEntity(TileCreateEvent e) {
+        super(BlockEntities.TUNNEL_WALL_BLOCK_ENTITY.getOrNull(), e);
     }
 
     @Override
@@ -79,16 +80,16 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
         
         if (scRoomPos != null) {
             NbtCompound posNbt = NbtUtil.create();
-            posNbt.putInt("x", scRoomPos.getX());
-            posNbt.putInt("y", scRoomPos.getY());
-            posNbt.putInt("z", scRoomPos.getZ());
-            nbt.put("scRoomPos", posNbt);
+            NbtUtil.set(posNbt, "x", scRoomPos.getX());
+            NbtUtil.set(posNbt, "y", scRoomPos.getY());
+            NbtUtil.set(posNbt, "z", scRoomPos.getZ());
+            NbtUtil.put(nbt, "scRoomPos", posNbt);
         }
         if (tunnelType != null) {
-            nbt.putString("tunnelType", tunnelType.getId().toString());
+            NbtUtil.set(nbt, "tunnelType", tunnelType.getId().toString());
         }
         if (tunnelItemId != null) {
-            nbt.putString("tunnelItem", tunnelItemId.toString());
+            NbtUtil.set(nbt, "tunnelItem", tunnelItemId.toString());
         }
 
         getTunnelDef().writeNbt(nbt);
@@ -99,16 +100,16 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
         super.readNbt(args);
         NbtCompound nbt = args.getNbt();
         
-        if (nbt.contains("scRoomPos")) {
-            NbtCompound posNbt = nbt.getCompound("scRoomPos");
-            scRoomPos = new BlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
+        if (NbtUtil.has(nbt, "scRoomPos")) {
+            NbtCompound posNbt = NbtUtil.get(nbt, "scRoomPos");
+            scRoomPos = PosUtil.flooredBlockPos(posNbt.getInt("x"), posNbt.getInt("y"), posNbt.getInt("z"));
 
             addTicket();
         }
-        if (nbt.contains("tunnelType")) {
+        if (NbtUtil.has(nbt, "tunnelType")) {
             tunnelType = TunnelType.fromId(CompatIdentifier.of(nbt.getString("tunnelType")));
         }
-        if (nbt.contains("tunnelItem")) {
+        if (NbtUtil.has(nbt, "tunnelItem")) {
             tunnelItemId = CompatIdentifier.of(nbt.getString("tunnelItem"));
         }
 
@@ -243,12 +244,10 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        if (getTunnelDef() instanceof ItemTunnel) {
+        if (getTunnelDef() instanceof ItemTunnel)
             return new int[]{0, 1};
-        }
 
         addTicket();
-
         return new int[0];
     }
 

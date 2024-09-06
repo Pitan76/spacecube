@@ -20,6 +20,7 @@ import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.TunnelSideData;
@@ -77,10 +78,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
             // - y: int
             // - z: int
             NbtCompound scRoomPos_nbt = NbtUtil.create();
-            scRoomPos_nbt.putInt("x", scRoomPos.getX());
-            scRoomPos_nbt.putInt("y", scRoomPos.getY());
-            scRoomPos_nbt.putInt("z", scRoomPos.getZ());
-            nbt.put("scRoomPos", scRoomPos_nbt);
+            NbtUtil.set(scRoomPos_nbt, "x", scRoomPos.getX());
+            NbtUtil.set(scRoomPos_nbt, "y", scRoomPos.getY());
+            NbtUtil.set(scRoomPos_nbt, "z", scRoomPos.getZ());
+            NbtUtil.put(nbt, "scRoomPos", scRoomPos_nbt);
         }
         if (tunnelSides != null) {
             // tunnels
@@ -95,14 +96,14 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
                 NbtCompound data_nbt = NbtUtil.create();
                 for (Map.Entry<Direction, BlockPos> entry : data.getTunnels().entrySet()) {
                     NbtCompound tunnel_nbt = NbtUtil.create();
-                    tunnel_nbt.putInt("x", entry.getValue().getX());
-                    tunnel_nbt.putInt("y", entry.getValue().getY());
-                    tunnel_nbt.putInt("z", entry.getValue().getZ());
-                    data_nbt.put(entry.getKey().toString(), tunnel_nbt);
+                    NbtUtil.set(tunnel_nbt, "x", entry.getValue().getX());
+                    NbtUtil.set(tunnel_nbt, "y", entry.getValue().getY());
+                    NbtUtil.set(tunnel_nbt, "z", entry.getValue().getZ());
+                    NbtUtil.put(data_nbt, entry.getKey().toString(), tunnel_nbt);
                 }
                 tunnels_nbt.put(type.getId().toString(), data_nbt);
             }
-            nbt.put("tunnels", tunnels_nbt);
+            NbtUtil.put(nbt, "tunnels", tunnels_nbt);
         }
     }
 
@@ -111,27 +112,27 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
         super.readNbt(args);
         NbtCompound nbt = args.getNbt();
 
-        if (nbt.contains("scRoomPos")) {
-            NbtCompound scRoomPos_nbt = nbt.getCompound("scRoomPos");
-            int x = scRoomPos_nbt.getInt("x");
-            int y = scRoomPos_nbt.getInt("y");
-            int z = scRoomPos_nbt.getInt("z");
-            scRoomPos = new BlockPos(x, y, z);
+        if (NbtUtil.has(nbt, "scRoomPos")) {
+            NbtCompound scRoomPos_nbt = NbtUtil.get(nbt, "scRoomPos");
+            int x = NbtUtil.get(scRoomPos_nbt, "x", Integer.class);
+            int y = NbtUtil.get(scRoomPos_nbt, "y", Integer.class);
+            int z = NbtUtil.get(scRoomPos_nbt, "z", Integer.class);
+            scRoomPos = PosUtil.flooredBlockPos(x, y, z);
 
             addTicket();
         }
-        if (nbt.contains("tunnels")) {
-            NbtCompound tunnels_nbt = nbt.getCompound("tunnels");
+        if (NbtUtil.has(nbt, "tunnels")) {
+            NbtCompound tunnels_nbt = NbtUtil.get(nbt, "tunnels");
             for (String type : tunnels_nbt.getKeys()) {
                 TunnelType tunnelType = TunnelType.fromString(type);
                 NbtCompound data_nbt = tunnels_nbt.getCompound(type);
                 TunnelSideData data = new TunnelSideData();
                 for (String direction : data_nbt.getKeys()) {
-                    NbtCompound tunnel_nbt = data_nbt.getCompound(direction);
-                    int x = tunnel_nbt.getInt("x");
-                    int y = tunnel_nbt.getInt("y");
-                    int z = tunnel_nbt.getInt("z");
-                    data.addTunnel(Direction.valueOf(direction.toUpperCase()), new BlockPos(x, y, z));
+                    NbtCompound tunnel_nbt = NbtUtil.get(data_nbt, direction);
+                    int x = NbtUtil.get(tunnel_nbt, "x", Integer.class);
+                    int y = NbtUtil.get(tunnel_nbt, "y", Integer.class);
+                    int z = NbtUtil.get(tunnel_nbt, "z", Integer.class);
+                    data.addTunnel(Direction.valueOf(direction.toUpperCase()), PosUtil.flooredBlockPos(x, y, z));
                 }
                 tunnelSides.put(tunnelType, data);
             }
@@ -237,7 +238,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
         if (!data.hasTunnel(side)) return new int[0];
         ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
-        BlockEntity blockEntity = spaceCubeWorld.getBlockEntity(data.getTunnel(side));
+        BlockEntity blockEntity = WorldUtil.getBlockEntity(spaceCubeWorld, data.getTunnel(side));
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return new int[0];
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();

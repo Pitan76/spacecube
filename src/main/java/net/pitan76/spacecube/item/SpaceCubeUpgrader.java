@@ -64,39 +64,39 @@ public class SpaceCubeUpgrader extends ExtendItem {
     }
 
     @Override
-    public TypedActionResult<ItemStack> onRightClick(ItemUseEvent event) {
-        World world = event.getWorld();
-        Player player = event.getUser();
+    public TypedActionResult<ItemStack> onRightClick(ItemUseEvent e) {
+        World world = e.getWorld();
+        Player player = e.getUser();
+        ItemStack stack = e.getStack();
 
         // sneaking
-        if (player.isSneaking()) return TypedActionResult.pass(event.stack);
+        if (e.isSneaking()) return TypedActionResult.pass(stack);
         // Only run on the server side
-        if (world.isClient()) return TypedActionResult.success(event.stack);
+        if (e.isClient()) return TypedActionResult.success(stack);
 
         if (WorldUtil.equals(world, SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world))) {
             BlockPos spacePos = SpaceCubeUtil.getNearestPos((ServerWorld) world, player.getBlockPos());
-            if (spacePos == null)
-                return TypedActionResult.fail(event.stack);
+            if (spacePos == null) return TypedActionResult.fail(stack);
 
             SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(world.getServer());
             Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath =  spaceCubeState.getSpacePosWithSCBlockPath();
-            if (!spacePosWithSCBlockPath.containsKey(spacePos))
-                return TypedActionResult.fail(event.stack);
+            if (!spacePosWithSCBlockPath.containsKey(spacePos)) return TypedActionResult.fail(stack);
+
             SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(spacePos);
 
             BlockPos placedPos = scBlockPath.getPos();
             World placedWorld = WorldUtil.getWorld(world, scBlockPath.getDimension().toMinecraft());
             BlockState state = placedWorld.getBlockState(placedPos);
             if (state.getBlock() instanceof SpaceCubeBlock) {
-                ActionResult result = upgradeSpaceCube(placedWorld, placedPos, state, event.stack);
-                if (result == ActionResult.CONSUME) {
+                ActionResult result = upgradeSpaceCube(placedWorld, placedPos, state, stack);
+                if (result == ActionResult.CONSUME)
                     player.sendMessage(TextUtil.literal("[SpaceCube] Upgraded!"));
-                }
-                return ActionResultUtil.typedActionResult(result, event.stack);
+
+                return ActionResultUtil.typedActionResult(result, stack);
             }
         }
 
-        return super.onRightClick(event);
+        return super.onRightClick(e);
     }
 
     public ActionResult upgradeSpaceCube(World world, BlockPos pos, BlockState state, ItemStack stack) {
@@ -110,7 +110,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
                 scBlockEntity.writeNbt(new WriteNbtArgs(nbt));
             }
 
-            BlockState newState = SpaceCubeBlock.getSpaceCubeBlockFromSize(size).getDefaultState();
+            BlockState newState = SpaceCubeBlock.getSpaceCubeBlockFromSize(size).getNewDefaultState();
             WorldUtil.setBlockState(world, pos, newState);
 
             BlockEntity newBlockEntity = WorldUtil.getBlockEntity(world, pos);
@@ -128,7 +128,6 @@ public class SpaceCubeUpgrader extends ExtendItem {
                     CubeGenerator.generateCube(spaceCubeWorld, scBlockEntity.scRoomPos, Blocks.SOLID_WALL, size);
                 }
             }
-
 
             ItemStackUtil.decrementCount(stack, 1);
             return ActionResult.CONSUME;

@@ -57,18 +57,18 @@ public class ItemTunnel implements ITunnelDef {
     @Override
     public void readNbt(NbtCompound nbt) {
         if (nbt == null) return;
-        if (nbt.contains("importStack"))
-            setImportStack(ItemStack.fromNbt(nbt.getCompound("importStack")));
-        if (nbt.contains("exportStack"))
-            setExportStack(ItemStack.fromNbt(nbt.getCompound("exportStack")));
+        if (NbtUtil.has(nbt, "importStack"))
+            setImportStack(ItemStack.fromNbt(NbtUtil.get(nbt, "importStack")));
+        if (NbtUtil.has(nbt, "exportStack"))
+            setExportStack(ItemStack.fromNbt(NbtUtil.get(nbt, "exportStack")));
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
         if (nbt == null) nbt = NbtUtil.create();
         if (!getImportStack().isEmpty())
-            nbt.put("importStack", getImportStack().writeNbt(new NbtCompound()));
+            NbtUtil.put(nbt, "importStack", getImportStack().writeNbt(new NbtCompound()));
         if (!getExportStack().isEmpty())
-            nbt.put("exportStack", getExportStack().writeNbt(new NbtCompound()));
+            NbtUtil.put(nbt, "exportStack", getExportStack().writeNbt(new NbtCompound()));
     }
 }

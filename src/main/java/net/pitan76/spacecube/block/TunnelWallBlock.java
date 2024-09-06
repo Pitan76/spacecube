@@ -5,7 +5,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -18,6 +17,7 @@ import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.PropertyUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.spacecube.Blocks;
@@ -36,7 +36,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
     public static final DirectionProperty CONNECTED_SIDE = DirectionProperty.of("connected_side", Direction.values());
 
     // Redstone Power
-    public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final BooleanProperty POWERED = PropertyUtil.powered();
 
     public TunnelWallBlock(CompatibleBlockSettings settings) {
         super(settings);
@@ -131,7 +131,7 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
         World world = e.getWorld();
         BlockPos pos = e.getPos();
 
-        if (world.getBlockEntity(pos) instanceof TunnelWallBlockEntity) {
+        if (WorldUtil.getBlockEntity(world, pos) instanceof TunnelWallBlockEntity) {
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
 
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {

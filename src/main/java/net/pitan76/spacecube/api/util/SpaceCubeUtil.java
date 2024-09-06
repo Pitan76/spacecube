@@ -6,6 +6,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
@@ -30,17 +31,17 @@ public class SpaceCubeUtil {
 
         switch (mod) {
             case 0:
-                return new BlockPos(div * 1024, 64, div * 1024);
+                return PosUtil.flooredBlockPos(div * 1024, 64, div * 1024);
             case 1:
-                return new BlockPos(div * -1024, 64, div * 1024);
+                return PosUtil.flooredBlockPos(div * -1024, 64, div * 1024);
             case 2:
-                return new BlockPos(div * 1024 + 1024, 64, div * 1024);
+                return PosUtil.flooredBlockPos(div * 1024 + 1024, 64, div * 1024);
             case 3:
-                return new BlockPos(div * 1024, 64, div * 1024 + 1024);
+                return PosUtil.flooredBlockPos(div * 1024, 64, div * 1024 + 1024);
 
             // まぁたぶんないけど念のために
             default:
-                return new BlockPos(0, 64, 0);
+                return PosUtil.flooredBlockPos(0, 64, 0);
         }
     }
 
@@ -61,7 +62,7 @@ public class SpaceCubeUtil {
 
         if (nearestPos == null) return null;
 
-        return new BlockPos(nearestPos.getX(), 64, nearestPos.getZ());
+        return PosUtil.flooredBlockPos(nearestPos.getX(), 64, nearestPos.getZ());
     }
 
     @Nullable

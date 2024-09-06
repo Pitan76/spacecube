@@ -11,6 +11,7 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.PersistentStateUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.world.CompatiblePersistentState;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.data.SCPlayerData;
@@ -36,7 +37,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
     @Override
     public void readNbt(ReadNbtArgs args) {
         NbtCompound nbt = args.getNbt();
-        NbtCompound players_nbt = nbt.getCompound("players");
+        NbtCompound players_nbt = NbtUtil.get(nbt, "players");
 
         // Read players NBT
         for (String key : players_nbt.getKeys()) {
@@ -48,17 +49,16 @@ public class SpaceCubeState extends CompatiblePersistentState {
             NbtList entryPosList_nbt = players_nbt.getList("entryPosList", 10);
             for (int i = 0; i < entryPosList_nbt.size(); i++) {
                 NbtCompound entryPos_nbt = entryPosList_nbt.getCompound(i);
-                int x = entryPos_nbt.getInt("x");
-                int y = entryPos_nbt.getInt("y");
-                int z = entryPos_nbt.getInt("z");
-
-                entryPosList.add(new BlockPos(x, y, z));
+                int x = NbtUtil.get(entryPos_nbt, "x", Integer.class);
+                int y = NbtUtil.get(entryPos_nbt, "y", Integer.class);
+                int z = NbtUtil.get(entryPos_nbt, "z", Integer.class);
+                entryPosList.add(PosUtil.flooredBlockPos(x, y, z));
             }
 
             // Dimension
             CompatIdentifier dimensionId = CompatIdentifier.fromMinecraft(World.OVERWORLD.getValue());
-            if (players_nbt.contains("dimension"))
-                dimensionId = CompatIdentifier.of(players_nbt.getString("dimension"));
+            if (NbtUtil.has(players_nbt, "dimension"))
+                dimensionId = CompatIdentifier.of(NbtUtil.get(players_nbt, "dimension", String.class));
 
             SCPlayerData playerData = new SCPlayerData(uuid, entryPosList, dimensionId);
             playerDataMap.put(uuid, playerData);
@@ -71,26 +71,24 @@ public class SpaceCubeState extends CompatiblePersistentState {
 
             // BlockPos (spacePos)
             BlockPos spacePos;
-            if (spacePosWithSCBlockPath_nbt.contains("spacePos")) {
-                NbtCompound spacePos_nbt = spacePosWithSCBlockPath_nbt.getCompound("spacePos");
-                int x = spacePos_nbt.getInt("x");
-                int y = spacePos_nbt.getInt("y");
-                int z = spacePos_nbt.getInt("z");
-
-                spacePos = new BlockPos(x, y, z);
+            if (NbtUtil.has(spacePosWithSCBlockPath_nbt, "spacePos")) {
+                NbtCompound spacePos_nbt = NbtUtil.get(spacePosWithSCBlockPath_nbt, "spacePos");
+                int x = NbtUtil.get(spacePos_nbt, "x", Integer.class);
+                int y = NbtUtil.get(spacePos_nbt, "y", Integer.class);
+                int z = NbtUtil.get(spacePos_nbt, "z", Integer.class);
+                spacePos = PosUtil.flooredBlockPos(x, y, z);
             } else continue;
 
             // SCBlockPath (spacePosWithSCBlockPath)
             SCBlockPath scBlockPath = new SCBlockPath();
-            if (spacePosWithSCBlockPath_nbt.contains("scBlockPath")) {
-                NbtCompound scBlockPath_nbt = spacePosWithSCBlockPath_nbt.getCompound("scBlockPath");
-                int x = scBlockPath_nbt.getInt("x");
-                int y = scBlockPath_nbt.getInt("y");
-                int z = scBlockPath_nbt.getInt("z");
+            if (NbtUtil.has(spacePosWithSCBlockPath_nbt, "scBlockPath")) {
+                NbtCompound scBlockPath_nbt = NbtUtil.get(spacePosWithSCBlockPath_nbt, "scBlockPath");
+                int x = NbtUtil.get(scBlockPath_nbt, "x", Integer.class);
+                int y = NbtUtil.get(scBlockPath_nbt, "y", Integer.class);
+                int z = NbtUtil.get(scBlockPath_nbt, "z", Integer.class);
+                scBlockPath.setPos(PosUtil.flooredBlockPos(x, y, z));
 
-                scBlockPath.setPos(new BlockPos(x, y, z));
-
-                scBlockPath.setDimension(CompatIdentifier.of(scBlockPath_nbt.getString("dimension")));
+                scBlockPath.setDimension(CompatIdentifier.of(NbtUtil.get(scBlockPath_nbt, "dimension", String.class)));
             }
 
             spacePosWithSCBlockPath.put(spacePos, scBlockPath);
@@ -127,20 +125,20 @@ public class SpaceCubeState extends CompatiblePersistentState {
             NbtList entryPosList_nbt = new NbtList();
             for (BlockPos entryPos : entryPosList) {
                 NbtCompound entryPos_nbt = NbtUtil.create();
-                entryPos_nbt.putInt("x", entryPos.getX());
-                entryPos_nbt.putInt("y", entryPos.getY());
-                entryPos_nbt.putInt("z", entryPos.getZ());
+                NbtUtil.set(entryPos_nbt, "x", entryPos.getX());
+                NbtUtil.set(entryPos_nbt, "y", entryPos.getY());
+                NbtUtil.set(entryPos_nbt, "z", entryPos.getZ());
                 entryPosList_nbt.add(entryPos_nbt);
             }
             player_nbt.put("entryPosList", entryPosList_nbt);
 
             // Dimension
-            player_nbt.putString("dimension",  entry.getValue().getDimension().toString());
+            NbtUtil.set(player_nbt, "dimension",  entry.getValue().getDimension().toString());
 
-            players_nbt.put(uuid.toString(), player_nbt);
+            NbtUtil.put(players_nbt, uuid.toString(), player_nbt);
         }
 
-        nbt.put("players", players_nbt);
+        NbtUtil.put(nbt, "players", players_nbt);
 
         // Get spacePosWithSCBlockPath
         NbtList spacePosWithSCBlockPathList_nbt = new NbtList();
@@ -151,9 +149,9 @@ public class SpaceCubeState extends CompatiblePersistentState {
             NbtCompound spacePos_nbt = NbtUtil.create();
 
             BlockPos spacePos = entry.getKey();
-            spacePos_nbt.putInt("x", spacePos.getX());
-            spacePos_nbt.putInt("y", spacePos.getY());
-            spacePos_nbt.putInt("z", spacePos.getZ());
+            NbtUtil.set(spacePos_nbt, "x", spacePos.getX());
+            NbtUtil.set(spacePos_nbt, "y", spacePos.getY());
+            NbtUtil.set(spacePos_nbt, "z", spacePos.getZ());
             spacePosWithSCBlockPath_nbt.put("spacePos", spacePos_nbt);
 
             // SCBlockPath (spacePosWithSCBlockPath)
@@ -162,11 +160,11 @@ public class SpaceCubeState extends CompatiblePersistentState {
 
                 SCBlockPath scBlockPath = entry.getValue();
                 BlockPos scBlockPathPos = scBlockPath.getPos();
-                scBlockPath_nbt.putInt("x", scBlockPathPos.getX());
-                scBlockPath_nbt.putInt("y", scBlockPathPos.getY());
-                scBlockPath_nbt.putInt("z", scBlockPathPos.getZ());
-                scBlockPath_nbt.putString("dimension", scBlockPath.getDimension().toString());
-                spacePosWithSCBlockPath_nbt.put("scBlockPath", scBlockPath_nbt);
+                NbtUtil.set(scBlockPath_nbt, "x", scBlockPathPos.getX());
+                NbtUtil.set(scBlockPath_nbt, "y", scBlockPathPos.getY());
+                NbtUtil.set(scBlockPath_nbt, "z", scBlockPathPos.getZ());
+                NbtUtil.set(scBlockPath_nbt, "dimension", scBlockPath.getDimension().toString());
+                NbtUtil.put(spacePosWithSCBlockPath_nbt, "scBlockPath", scBlockPath_nbt);
             }
 
             spacePosWithSCBlockPathList_nbt.add(spacePosWithSCBlockPath_nbt);

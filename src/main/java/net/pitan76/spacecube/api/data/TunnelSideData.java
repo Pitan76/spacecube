@@ -10,6 +10,7 @@ public class TunnelSideData {
     public final Map<Direction, BlockPos> tunnels = new HashMap<>();
 
     public TunnelSideData() {
+
     }
 
     public TunnelSideData(Direction dir, BlockPos pos) {

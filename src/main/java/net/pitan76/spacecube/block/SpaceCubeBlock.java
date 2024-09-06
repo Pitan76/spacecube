@@ -16,9 +16,9 @@ import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
-import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -98,16 +98,16 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         if (!e.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
             if (e.player.isCreative() && !tile.isScRoomPosNull()) {
-                ItemStack itemStack = ItemStackUtil.create(this.asItem());
+                ItemStack stack = ItemStackUtil.create(this);
                 NbtCompound nbt = NbtUtil.create();
                 tile.writeNbt(new WriteNbtArgs(nbt));
 
                 // if there is a BlockEntityTag, set nbt to the item (BlockEntityTagが存在する際はnbtをアイテムにセット)
                 if (!nbt.isEmpty())
-                    itemStack.setSubNbt("BlockEntityTag", nbt);
+                    BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, tile);
 
-                ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack);
-                itemEntity.setToDefaultPickupDelay();
+                ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
+                ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
                 WorldUtil.spawnEntity(world, itemEntity);
             }
         }
@@ -120,18 +120,15 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         BlockPos pos = e.getPos();
         ItemStack stack = e.getStack();
 
-        if (!e.isClient() && stack.hasNbt()) {
+        if (!e.isClient() && BlockEntityDataUtil.hasBlockEntityNbt(stack)) {
             BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
-
-                NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-                spaceCubeBlockEntity.readNbt(new ReadNbtArgs(nbt));
+                BlockEntityDataUtil.readCompatBlockEntityNbtFromStack(stack, spaceCubeBlockEntity);
 
                 ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
-                if (spaceCubeWorld == null) {
+                if (spaceCubeWorld == null)
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
-                }
 
                 SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
                 Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath =  spaceCubeState.getSpacePosWithSCBlockPath();
@@ -151,8 +148,9 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     public ItemStack getPickStack(PickStackEvent e) {
         ItemStack stack = super.getPickStack(e);
         try {
-            if (e.hasBlockEntity()) {
-                e.getBlockEntity().setStackNbt(stack);
+            if (e.getBlockEntity() instanceof SpaceCubeBlockEntity) {
+                SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) e.getBlockEntity();
+                BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
             }
         } catch (NullPointerException exception) {
             SpaceCube.INSTANCE.error("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + e.pos.toString());
