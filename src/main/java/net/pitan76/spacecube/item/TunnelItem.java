@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.ExtendItem;
+import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -36,17 +37,17 @@ public class TunnelItem extends ExtendItem {
         if (state.getBlock() == Blocks.SOLID_WALL) {
             WorldUtil.setBlockState(world, pos, Blocks.TUNNEL_WALL.getDefaultState().with(TunnelWallBlock.CONNECTED_SIDE, Direction.UP));
 
-            BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
+            BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
                 tunnelWallBlockEntity.setTunnelType(getTunnelType());
                 tunnelWallBlockEntity.setTunnelItem(e.getStack().getItem());
-                if (world.isClient()) return ActionResult.SUCCESS;
+                if (e.isClient()) return ActionResult.SUCCESS;
 
                 BlockPos scRoomPos = SpaceCubeUtil.getNearestPos((ServerWorld) world, e.getBlockPos());
 
                 tunnelWallBlockEntity.setScRoomPos(scRoomPos);
-                tunnelWallBlockEntity.markDirty();
+                BlockEntityUtil.markDirty(tunnelWallBlockEntity);
                 tunnelWallBlockEntity.sync();
 
                 if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {

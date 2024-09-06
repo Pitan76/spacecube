@@ -40,7 +40,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
         NbtCompound players_nbt = NbtUtil.get(nbt, "players");
 
         // Read players NBT
-        for (String key : players_nbt.getKeys()) {
+        for (String key : NbtUtil.getKeys(players_nbt)) {
             // UUID
             UUID uuid = UUID.fromString(key);
 
@@ -152,7 +152,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
             NbtUtil.set(spacePos_nbt, "x", spacePos.getX());
             NbtUtil.set(spacePos_nbt, "y", spacePos.getY());
             NbtUtil.set(spacePos_nbt, "z", spacePos.getZ());
-            spacePosWithSCBlockPath_nbt.put("spacePos", spacePos_nbt);
+            NbtUtil.put(spacePosWithSCBlockPath_nbt, "spacePos", spacePos_nbt);
 
             // SCBlockPath (spacePosWithSCBlockPath)
             if (entry.getValue().pos != null && entry.getValue().dimension != null) {
