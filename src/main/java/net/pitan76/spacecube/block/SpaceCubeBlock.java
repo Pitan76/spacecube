@@ -104,7 +104,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
                 tile.writeNbt(new WriteNbtArgs(nbt));
                 // Todo: use New MCPitanLib API
-                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()));
+                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()).toString());
                 BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
 
                 ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
@@ -155,7 +155,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
                 spaceCubeBlockEntity.writeNbt(new WriteNbtArgs(nbt));
                 // Todo: use New MCPitanLib API
-                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()));
+                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()).toString());
                 BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
 
                 //BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
