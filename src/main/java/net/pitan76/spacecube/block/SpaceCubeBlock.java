@@ -132,7 +132,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
 
                 SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
-                Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath =  spaceCubeState.getSpacePosWithSCBlockPath();
+                Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
 
                 BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
                 if (spacePosWithSCBlockPath.containsKey(scRoomPos)) {
