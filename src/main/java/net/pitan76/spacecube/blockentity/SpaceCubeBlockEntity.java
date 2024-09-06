@@ -101,7 +101,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
                     NbtUtil.set(tunnel_nbt, "z", entry.getValue().getZ());
                     NbtUtil.put(data_nbt, entry.getKey().toString(), tunnel_nbt);
                 }
-                tunnels_nbt.put(type.getId().toString(), data_nbt);
+                NbtUtil.put(tunnels_nbt, type.getId().toString(), data_nbt);
             }
             NbtUtil.put(nbt, "tunnels", tunnels_nbt);
         }
@@ -123,11 +123,11 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
         }
         if (NbtUtil.has(nbt, "tunnels")) {
             NbtCompound tunnels_nbt = NbtUtil.get(nbt, "tunnels");
-            for (String type : tunnels_nbt.getKeys()) {
+            for (String type : NbtUtil.getKeys(tunnels_nbt)) {
                 TunnelType tunnelType = TunnelType.fromString(type);
                 NbtCompound data_nbt = tunnels_nbt.getCompound(type);
                 TunnelSideData data = new TunnelSideData();
-                for (String direction : data_nbt.getKeys()) {
+                for (String direction : NbtUtil.getKeys(data_nbt)) {
                     NbtCompound tunnel_nbt = NbtUtil.get(data_nbt, direction);
                     int x = NbtUtil.get(tunnel_nbt, "x", Integer.class);
                     int y = NbtUtil.get(tunnel_nbt, "y", Integer.class);

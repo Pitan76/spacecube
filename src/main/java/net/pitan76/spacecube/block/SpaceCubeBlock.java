@@ -151,7 +151,14 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         try {
             if (e.getBlockEntity() instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) e.getBlockEntity();
-                BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
+
+                NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
+                spaceCubeBlockEntity.writeNbt(new WriteNbtArgs(nbt));
+                // Todo: use New MCPitanLib API
+                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()));
+                BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
+
+                //BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
             }
         } catch (NullPointerException exception) {
             SpaceCube.INSTANCE.error("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + e.pos.toString());
