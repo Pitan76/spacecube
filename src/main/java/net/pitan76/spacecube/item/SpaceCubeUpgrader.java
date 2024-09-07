@@ -43,19 +43,19 @@ public class SpaceCubeUpgrader extends ExtendItem {
     }
 
     @Override
-    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent event) {
-        World world = event.getWorld();
-        BlockPos pos = event.getBlockPos();
-        BlockState state = WorldUtil.getBlockState(world, pos);
-        Player player = event.getPlayer();
+    public ActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
+        World world = e.getWorld();
+        BlockPos pos = e.getBlockPos();
+        BlockState state = e.getBlockState();
+        Player player = e.getPlayer();
 
         if (state.getBlock() instanceof SpaceCubeBlock) {
             // sneaking
             if (player.isSneaking()) return ActionResult.PASS;
             // Only run on the server side
-            if (world.isClient()) return ActionResult.SUCCESS;
+            if (e.isClient()) return ActionResult.SUCCESS;
 
-            ActionResult result = upgradeSpaceCube(world, pos, state, event.getStack());
+            ActionResult result = upgradeSpaceCube(world, pos, state, e.getStack());
             if (result == ActionResult.CONSUME) {
                 player.sendMessage(TextUtil.literal("[SpaceCube] Upgraded!"));
             }
