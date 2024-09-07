@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
@@ -27,6 +28,7 @@ import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class SpaceCubeUpgrader extends ExtendItem {
     public final int size;
@@ -78,15 +80,19 @@ public class SpaceCubeUpgrader extends ExtendItem {
             BlockPos spacePos = SpaceCubeUtil.getNearestPos((ServerWorld) world, player.getBlockPos());
             if (spacePos == null) return TypedActionResult.fail(stack);
 
-            SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(world.getServer());
+            Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
+            SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
             Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath =  spaceCubeState.getSpacePosWithSCBlockPath();
             if (!spacePosWithSCBlockPath.containsKey(spacePos)) return TypedActionResult.fail(stack);
 
             SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(spacePos);
-
             BlockPos placedPos = scBlockPath.getPos();
-            World placedWorld = WorldUtil.getWorld(world, scBlockPath.getDimension().toMinecraft());
-            BlockState state = placedWorld.getBlockState(placedPos);
+
+            Optional<World> optionalPlacedWorld = WorldUtil.getWorld(world, scBlockPath.getDimension());
+            if (!optionalPlacedWorld.isPresent()) return TypedActionResult.fail(stack);
+            World placedWorld = optionalPlacedWorld.get();
+
+            BlockState state = WorldUtil.getBlockState(placedWorld, placedPos);
             if (state.getBlock() instanceof SpaceCubeBlock) {
                 ActionResult result = upgradeSpaceCube(placedWorld, placedPos, state, stack);
                 if (result == ActionResult.CONSUME)

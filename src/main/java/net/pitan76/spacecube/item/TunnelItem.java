@@ -22,6 +22,8 @@ import net.pitan76.spacecube.block.TunnelWallBlock;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 
+import java.util.Optional;
+
 public class TunnelItem extends ExtendItem {
 
     public TunnelItem(CompatibleItemSettings settings) {
@@ -51,13 +53,13 @@ public class TunnelItem extends ExtendItem {
                 tunnelWallBlockEntity.sync();
 
                 if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
-                    SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                    Optional<SpaceCubeBlockEntity> spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                    if (!spaceCubeBlockEntity.isPresent()) return ActionResult.FAIL;
 
                     state = WorldUtil.getBlockState(world, pos);
                     Direction dir = state.get(TunnelWallBlock.CONNECTED_SIDE);
 
-                    TunnelSideData tunnelSide = spaceCubeBlockEntity.getTunnelSide(getTunnelType());
-
+                    TunnelSideData tunnelSide = spaceCubeBlockEntity.get().getTunnelSide(getTunnelType());
                     if (tunnelSide.isFull()) {
                         e.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
                         WorldUtil.setBlockState(world, pos, Blocks.SOLID_WALL.getDefaultState());
@@ -66,7 +68,7 @@ public class TunnelItem extends ExtendItem {
 
                     // Connected Sideが存在する場合は別のSideに割り当てる
                     if (tunnelSide.hasTunnel(dir)) {
-                        dir = tunnelSide.getRestDir();
+                        dir = tunnelSide.getRestDir().get();
                         WorldUtil.setBlockState(world, pos, state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
                     }
                     tunnelSide.addTunnel(dir, pos);

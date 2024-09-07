@@ -27,6 +27,8 @@ import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvider {
 
     // 今のところは使っていない (Not used for now)
@@ -61,19 +63,18 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             // トンネルをはがす
             if (e.getBlockEntity() instanceof TunnelWallBlockEntity) {
                 TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
-                Item item = tunnelWallBlockEntity.getTunnelItem();
-                if (item != null) {
-                    e.getPlayer().giveStack(ItemStackUtil.create(item, 1));
-                }
+
+                Optional<Item> item = tunnelWallBlockEntity.getTunnelItem();
+                item.ifPresent(value -> e.getPlayer().giveStack(ItemStackUtil.create(value, 1)));
 
                 if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
-                    SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                    Optional<SpaceCubeBlockEntity> spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
 
                     TunnelType tunnelType = tunnelWallBlockEntity.getTunnelType();
                     Direction dir = state.get(CONNECTED_SIDE);
 
-                    if (spaceCubeBlockEntity.hasTunnel(tunnelType, dir))
-                        spaceCubeBlockEntity.removeTunnel(tunnelType, dir);
+                    if (spaceCubeBlockEntity.isPresent() && spaceCubeBlockEntity.get().hasTunnel(tunnelType, dir))
+                        spaceCubeBlockEntity.get().removeTunnel(tunnelType, dir);
                 }
             }
             WorldUtil.setBlockState(world, pos, Blocks.SOLID_WALL.getNewDefaultState());
@@ -85,26 +86,27 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
 
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
-                SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                Optional<SpaceCubeBlockEntity> spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                if (!spaceCubeBlockEntity.isPresent()) return ActionResult.FAIL;
 
                 // トンネルの接続サイドを変更する Change the connected side of the tunnel
-
                 if (state.contains(CONNECTED_SIDE)) {
                     Direction dir = state.get(CONNECTED_SIDE);
 
-                    TunnelSideData tunnelSide = spaceCubeBlockEntity.getTunnelSide(tunnelWallBlockEntity.getTunnelType());
+                    TunnelSideData tunnelSide = spaceCubeBlockEntity.get().getTunnelSide(tunnelWallBlockEntity.getTunnelType());
 
                     // すべての接続サイドが使われている場合 (If all connected sides are used)
-                    if (spaceCubeBlockEntity.tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
+                    if (spaceCubeBlockEntity.get().tunnelIsFull(tunnelWallBlockEntity.getTunnelType())) {
                         e.getPlayer().sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
                         return ActionResult.FAIL;
                     }
 
-                    Direction nextDir = tunnelSide.getNextDir(dir);
-                    WorldUtil.setBlockState(world, pos, WorldUtil.getBlockState(world, pos).with(CONNECTED_SIDE, nextDir));
-                    if (!tunnelSide.hasTunnel(nextDir)) {
+                    Optional<Direction> nextDir = tunnelSide.getNextDir(dir);
+                    Direction nextDirValue = nextDir.get();
+                    WorldUtil.setBlockState(world, pos, WorldUtil.getBlockState(world, pos).with(CONNECTED_SIDE, nextDirValue));
+                    if (!tunnelSide.hasTunnel(nextDirValue)) {
                         tunnelSide.removeTunnel(dir);
-                        tunnelSide.addTunnel(nextDir, pos);
+                        tunnelSide.addTunnel(nextDirValue, pos);
                     }
                 }
             }
@@ -135,13 +137,14 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
             TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) WorldUtil.getBlockEntity(world, pos);
 
             if (tunnelWallBlockEntity.existSpaceCubeBlockEntity()) {
-                SpaceCubeBlockEntity spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                Optional<SpaceCubeBlockEntity> spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
+                if (!spaceCubeBlockEntity.isPresent()) return super.onBreak(e);
 
                 TunnelType tunnelType = tunnelWallBlockEntity.getTunnelType();
                 Direction dir = e.state.get(CONNECTED_SIDE);
 
-                if (spaceCubeBlockEntity.hasTunnel(tunnelType, dir))
-                    spaceCubeBlockEntity.removeTunnel(tunnelType, dir);
+                if (spaceCubeBlockEntity.get().hasTunnel(tunnelType, dir))
+                    spaceCubeBlockEntity.get().removeTunnel(tunnelType, dir);
             }
         }
         return super.onBreak(e);

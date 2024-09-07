@@ -4,7 +4,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -16,10 +16,8 @@ import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
-import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
-import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -31,6 +29,7 @@ import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProvider {
     public final int size;
@@ -97,15 +96,10 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         // Creative only - サバイバルは getPickStack() で処理 (Survival is handled by getPickStack() )
         BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
         if (!e.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
-            SpaceCubeBlockEntity tile = (SpaceCubeBlockEntity) blockEntity;
-            if (e.player.isCreative() && !tile.isScRoomPosNull()) {
+            SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
+            if (e.player.isCreative() && !spaceCubeBlockEntity.isScRoomPosNull()) {
                 ItemStack stack = ItemStackUtil.create(this);
-
-                NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
-                tile.writeNbt(new WriteNbtArgs(nbt));
-                // Todo: use New MCPitanLib API
-                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()).toString());
-                BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
+                BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
 
                 ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
                 ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
@@ -121,6 +115,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         BlockPos pos = e.getPos();
         ItemStack stack = e.getStack();
 
+
         if (!e.isClient() && BlockEntityDataUtil.hasBlockEntityNbt(stack)) {
             BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
             if (blockEntity instanceof SpaceCubeBlockEntity) {
@@ -128,10 +123,14 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
                 BlockEntityDataUtil.readCompatBlockEntityNbtFromStack(stack, spaceCubeBlockEntity);
 
                 ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
-                if (spaceCubeWorld == null)
+                if (spaceCubeWorld == null) {
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
+                    super.onPlaced(e);
+                    return;
+                }
 
-                SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
+                Optional<MinecraftServer> optionalServer = WorldUtil.getServer(spaceCubeWorld);
+                SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
                 Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
 
                 BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
@@ -151,14 +150,7 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
         try {
             if (e.getBlockEntity() instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) e.getBlockEntity();
-
-                NbtCompound nbt = BlockEntityDataUtil.getBlockEntityNbt(stack);
-                spaceCubeBlockEntity.writeNbt(new WriteNbtArgs(nbt));
-                // Todo: use New MCPitanLib API
-                NbtUtil.set(nbt, "id", BlockEntityTypeUtil.toID(BlockEntities.SPACE_CUBE_BLOCK_ENTITY.getOrNull()).toString());
-                BlockEntityDataUtil.setBlockEntityNbt(stack, nbt);
-
-                //BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
+                BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
             }
         } catch (NullPointerException exception) {
             SpaceCube.INSTANCE.error("[SpaceCube] Error: SpaceCubeBlockEntity is null. BlockPos: " + e.pos.toString());

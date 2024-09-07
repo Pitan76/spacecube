@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInventory, IInventory {
 
@@ -125,7 +126,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
             NbtCompound tunnels_nbt = NbtUtil.get(nbt, "tunnels");
             for (String type : NbtUtil.getKeys(tunnels_nbt)) {
                 TunnelType tunnelType = TunnelType.fromString(type);
-                NbtCompound data_nbt = tunnels_nbt.getCompound(type);
+                NbtCompound data_nbt = NbtUtil.get(tunnels_nbt, type);
                 TunnelSideData data = new TunnelSideData();
                 for (String direction : NbtUtil.getKeys(data_nbt)) {
                     NbtCompound tunnel_nbt = NbtUtil.get(data_nbt, direction);
@@ -213,20 +214,20 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
         return getTunnelSide(type).isFull();
     }
 
-    public Direction getRestDir(TunnelType type) {
+    public Optional<Direction> getRestDir(TunnelType type) {
         if (!tunnelSides.containsKey(type)) addTunnelType(type);
         TunnelSideData data = getTunnelSide(type);
         return data.getRestDir();
     }
 
-    public Direction getDir(TunnelType type, BlockPos pos) {
-        if (!hasTunnelType(type)) return null;
+    public Optional<Direction> getDir(TunnelType type, BlockPos pos) {
+        if (!hasTunnelType(type)) return Optional.empty();
         TunnelSideData data = getTunnelSide(type);
         return data.getDir(pos);
     }
 
-    public Direction getNextDir(TunnelType type, Direction dir) {
-        if (!hasTunnelType(type)) return null;
+    public Optional<Direction> getNextDir(TunnelType type, Direction dir) {
+        if (!hasTunnelType(type)) return Optional.empty();
         TunnelSideData data = getTunnelSide(type);
         return data.getNextDir(dir);
     }

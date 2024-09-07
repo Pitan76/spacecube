@@ -5,6 +5,7 @@ import net.minecraft.util.math.Direction;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TunnelSideData {
     public final Map<Direction, BlockPos> tunnels = new HashMap<>();
@@ -65,38 +66,38 @@ public class TunnelSideData {
         return tunnels.isEmpty();
     }
 
-    public Direction getRestDir() {
+    public Optional<Direction> getRestDir() {
         Direction[] dirs = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
         for (Direction dir : dirs) {
-            if (!hasTunnel(dir)) return dir;
+            if (!hasTunnel(dir)) return Optional.of(dir);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public Direction getNextDir(Direction dir) {
-        if (isFull()) return null;
+    public Optional<Direction> getNextDir(Direction dir) {
+        if (isFull()) return Optional.empty();
         switch (dir) {
             case UP:
-                return (hasTunnel(Direction.DOWN)) ? getNextDir(Direction.DOWN) : Direction.DOWN;
+                return (hasTunnel(Direction.DOWN)) ? getNextDir(Direction.DOWN) : Optional.of(Direction.DOWN);
             case DOWN:
-                return (hasTunnel(Direction.NORTH)) ? getNextDir(Direction.NORTH) : Direction.NORTH;
+                return (hasTunnel(Direction.NORTH)) ? getNextDir(Direction.NORTH) : Optional.of(Direction.NORTH);
             case NORTH:
-                return (hasTunnel(Direction.SOUTH)) ? getNextDir(Direction.SOUTH) : Direction.SOUTH;
+                return (hasTunnel(Direction.SOUTH)) ? getNextDir(Direction.SOUTH) : Optional.of(Direction.SOUTH);
             case SOUTH:
-                return (hasTunnel(Direction.WEST)) ? getNextDir(Direction.WEST) : Direction.WEST;
+                return (hasTunnel(Direction.WEST)) ? getNextDir(Direction.WEST) : Optional.of(Direction.WEST);
             case WEST:
-                return (hasTunnel(Direction.EAST)) ? getNextDir(Direction.EAST) : Direction.EAST;
+                return (hasTunnel(Direction.EAST)) ? getNextDir(Direction.EAST) : Optional.of(Direction.EAST);
             case EAST:
-                return (hasTunnel(Direction.UP)) ? getNextDir(Direction.UP) : Direction.UP;
+                return (hasTunnel(Direction.UP)) ? getNextDir(Direction.UP) : Optional.of(Direction.UP);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public Direction getDir(BlockPos pos) {
+    public Optional<Direction> getDir(BlockPos pos) {
         for (Map.Entry<Direction, BlockPos> entry : tunnels.entrySet()) {
             if (entry.getValue() == pos)
-                return entry.getKey();
+                return Optional.ofNullable(entry.getKey());
         }
-        return null;
+        return Optional.empty();
     }
 }

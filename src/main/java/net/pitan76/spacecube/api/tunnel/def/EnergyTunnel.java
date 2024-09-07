@@ -1,6 +1,7 @@
 package net.pitan76.spacecube.api.tunnel.def;
 
 import net.minecraft.nbt.NbtCompound;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import net.pitan76.spacecube.compat.TunnelEnergyStorage;
@@ -84,11 +85,11 @@ public class EnergyTunnel implements ITunnelDef {
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        nbt.putLong("energy", energy);
+        NbtUtil.putLong(nbt, "energy", energy);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        energy = nbt.getLong("energy");
+        energy = NbtUtil.getLong(nbt, "energy");
     }
 }

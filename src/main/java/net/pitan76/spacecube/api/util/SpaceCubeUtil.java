@@ -1,15 +1,19 @@
 package net.pitan76.spacecube.api.util;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class SpaceCubeUtil {
 
@@ -67,11 +71,14 @@ public class SpaceCubeUtil {
 
     @Nullable
     public static BlockPos getNearestPos(ServerWorld world, BlockPos pos) {
-        return getNearestPos(SpaceCubeState.getOrCreate(world.getServer()), pos);
+
+        Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
+        return getNearestPos(SpaceCubeState.getOrCreate(optionalServer.get()), pos);
     }
 
     public static BlockPos getNewPos(ServerWorld world) {
-        return getNewPos(SpaceCubeState.getOrCreate(world.getServer()));
+        Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
+        return getNewPos(SpaceCubeState.getOrCreate(optionalServer.get()));
     }
 
     public static int getSpaceCubeCount(SpaceCubeState state) {
@@ -79,7 +86,8 @@ public class SpaceCubeUtil {
     }
 
     public static int getSpaceCubeCount(ServerWorld world) {
-        return getSpaceCubeCount(SpaceCubeState.getOrCreate(world.getServer()));
+        Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
+        return getSpaceCubeCount(SpaceCubeState.getOrCreate(optionalServer.get()));
     }
 
     // plan: include MCPitanLib
@@ -98,6 +106,7 @@ public class SpaceCubeUtil {
     // ----
 
     public static ServerWorld getSpaceCubeWorld(ServerWorld world) {
-        return (ServerWorld) WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.toMinecraft());
+        Optional<World> optionalWorld = WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
+        return (ServerWorld) optionalWorld.get();
     }
 }

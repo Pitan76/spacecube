@@ -2,6 +2,7 @@ package net.pitan76.spacecube.item;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -30,6 +31,7 @@ import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.world.SpaceCubeState;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PersonalShrinkingDevice extends ExtendItem {
@@ -51,7 +53,7 @@ public class PersonalShrinkingDevice extends ExtendItem {
 
         // Process when the player's world is space cube dimension
         // プレイヤーのワールドがspace cube dimensionの場合の処理
-        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.toMinecraft().equals(WorldUtil.getWorldId(world))) {
+        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.equals(WorldUtil.getCompatWorldId(world))) {
             ActionResult result = tpPrevCubeOrWorld(world, player);
             ActionResultUtil.typedActionResult(result, event.stack);
         }
@@ -97,7 +99,9 @@ public class PersonalShrinkingDevice extends ExtendItem {
             }
 
             ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player.getEntity();
-            SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(spaceCubeWorld.getServer());
+
+            Optional<MinecraftServer> optionalServer = WorldUtil.getServer(spaceCubeWorld);
+            SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
 
             int size = ((SpaceCubeBlock) state.getBlock()).getSize();
 
@@ -179,11 +183,11 @@ public class PersonalShrinkingDevice extends ExtendItem {
             }
 
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-            player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            serverPlayer.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
             return ActionResult.SUCCESS;
         }
-        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.toMinecraft().equals(WorldUtil.getWorldId(world))) {
+        if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.equals(WorldUtil.getCompatWorldId(world))) {
             return tpPrevCubeOrWorld(world, player);
         }
 
@@ -196,7 +200,8 @@ public class PersonalShrinkingDevice extends ExtendItem {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player.getEntity();
         UUID uuid = serverPlayer.getUuid();
 
-        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(playerWorld.getServer());
+        Optional<MinecraftServer> optionalServer = WorldUtil.getServer(playerWorld);
+        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
 
         if (spaceCubeState.existPlayerData(uuid)) {
             if (spaceCubeState.hasEntryPos(uuid) && spaceCubeState.entryPosListSize(uuid) > 1) {
@@ -215,12 +220,12 @@ public class PersonalShrinkingDevice extends ExtendItem {
                 // set world of return world (帰りのワールドを代入)
                 CompatIdentifier worldId = spaceCubeState.getWorldId(uuid);
 
-                ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, worldId.toMinecraft());
-
-                if (returnWorld == null) {
+                Optional<World> returnWorldOptional = WorldUtil.getWorld(playerWorld, worldId);
+                if (!returnWorldOptional.isPresent()) {
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: player's world is null.");
                     return ActionResult.PASS;
                 }
+                ServerWorld returnWorld = (ServerWorld) returnWorldOptional.get();
 
                 int x, y, z;
                 if (spaceCubeState.hasEntryPos(uuid)) {
@@ -253,12 +258,13 @@ public class PersonalShrinkingDevice extends ExtendItem {
             if (pos != null) {
                 Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
                 SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(pos);
-                ServerWorld returnWorld = (ServerWorld) WorldUtil.getWorld(playerWorld, scBlockPath.getDimension().toMinecraft());
+                Optional<World> returnWorldOptional = WorldUtil.getWorld(playerWorld, scBlockPath.getDimension());
 
-                if (returnWorld == null) {
+                if (!returnWorldOptional.isPresent()) {
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: player's world is null.");
                     return ActionResult.PASS;
                 }
+                ServerWorld returnWorld = (ServerWorld) returnWorldOptional.get();
 
                 int x, y, z;
                 if (scBlockPath.pos != null) {
@@ -287,8 +293,8 @@ public class PersonalShrinkingDevice extends ExtendItem {
     }
 
     @Override
-    public void appendTooltip(ItemAppendTooltipEvent event) {
-        super.appendTooltip(event);
-        event.addTooltip(TextUtil.translatable("tooltip.spacecube.personal_shrinking_device"));
+    public void appendTooltip(ItemAppendTooltipEvent e) {
+        super.appendTooltip(e);
+        e.addTooltip(TextUtil.translatable("tooltip.spacecube.personal_shrinking_device"));
     }
 }
