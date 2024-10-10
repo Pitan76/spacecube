@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.minecraft.nbt.NbtCompound;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
@@ -49,15 +50,15 @@ public class FluidTunnel implements ITunnelDef {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
         NbtUtil.put(nbt, "variant", fluidStorage.variant.toNbt());
-        NbtUtil.set(nbt, "amount", (long) fluidStorage.amount);
+        NbtUtil.putLong(nbt, "amount", fluidStorage.amount);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
         fluidStorage.variant = FluidVariant.fromNbt(NbtUtil.get(nbt, "variant"));
-        fluidStorage.amount = NbtUtil.get(nbt, "amount", Long.class);
+        fluidStorage.amount = NbtUtil.getLong(nbt, "amount");
     }
 
     public SingleVariantStorage<FluidVariant> getFluidStorage() {

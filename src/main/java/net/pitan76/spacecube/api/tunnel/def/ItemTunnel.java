@@ -3,10 +3,13 @@ package net.pitan76.spacecube.api.tunnel.def;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
+
+import java.util.Optional;
 
 public class ItemTunnel implements ITunnelDef {
     private TunnelWallBlockEntity blockEntity = null;
@@ -55,20 +58,28 @@ public class ItemTunnel implements ITunnelDef {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
         if (nbt == null) return;
-        if (NbtUtil.has(nbt, "importStack"))
-            setImportStack(ItemStack.fromNbt(NbtUtil.get(nbt, "importStack")));
-        if (NbtUtil.has(nbt, "exportStack"))
-            setExportStack(ItemStack.fromNbt(NbtUtil.get(nbt, "exportStack")));
+        if (NbtUtil.has(nbt, "importStack")) {
+            Optional<ItemStack> stack = NbtUtil.getItemStack(nbt, "importStack", registryLookup);
+            stack.ifPresent(this::setImportStack);
+        }
+
+        if (NbtUtil.has(nbt, "exportStack")) {
+            Optional<ItemStack> stack = NbtUtil.getItemStack(nbt, "exportStack", registryLookup);
+            stack.ifPresent(this::setExportStack);
+        }
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
         if (nbt == null) nbt = NbtUtil.create();
-        if (!getImportStack().isEmpty())
-            NbtUtil.put(nbt, "importStack", getImportStack().writeNbt(new NbtCompound()));
-        if (!getExportStack().isEmpty())
-            NbtUtil.put(nbt, "exportStack", getExportStack().writeNbt(new NbtCompound()));
+        if (!getImportStack().isEmpty()) {
+            NbtUtil.putItemStack(nbt, "importStack", getImportStack(), registryLookup);
+        }
+
+        if (!getExportStack().isEmpty()) {
+            NbtUtil.putItemStack(nbt, "exportStack", getExportStack(), registryLookup);
+        }
     }
 }

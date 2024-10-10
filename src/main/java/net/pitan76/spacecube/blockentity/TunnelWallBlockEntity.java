@@ -45,10 +45,6 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     // Tunnelの機能定義 (Tunnel function definition)
     public ITunnelDef tunnelDef = null;
 
-    // item tunnel用
-    // private DefaultedList<ItemStack> stacks = DefaultedList.ofSize(1, ItemStackUtil.empty());
-
-
     public ITunnelDef getTunnelDef() {
         if (tunnelDef == null)
             tunnelDef = getTunnelType().createTunnelDef(this);
@@ -95,7 +91,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
             NbtUtil.set(nbt, "tunnelItem", tunnelItemId.toString());
         }
 
-        getTunnelDef().writeNbt(nbt);
+        getTunnelDef().writeNbt(nbt, args.registryLookup);
     }
 
     @Override
@@ -114,7 +110,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
             tunnelItemId = CompatIdentifier.of(NbtUtil.getString(nbt, "tunnelItem"));
         }
 
-        getTunnelDef().readNbt(nbt);
+        getTunnelDef().readNbt(nbt, args.registryLookup);
     }
 
     public void addTicket() {
