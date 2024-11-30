@@ -188,7 +188,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
 
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScRoomPos().get());
 
-        Optional<World> optionalWorld = WorldUtil.getWorld(getWorld(), scBlockPath.getDimension());
+        Optional<ServerWorld> optionalWorld = WorldUtil.getWorld(getWorld(), scBlockPath.getDimension());
         if (!optionalWorld.isPresent()) return Optional.empty();
 
         BlockEntity blockEntity = WorldUtil.getBlockEntity(optionalWorld.get(), scBlockPath.getPos());

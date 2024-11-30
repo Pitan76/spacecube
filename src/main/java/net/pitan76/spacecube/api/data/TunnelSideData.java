@@ -18,6 +18,10 @@ public class TunnelSideData {
         tunnels.put(dir, pos);
     }
 
+    public TunnelSideData(net.pitan76.mcpitanlib.midohra.util.math.Direction dir, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
+        this(dir.toMinecraft(), pos.toMinecraft());
+    }
+
     public Map<Direction, BlockPos> getTunnels() {
         return tunnels;
     }
@@ -99,5 +103,29 @@ public class TunnelSideData {
                 return Optional.ofNullable(entry.getKey());
         }
         return Optional.empty();
+    }
+
+    public void addTunnel(net.pitan76.mcpitanlib.midohra.util.math.Direction dir, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
+        addTunnel(dir.toMinecraft(), pos.toMinecraft());
+    }
+
+    public void removeTunnel(net.pitan76.mcpitanlib.midohra.util.math.Direction dir) {
+        removeTunnel(dir.toMinecraft());
+    }
+
+    public boolean hasTunnel(net.pitan76.mcpitanlib.midohra.util.math.Direction dir) {
+        return hasTunnel(dir.toMinecraft());
+    }
+
+    public BlockPos getTunnel(net.pitan76.mcpitanlib.midohra.util.math.Direction dir) {
+        return getTunnel(dir.toMinecraft());
+    }
+
+    public Optional<net.pitan76.mcpitanlib.midohra.util.math.Direction> getRestMidohraDir() {
+        return getRestDir().map(net.pitan76.mcpitanlib.midohra.util.math.Direction::of);
+    }
+
+    public Optional<net.pitan76.mcpitanlib.midohra.util.math.Direction> getNextDir(net.pitan76.mcpitanlib.midohra.util.math.Direction dir) {
+        return getNextDir(dir.toMinecraft()).map(net.pitan76.mcpitanlib.midohra.util.math.Direction::of);
     }
 }

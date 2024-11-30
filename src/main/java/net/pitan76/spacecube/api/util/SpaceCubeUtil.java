@@ -2,13 +2,10 @@ package net.pitan76.spacecube.api.util;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.pitan76.mcpitanlib.api.util.ActionResultUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
@@ -76,9 +73,20 @@ public class SpaceCubeUtil {
         return getNearestPos(SpaceCubeState.getOrCreate(optionalServer.get()), pos);
     }
 
+    @Nullable
+    public static net.pitan76.mcpitanlib.midohra.util.math.BlockPos getNearestPos(net.pitan76.mcpitanlib.midohra.world.ServerWorld world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
+        BlockPos pos1 = getNearestPos(world.getRaw(), pos.toMinecraft());
+        if (pos1 == null) return null;
+        return net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(pos1);
+    }
+
     public static BlockPos getNewPos(ServerWorld world) {
         Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
         return getNewPos(SpaceCubeState.getOrCreate(optionalServer.get()));
+    }
+
+    public static net.pitan76.mcpitanlib.midohra.util.math.BlockPos getNewPos(net.pitan76.mcpitanlib.midohra.world.ServerWorld world) {
+        return net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(getNewPos(world.getRaw()));
     }
 
     public static int getSpaceCubeCount(SpaceCubeState state) {
@@ -90,23 +98,20 @@ public class SpaceCubeUtil {
         return getSpaceCubeCount(SpaceCubeState.getOrCreate(optionalServer.get()));
     }
 
-    // plan: include MCPitanLib
-    public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t, boolean swingHand) {
-        return ActionResultUtil.typedActionResult(result, t, swingHand);
-    }
-
-    public static <T> TypedActionResult<T> typedActionResult(ActionResult result, T t) {
-        return typedActionResult(result, t, true);
-    }
-
-    public static <T> ActionResult actionResult(TypedActionResult<T> result) {
-        return ActionResultUtil.actionResult(result);
+    public static int getSpaceCubeCount(net.pitan76.mcpitanlib.midohra.world.ServerWorld world) {
+        return getSpaceCubeCount(world.getRaw());
     }
 
     // ----
 
+    @Nullable
     public static ServerWorld getSpaceCubeWorld(ServerWorld world) {
-        Optional<World> optionalWorld = WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
-        return (ServerWorld) optionalWorld.get();
+        Optional<ServerWorld> optionalWorld = WorldUtil.getWorld(world, SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
+        return optionalWorld.orElse(null);
+    }
+
+    public static net.pitan76.mcpitanlib.midohra.world.ServerWorld getSpaceCubeWorld(net.pitan76.mcpitanlib.midohra.world.ServerWorld world) {
+        Optional<World> optionalWorld = world.getWorld(SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY);
+        return (net.pitan76.mcpitanlib.midohra.world.ServerWorld) optionalWorld.orElse(null);
     }
 }

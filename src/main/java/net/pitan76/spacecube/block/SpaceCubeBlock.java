@@ -6,18 +6,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProvider {
+public class SpaceCubeBlock extends CompatBlock implements ExtendBlockEntityProvider {
     public final int size;
 
     public SpaceCubeBlock(CompatibleBlockSettings settings, int size) {
@@ -63,24 +62,24 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         Player player = e.getPlayer();
 
         // If the player is sneaking, pass the event
         // プレイヤーがスニークしている場合はイベントをパス
-        if (e.isSneaking()) return ActionResult.PASS;
+        if (e.isSneaking()) return e.pass();
         // Only run on the server side (サーバー側のみで実行)
-        if (e.isClient()) return ActionResult.SUCCESS;
+        if (e.isClient()) return e.success();
 
         // If the player is holding a PersonalShrinkingDevice, pass the event
         // プレイヤーがPersonalShrinkingDeviceを持っている場合はイベントをパス
         //    → Process on the PersonalShrinkingDevice side
         //    → PersonalShrinkingDevice側で処理
         Item handItem = player.getMainHandStack().getItem();
-        if (handItem instanceof PersonalShrinkingDevice) return ActionResult.PASS;
-        if (handItem instanceof SpaceCubeUpgrader) return ActionResult.PASS;
+        if (handItem instanceof PersonalShrinkingDevice ||
+                handItem instanceof SpaceCubeUpgrader) return e.pass();
 
-        return ActionResult.SUCCESS;
+        return e.success();
     }
 
     @Override
@@ -90,20 +89,20 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
     @Override
     public BlockBreakResult onBreak(BlockBreakEvent e) {
-        World world = e.getWorld();
-        BlockPos pos = e.getPos();
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
 
         // Creative only - サバイバルは getPickStack() で処理 (Survival is handled by getPickStack() )
-        BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
+        BlockEntity blockEntity = e.getBlockEntity();
         if (!e.isClient() && blockEntity instanceof SpaceCubeBlockEntity) {
             SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
             if (e.player.isCreative() && !spaceCubeBlockEntity.isScRoomPosNull()) {
                 ItemStack stack = ItemStackUtil.create(this);
                 BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
 
-                ItemEntity itemEntity = ItemEntityUtil.create(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
+                ItemEntity itemEntity = ItemEntityUtil.create(world.getRaw(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
                 ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
-                WorldUtil.spawnEntity(world, itemEntity);
+                world.spawnEntity(itemEntity);
             }
         }
         return super.onBreak(e);
@@ -111,18 +110,18 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
     @Override
     public void onPlaced(BlockPlacedEvent e) {
-        World world = e.getWorld();
-        BlockPos pos = e.getPos();
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
         ItemStack stack = e.getStack();
 
 
         if (!e.isClient() && BlockEntityDataUtil.hasBlockEntityNbt(stack)) {
-            BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
+            BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 BlockEntityDataUtil.readCompatBlockEntityNbtFromStack(stack, spaceCubeBlockEntity);
 
-                ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
+                ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getRaw());
                 if (spaceCubeWorld == null) {
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
                     super.onPlaced(e);
@@ -131,13 +130,13 @@ public class SpaceCubeBlock extends ExtendBlock implements ExtendBlockEntityProv
 
                 Optional<MinecraftServer> optionalServer = WorldUtil.getServer(spaceCubeWorld);
                 SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
-                Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
+                Map<net.minecraft.util.math.BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
 
-                BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
+                net.minecraft.util.math.BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
                 if (spacePosWithSCBlockPath.containsKey(scRoomPos)) {
                     SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(scRoomPos);
-                    scBlockPath.setPos(pos);
-                    scBlockPath.setDimension(CompatIdentifier.fromMinecraft(WorldUtil.getWorldId(world)));
+                    scBlockPath.setPos(pos.toMinecraft());
+                    scBlockPath.setDimension(world.getId());
                 }
             }
         }

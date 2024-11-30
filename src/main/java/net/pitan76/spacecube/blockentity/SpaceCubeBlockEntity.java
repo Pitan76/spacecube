@@ -3,7 +3,6 @@ package net.pitan76.spacecube.blockentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -16,6 +15,10 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.CompatSidedInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanExtractArgs;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanInsertArgs;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
@@ -36,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInventory, IInventory {
+public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSidedInventory, IInventory {
 
     // scRoomPos = Space Cube Position in Space Cube Dimension (Space Cube Dimension内のスペースキューブの位置)
     public BlockPos scRoomPos = null;
@@ -233,7 +236,8 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int[] getAvailableSlots(AvailableSlotsArgs args) {
+        Direction side = args.getSide();
 
         if (!hasTunnelType(TunnelType.ITEM)) return new int[0];
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
@@ -252,7 +256,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
     }
 
     @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+    public boolean canInsert(CanInsertArgs args) {
+        Direction dir = args.getDir();
+        int slot = args.getSlot();
+
         if (!hasTunnelType(TunnelType.ITEM)) return false;
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
 
@@ -262,7 +269,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+    public boolean canExtract(CanExtractArgs args) {
+        Direction dir = args.getDir();
+        int slot = args.getSlot();
+
         if (!hasTunnelType(TunnelType.ITEM)) return false;
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
 
@@ -385,5 +395,17 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements SidedInve
             default:
                 return null;
         }
+    }
+
+    public boolean hasTunnel(TunnelType type, net.pitan76.mcpitanlib.midohra.util.math.Direction direction) {
+        return hasTunnel(type, direction.toMinecraft());
+    }
+
+    public boolean addTunnel(TunnelType type, net.pitan76.mcpitanlib.midohra.util.math.Direction direction, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
+        return addTunnel(type, direction.toMinecraft(), pos.toMinecraft());
+    }
+
+    public void removeTunnel(TunnelType type, net.pitan76.mcpitanlib.midohra.util.math.Direction direction) {
+        removeTunnel(type, direction.toMinecraft());
     }
 }
