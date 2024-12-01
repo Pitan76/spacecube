@@ -4,8 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
@@ -13,7 +11,10 @@ import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
+import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
+import net.pitan76.mcpitanlib.api.sound.CompatSoundEvents;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.entity.ServerPlayerUtil;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
@@ -171,11 +172,11 @@ public class PersonalShrinkingDevice extends CompatItem {
                 spaceCubeState.markDirty();
 
                 // Teleport the player to the space cube dimension (プレイヤーをspace cube dimensionにテレポート)
-                serverPlayer.teleport(spaceCubeWorld, scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ(), player.getYaw(), player.getPitch());
+                ServerPlayerUtil.teleport(serverPlayer, spaceCubeWorld, scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ(), player.getYaw(), player.getPitch());
             }
 
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-            serverPlayer.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            ServerPlayerUtil.playSound(serverPlayer, CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
 
             return e.success();
         }
@@ -204,7 +205,7 @@ public class PersonalShrinkingDevice extends CompatItem {
                 int y = entryPos.getY();
                 int z = entryPos.getZ();
 
-                serverPlayer.teleport(x, y, z);
+                ServerPlayerUtil.teleport(serverPlayer, x, y, z);
 
             } else {
                 // another dimension
@@ -238,10 +239,10 @@ public class PersonalShrinkingDevice extends CompatItem {
                 spaceCubeState.removeEntryPosList(uuid);
 
                 // Teleport the player to the return world (プレイヤーをreturn worldにテレポート)
-                serverPlayer.teleport(returnWorld, x, y, z, player.getYaw(), player.getPitch());
+                ServerPlayerUtil.teleport(serverPlayer, returnWorld, x, y, z, player.getYaw(), player.getPitch());
             }
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-            player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
             return CompatActionResult.SUCCESS;
         } else {
             // データがないときの処理
@@ -273,10 +274,10 @@ public class PersonalShrinkingDevice extends CompatItem {
                     y = returnWorld.getSpawnPos().getY();
                     z = returnWorld.getSpawnPos().getZ();
                 }
-                serverPlayer.teleport(returnWorld, x, y, z, player.getYaw(), player.getPitch());
+                ServerPlayerUtil.teleport(serverPlayer, returnWorld, x, y, z, player.getYaw(), player.getPitch());
 
                 // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-                player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
                 return CompatActionResult.SUCCESS;
             }
 

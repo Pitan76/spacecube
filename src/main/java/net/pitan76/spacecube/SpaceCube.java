@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.transfer.fluid.v1.fabric.FabricFluidStorage;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.PlatformUtil;
@@ -69,13 +70,12 @@ public class SpaceCube extends ExtendModInitializer {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public static void registerFluidStorage() {
         FluidStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 ITunnelDef def = ((TunnelWallBlockEntity) blockEntity).getTunnelDef();
                 if (def instanceof FluidTunnel)
-                    return ((FluidTunnel) def).getFluidStorage();
+                    return ((FabricFluidStorage)((FluidTunnel) def).getFluidStorage()).storage;
             }
 
             return null;
@@ -86,7 +86,7 @@ public class SpaceCube extends ExtendModInitializer {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 ITunnelDef def = scBlockEntity.getTunnelDef(TunnelType.FLUID, dir);
                 if (def instanceof FluidTunnel)
-                    return ((FluidTunnel) def).getFluidStorage();
+                    return ((FabricFluidStorage)((FluidTunnel) def).getFluidStorage()).storage;
             }
 
             return null;

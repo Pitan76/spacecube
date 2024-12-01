@@ -14,12 +14,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
+import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.ItemUtil;
@@ -66,9 +66,9 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
-        writeNbt(new WriteNbtArgs(nbt));
+    public NbtCompound toInitialChunkDataNbt(CompatRegistryLookup registryLookup) {
+        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
+        writeNbt(new WriteNbtArgs(nbt, registryLookup));
         return nbt;
     }
 
