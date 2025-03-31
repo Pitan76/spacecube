@@ -21,10 +21,7 @@ import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
 import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
-import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import net.pitan76.mcpitanlib.api.util.ItemUtil;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -115,7 +112,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
 
     public void addTicket() {
         if (!Config.enabledChunkLoader()) return;
-        if (!(getWorld() instanceof ServerWorld)) return;
+        if (!(BlockEntityUtil.getWorld(this) instanceof ServerWorld)) return;
 
         Optional<SpaceCubeBlockEntity> scBlockEntity = getSpaceCubeBlockEntity();
 
@@ -175,20 +172,20 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
         if (world.isClient()) return;
         if (!(world instanceof ServerWorld)) return;
 
-        ((ServerWorld) world).getChunkManager().markForUpdate(getPos());
+        ((ServerWorld) world).getChunkManager().markForUpdate(BlockEntityUtil.getPos(this));
     }
 
     public Optional<SpaceCubeBlockEntity> getSpaceCubeBlockEntity() {
         if (!getScRoomPos().isPresent()) return Optional.empty();
-        if (getWorld() == null) return Optional.empty();
-        if (!WorldUtil.getServer(getWorld()).isPresent()) return Optional.empty();
+        if (BlockEntityUtil.getWorld(this) == null) return Optional.empty();
+        if (!WorldUtil.getServer(BlockEntityUtil.getWorld(this)).isPresent()) return Optional.empty();
 
         Optional<MinecraftServer> optionalServer = WorldUtil.getServer(getWorld());
         SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
 
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScRoomPos().get());
 
-        Optional<ServerWorld> optionalWorld = WorldUtil.getWorld(getWorld(), scBlockPath.getDimension());
+        Optional<ServerWorld> optionalWorld = WorldUtil.getWorld(BlockEntityUtil.getWorld(this), scBlockPath.getDimension());
         if (!optionalWorld.isPresent()) return Optional.empty();
 
         BlockEntity blockEntity = WorldUtil.getBlockEntity(optionalWorld.get(), scBlockPath.getPos());
@@ -252,7 +249,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     public Optional<Direction> getDirection() {
         Optional<SpaceCubeBlockEntity> scBlockEntity = getSpaceCubeBlockEntity();
         if (!scBlockEntity.isPresent()) return Optional.empty();
-        return scBlockEntity.get().getDir(getTunnelType(), getPos());
+        return scBlockEntity.get().getDir(getTunnelType(), BlockEntityUtil.getPos(this));
     }
 
     @Override

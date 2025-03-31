@@ -20,6 +20,7 @@ import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanExtractArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanInsertArgs;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
+import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
@@ -152,9 +153,9 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (ticketedChunkSpaceCubeWorld) return;
 
         if (!Config.enabledChunkLoader()) return;
-        if (!(getWorld() instanceof ServerWorld)) return;
+        if (!(BlockEntityUtil.getWorld(this) instanceof ServerWorld)) return;
 
-        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) getWorld());
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) BlockEntityUtil.getWorld(this));
         if (spaceCubeWorld == null) return;
 
         ChunkPos chunkPos = new ChunkPos(getScRoomPos());
@@ -166,12 +167,12 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (ticketedChunkMainWorld) return;
 
         if (!Config.enabledChunkLoader()) return;
-        if (!(getWorld() instanceof ServerWorld)) return;
+        if (!(BlockEntityUtil.getWorld(this) instanceof ServerWorld)) return;
 
-        World mainWorld = getWorld();
+        World mainWorld = BlockEntityUtil.getWorld(this);
         if (!(mainWorld instanceof ServerWorld)) return;
 
-        ChunkPos chunkPos = new ChunkPos(getPos());
+        ChunkPos chunkPos = new ChunkPos(BlockEntityUtil.getPos(this));
         WorldUtil.addTicket(((ServerWorld) mainWorld), ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
         ticketedChunkMainWorld = true;
     }

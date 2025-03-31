@@ -169,7 +169,7 @@ public class PersonalShrinkingDevice extends CompatItem {
 
                 spaceCubeState.addEntryPos(serverPlayer.getUuid(), serverPlayer.getBlockPos(), world.getId());
 
-                spaceCubeState.markDirty();
+                PersistentStateUtil.markDirty(spaceCubeState);
 
                 // Teleport the player to the space cube dimension (プレイヤーをspace cube dimensionにテレポート)
                 ServerPlayerUtil.teleport(serverPlayer, spaceCubeWorld, scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ(), player.getYaw(), player.getPitch());
