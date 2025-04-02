@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.world;
 
-import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.util.math.ChunkPos;
+import net.pitan76.mcpitanlib.midohra.world.chunk.ChunkTicketType;
 
 import java.util.Comparator;
 

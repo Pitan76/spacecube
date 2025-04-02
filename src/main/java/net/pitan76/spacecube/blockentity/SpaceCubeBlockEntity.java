@@ -159,7 +159,9 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (spaceCubeWorld == null) return;
 
         ChunkPos chunkPos = new ChunkPos(getScRoomPos());
-        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+
+        net.pitan76.mcpitanlib.midohra.world.ServerWorld mServerWorld = net.pitan76.mcpitanlib.midohra.world.ServerWorld.of(spaceCubeWorld);
+        mServerWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, net.pitan76.mcpitanlib.midohra.util.math.ChunkPos.of(chunkPos), Config.getChunkLoaderRadius(), chunkPos);
         ticketedChunkSpaceCubeWorld = true;
     }
 
@@ -173,7 +175,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (!(mainWorld instanceof ServerWorld)) return;
 
         ChunkPos chunkPos = new ChunkPos(BlockEntityUtil.getPos(this));
-        WorldUtil.addTicket(((ServerWorld) mainWorld), ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius(), chunkPos);
+
+        net.pitan76.mcpitanlib.midohra.world.ServerWorld mServerWorld = net.pitan76.mcpitanlib.midohra.world.ServerWorld.of((ServerWorld) mainWorld);
+        mServerWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, net.pitan76.mcpitanlib.midohra.util.math.ChunkPos.of(chunkPos), Config.getChunkLoaderRadius(), chunkPos);
+
         ticketedChunkMainWorld = true;
     }
 
