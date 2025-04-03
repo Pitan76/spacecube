@@ -25,9 +25,6 @@
       "net.pitan76.spacecube.client.compat.ModMenuAddon"
     ]
   },
-  "mixins": [
-    "spacecube.mixins.json"
-  ],
   "depends": {
     "fabricloader": "*",
     "minecraft": "*",
