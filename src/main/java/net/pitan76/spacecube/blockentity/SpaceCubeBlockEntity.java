@@ -159,9 +159,8 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (spaceCubeWorld == null) return;
 
         ChunkPos chunkPos = new ChunkPos(getScRoomPos());
+        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius());
 
-        net.pitan76.mcpitanlib.midohra.world.ServerWorld mServerWorld = net.pitan76.mcpitanlib.midohra.world.ServerWorld.of(spaceCubeWorld);
-        mServerWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, net.pitan76.mcpitanlib.midohra.util.math.ChunkPos.of(chunkPos), Config.getChunkLoaderRadius(), chunkPos);
         ticketedChunkSpaceCubeWorld = true;
     }
 
@@ -175,9 +174,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (!(mainWorld instanceof ServerWorld)) return;
 
         ChunkPos chunkPos = new ChunkPos(BlockEntityUtil.getPos(this));
-
-        net.pitan76.mcpitanlib.midohra.world.ServerWorld mServerWorld = net.pitan76.mcpitanlib.midohra.world.ServerWorld.of((ServerWorld) mainWorld);
-        mServerWorld.getChunkManager().addTicket(ChunkTicketTypes.CHUNK_LOADER, net.pitan76.mcpitanlib.midohra.util.math.ChunkPos.of(chunkPos), Config.getChunkLoaderRadius(), chunkPos);
+        WorldUtil.addTicket((ServerWorld) mainWorld, ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius());
 
         ticketedChunkMainWorld = true;
     }
@@ -249,7 +246,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
         if (!data.hasTunnel(side)) return new int[0];
         ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
+
+        if (spaceCubeWorld == null) return new int[0];
         BlockEntity blockEntity = WorldUtil.getBlockEntity(spaceCubeWorld, data.getTunnel(side));
+
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return new int[0];
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
@@ -291,8 +291,12 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (!hasTunnelType(type)) return null;
         TunnelSideData data = getTunnelSide(type);
         if (!data.hasTunnel(dir)) return null;
-        BlockEntity blockEntity = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world).getBlockEntity(data.getTunnel(dir));
+        ServerWorld serverWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
+        if (serverWorld == null) return null;
+
+        BlockEntity blockEntity = serverWorld.getBlockEntity(data.getTunnel(dir));
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return null;
+
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         return tunnelWallBlockEntity.getTunnelDef();
     }
