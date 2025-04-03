@@ -45,19 +45,19 @@ public class SpaceCubeBlock extends CompatBlock implements ExtendBlockEntityProv
     public static SpaceCubeBlock getSpaceCubeBlockFromSize(int size) {
         switch (size) {
             case 2:
-                return Blocks.TINY_SPCAE_CUBE;
+                return Blocks.TINY_SPACE_CUBE;
             case 3:
-                return Blocks.SMALL_SPCAE_CUBE;
+                return Blocks.SMALL_SPACE_CUBE;
             case 4:
-                return Blocks.NORMAL_SPCAE_CUBE;
+                return Blocks.NORMAL_SPACE_CUBE;
             case 5:
-                return Blocks.LARGE_SPCAE_CUBE;
+                return Blocks.LARGE_SPACE_CUBE;
             case 6:
-                return Blocks.GIANT_SPCAE_CUBE;
+                return Blocks.GIANT_SPACE_CUBE;
             case 7:
-                return Blocks.MAXIMUM_SPCAE_CUBE;
+                return Blocks.MAXIMUM_SPACE_CUBE;
             default:
-                return Blocks.NORMAL_SPCAE_CUBE;
+                return Blocks.NORMAL_SPACE_CUBE;
         }
     }
 

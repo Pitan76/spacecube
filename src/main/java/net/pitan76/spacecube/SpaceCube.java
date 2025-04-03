@@ -27,7 +27,7 @@ public class SpaceCube extends ExtendModInitializer {
     // MCPitanLibの独自のレジストリ MCPitanLib's own registry
     public static CompatRegistryV2 registry;
 
-    public static final CreativeTabBuilder SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(_id("creative_tab")).setIcon(() -> ItemStackUtil.create(Items.NORMAL_SPCAE_CUBE, 1));
+    public static final CreativeTabBuilder SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(_id("creative_tab")).setIcon(() -> ItemStackUtil.create(Items.NORMAL_SPACE_CUBE, 1));
     public static final CompatIdentifier SPACE_CUBE_DIMENSION_WORLD_KEY = _id("space_cube_dimension");
 
     // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)

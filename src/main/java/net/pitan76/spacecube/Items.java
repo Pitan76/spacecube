@@ -12,12 +12,12 @@ import static net.pitan76.spacecube.SpaceCube._id;
 import static net.pitan76.spacecube.SpaceCube.registry;
 
 public class Items {
-    public static Item TINY_SPCAE_CUBE = ItemUtil.create(Blocks.TINY_SPCAE_CUBE, CompatibleItemSettings.of(_id("tiny_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
-    public static Item SMALL_SPCAE_CUBE = ItemUtil.create(Blocks.SMALL_SPCAE_CUBE, CompatibleItemSettings.of(_id("small_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
-    public static Item NORMAL_SPCAE_CUBE = ItemUtil.create(Blocks.NORMAL_SPCAE_CUBE, CompatibleItemSettings.of(_id("normal_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
-    public static Item LARGE_SPCAE_CUBE = ItemUtil.create(Blocks.LARGE_SPCAE_CUBE, CompatibleItemSettings.of(_id("large_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
-    public static Item GIANT_SPCAE_CUBE = ItemUtil.create(Blocks.GIANT_SPCAE_CUBE, CompatibleItemSettings.of(_id("giant_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
-    public static Item MAXIMUM_SPCAE_CUBE = ItemUtil.create(Blocks.MAXIMUM_SPCAE_CUBE, CompatibleItemSettings.of(_id("maximum_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item TINY_SPACE_CUBE = ItemUtil.create(Blocks.TINY_SPACE_CUBE, CompatibleItemSettings.of(_id("tiny_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item SMALL_SPACE_CUBE = ItemUtil.create(Blocks.SMALL_SPACE_CUBE, CompatibleItemSettings.of(_id("small_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item NORMAL_SPACE_CUBE = ItemUtil.create(Blocks.NORMAL_SPACE_CUBE, CompatibleItemSettings.of(_id("normal_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item LARGE_SPACE_CUBE = ItemUtil.create(Blocks.LARGE_SPACE_CUBE, CompatibleItemSettings.of(_id("large_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item GIANT_SPACE_CUBE = ItemUtil.create(Blocks.GIANT_SPACE_CUBE, CompatibleItemSettings.of(_id("giant_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
+    public static Item MAXIMUM_SPACE_CUBE = ItemUtil.create(Blocks.MAXIMUM_SPACE_CUBE, CompatibleItemSettings.of(_id("maximum_space_cube")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
 
     public static Item PERSONAL_SHRINKING_DEVICE = new PersonalShrinkingDevice(CompatibleItemSettings.of(_id("personal_shrinking_device")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB));
 
@@ -35,12 +35,12 @@ public class Items {
     public static Item MAXIMUM_UPGRADER = new SpaceCubeUpgrader(CompatibleItemSettings.of(_id("maximum_upgrader")).addGroup(SpaceCube.SPACE_CUBE_CREATIVE_TAB), 7);
 
     public static void init() {
-        register(_id("tiny_space_cube"), () -> TINY_SPCAE_CUBE);
-        register(_id("small_space_cube"), () -> SMALL_SPCAE_CUBE);
-        register(_id("normal_space_cube"), () -> NORMAL_SPCAE_CUBE);
-        register(_id("large_space_cube"), () -> LARGE_SPCAE_CUBE);
-        register(_id("giant_space_cube"), () -> GIANT_SPCAE_CUBE);
-        register(_id("maximum_space_cube"), () -> MAXIMUM_SPCAE_CUBE);
+        register(_id("tiny_space_cube"), () -> TINY_SPACE_CUBE);
+        register(_id("small_space_cube"), () -> SMALL_SPACE_CUBE);
+        register(_id("normal_space_cube"), () -> NORMAL_SPACE_CUBE);
+        register(_id("large_space_cube"), () -> LARGE_SPACE_CUBE);
+        register(_id("giant_space_cube"), () -> GIANT_SPACE_CUBE);
+        register(_id("maximum_space_cube"), () -> MAXIMUM_SPACE_CUBE);
 
         register(_id("personal_shrinking_device"), () -> PERSONAL_SHRINKING_DEVICE);
 

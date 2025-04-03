@@ -18,7 +18,7 @@ public class BlockEntities {
     public static RegistryResult<BlockEntityType<?>> TUNNEL_WALL_BLOCK_ENTITY;
 
     public static void init() {
-        SPACE_CUBE_BLOCK_ENTITY = register(SpaceCube._id("space_cube_block"), () -> create(SpaceCubeBlockEntity::new, Blocks.TINY_SPCAE_CUBE, Blocks.SMALL_SPCAE_CUBE, Blocks.NORMAL_SPCAE_CUBE, Blocks.LARGE_SPCAE_CUBE, Blocks.GIANT_SPCAE_CUBE, Blocks.MAXIMUM_SPCAE_CUBE));
+        SPACE_CUBE_BLOCK_ENTITY = register(SpaceCube._id("space_cube_block"), () -> create(SpaceCubeBlockEntity::new, Blocks.TINY_SPACE_CUBE, Blocks.SMALL_SPACE_CUBE, Blocks.NORMAL_SPACE_CUBE, Blocks.LARGE_SPACE_CUBE, Blocks.GIANT_SPACE_CUBE, Blocks.MAXIMUM_SPACE_CUBE));
         TUNNEL_WALL_BLOCK_ENTITY = register(SpaceCube._id("tunnel_wall"), () -> create(TunnelWallBlockEntity::new, Blocks.TUNNEL_WALL));
     }
 
