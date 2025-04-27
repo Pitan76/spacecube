@@ -1,13 +1,14 @@
 package net.pitan76.spacecube.api.list;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity.indexToDir;
 
-public class TunnelIODefaultedList extends DefaultedList<ItemStack> {
+public class TunnelIODefaultedList extends ItemStackList {
 
     private final SpaceCubeBlockEntity blockEntity;
 
@@ -23,7 +24,6 @@ public class TunnelIODefaultedList extends DefaultedList<ItemStack> {
         super(delegate, initialElement);
         this.blockEntity = blockEntity;
     }
-
 
     public static TunnelIODefaultedList ofSize(SpaceCubeBlockEntity entity) {
         return ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStackUtil.empty(), entity);
@@ -56,7 +56,7 @@ public class TunnelIODefaultedList extends DefaultedList<ItemStack> {
     }
 
     @Override
-    public ItemStack get(int index) {
+    public @NotNull ItemStack get(int index) {
         if (!blockEntity.hasTunnelType(TunnelType.ITEM)) return ItemStackUtil.empty();
         Direction dir = indexToDir(Math.floorDiv(index, 2));
 

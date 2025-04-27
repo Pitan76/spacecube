@@ -6,7 +6,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
@@ -24,6 +23,7 @@ import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
@@ -345,7 +345,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         // Import Stacks = 偶数 (0, 2, 4, 6, 8, 10...)
         // Export Stacks = 奇数 (1, 3, 5, 7, 9, 11...)
 
@@ -364,7 +364,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         // 11: WEST Dir Export Stack
 
         TunnelIODefaultedList stacks = TunnelIODefaultedList.ofSize(this);
-        if (!hasTunnelType(TunnelType.ITEM)) return DefaultedList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStackUtil.empty());
+        if (!hasTunnelType(TunnelType.ITEM)) return ItemStackList.ofSize(ItemTunnel.defaultSize * Direction.values().length, ItemStackUtil.empty());
 
         return stacks;
     }
