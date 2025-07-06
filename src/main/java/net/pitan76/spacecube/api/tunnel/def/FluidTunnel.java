@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.api.tunnel.def;
 
-import net.minecraft.nbt.NbtCompound;
-import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.FluidStorageUtil;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.IFluidStorage;
 import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
@@ -34,13 +34,13 @@ public class FluidTunnel implements ITunnelDef {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
-        fluidStorage.writeNbt(nbt, registryLookup);
+    public void writeNbt(WriteNbtArgs args) {
+        fluidStorage.writeNbt(args);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
-        fluidStorage.readNbt(nbt, registryLookup);
+    public void readNbt(ReadNbtArgs args) {
+        fluidStorage.readNbt(args);
     }
 
     public IFluidStorage getFluidStorage() {

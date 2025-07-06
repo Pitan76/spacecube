@@ -103,6 +103,11 @@ public class TunnelWallBlock extends WallBlock implements ExtendBlockEntityProvi
                     }
 
                     Optional<Direction> nextDir = tunnelSide.getNextDir(dir);
+                    if (!nextDir.isPresent()) {
+                        e.getPlayer().sendMessage(TextUtil.literal("[SpaceCube] " + "Error: No next direction found"));
+                        return e.fail();
+                    }
+
                     Direction nextDirValue = nextDir.get();
                     world.setBlockState(pos, world.getBlockState(pos).with(CONNECTED_SIDE, nextDirValue));
                     if (!tunnelSide.hasTunnel(nextDirValue)) {

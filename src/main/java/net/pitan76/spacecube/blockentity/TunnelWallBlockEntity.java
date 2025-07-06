@@ -1,6 +1,5 @@
 package net.pitan76.spacecube.blockentity;
 
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -20,8 +20,14 @@ import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.packet.UpdatePacketType;
 import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
-import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.tile.RenderAttachmentBlockEntity;
+import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
+import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -34,10 +40,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAttachmentBlockEntity, IInventory, SidedInventory {
-    private BlockPos scRoomPos;
-    private TunnelType tunnelType;
-    private CompatIdentifier tunnelItemId;
+public class TunnelWallBlockEntity extends CompatBlockEntity implements IInventory, RenderAttachmentBlockEntity, SidedInventory {
+    private BlockPos scRoomPos = PosUtil.flooredBlockPos(0, 0, 0);
+    private TunnelType tunnelType = TunnelType.NONE;
+    private CompatIdentifier tunnelItemId = CompatIdentifier.EMPTY;
 
     // Tunnelの機能定義 (Tunnel function definition)
     public ITunnelDef tunnelDef = null;
@@ -72,42 +78,24 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     @Override
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtCompound nbt = args.getNbt();
-        
-        if (scRoomPos != null) {
-            NbtCompound posNbt = NbtUtil.create();
-            NbtUtil.set(posNbt, "x", scRoomPos.getX());
-            NbtUtil.set(posNbt, "y", scRoomPos.getY());
-            NbtUtil.set(posNbt, "z", scRoomPos.getZ());
-            NbtUtil.put(nbt, "scRoomPos", posNbt);
-        }
-        if (tunnelType != null) {
-            NbtUtil.set(nbt, "tunnelType", tunnelType.getId().toString());
-        }
-        if (tunnelItemId != null) {
-            NbtUtil.set(nbt, "tunnelItem", tunnelItemId.toString());
-        }
 
-        getTunnelDef().writeNbt(nbt, args.registryLookup);
+        NbtRWUtil.putBlockPos(args, "scRoomPos", scRoomPos);
+        NbtRWUtil.putString(args, "tunnelType", tunnelType.getId().toString());
+        NbtRWUtil.putString(args, "tunnelItem", tunnelItemId.toString());
+
+        getTunnelDef().writeNbt(args);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        NbtCompound nbt = args.getNbt();
-        
-        if (NbtUtil.has(nbt, "scRoomPos")) {
-            scRoomPos = NbtUtil.getBlockPos(nbt, "scRoomPos");
-            addTicket();
-        }
-        if (NbtUtil.has(nbt, "tunnelType")) {
-            tunnelType = TunnelType.fromId(CompatIdentifier.of(NbtUtil.getString(nbt, "tunnelType")));
-        }
-        if (NbtUtil.has(nbt, "tunnelItem")) {
-            tunnelItemId = CompatIdentifier.of(NbtUtil.getString(nbt, "tunnelItem"));
-        }
 
-        getTunnelDef().readNbt(nbt, args.registryLookup);
+        scRoomPos = NbtRWUtil.getBlockPosV(args, "scRoomPos");
+        tunnelType = TunnelType.fromString(NbtRWUtil.getStringOrDefault(args, "tunnelType", TunnelType.NONE.getId().toString()));
+        tunnelItemId = CompatIdentifier.of(
+                NbtRWUtil.getStringOrDefault(args, "tunnelItem", CompatIdentifier.EMPTY.toString()));
+
+        getTunnelDef().readNbt(args);
     }
 
     public void addTicket() {
@@ -138,7 +126,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     }
 
     public void setTunnelItem(Item tunnelItem) {
-        setTunnelItemId(ItemUtil.toID(tunnelItem));
+        setTunnelItemId(ItemUtil.toId(tunnelItem));
     }
 
     public Optional<Item> getTunnelItem() {
@@ -160,18 +148,19 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
     }
 
     @Override
-    public @Nullable Object getRenderAttachmentData() {
+    public @Nullable Object getCompatRenderData() {
         // Render用スレッドへのアクセスはこれを使う
         // Access to the Render thread is done using this
-
         return new TunnelWallBlockEntityRenderAttachmentData(getTunnelType());
     }
 
     public void sync() {
+        World world = callGetWorld();
         if (world == null) return;
-        if (world.isClient()) return;
+        if (WorldUtil.isClient(world)) return;
         if (!(world instanceof ServerWorld)) return;
 
+        // TODO: MCPitanLibの
         ((ServerWorld) world).getChunkManager().markForUpdate(BlockEntityUtil.getPos(this));
     }
 
@@ -180,9 +169,10 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements RenderAt
         if (BlockEntityUtil.getWorld(this) == null) return Optional.empty();
         if (!WorldUtil.getServer(BlockEntityUtil.getWorld(this)).isPresent()) return Optional.empty();
 
-        Optional<MinecraftServer> optionalServer = WorldUtil.getServer(getWorld());
-        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
+        Optional<MinecraftServer> optionalServer = WorldUtil.getServer(callGetWorld());
+        if (!optionalServer.isPresent()) return Optional.empty();
 
+        SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
         SCBlockPath scBlockPath = spaceCubeState.getSpacePosWithSCBlockPath().get(getScRoomPos().get());
 
         Optional<ServerWorld> optionalWorld = WorldUtil.getWorld(BlockEntityUtil.getWorld(this), scBlockPath.getDimension());

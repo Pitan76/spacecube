@@ -1,8 +1,8 @@
 package net.pitan76.spacecube.api.tunnel.def;
 
-import net.minecraft.nbt.NbtCompound;
-import net.pitan76.mcpitanlib.api.registry.CompatRegistryLookup;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
+import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
+import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import net.pitan76.spacecube.compat.TunnelEnergyStorage;
@@ -85,12 +85,12 @@ public class EnergyTunnel implements ITunnelDef {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
-        NbtUtil.putLong(nbt, "energy", energy);
+    public void writeNbt(WriteNbtArgs args) {
+        NbtRWUtil.putLong(args, "energy", energy);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, CompatRegistryLookup registryLookup) {
-        energy = NbtUtil.getLong(nbt, "energy");
+    public void readNbt(ReadNbtArgs args) {
+        energy = NbtRWUtil.getLong(args, "energy");
     }
 }
