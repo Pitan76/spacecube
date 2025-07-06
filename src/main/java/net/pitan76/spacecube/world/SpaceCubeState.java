@@ -66,9 +66,9 @@ public class SpaceCubeState extends CompatiblePersistentState {
         }
 
         // Get spacePosWithSCBlockPath
-        NbtList spacePosWithSCBlockPathList_nbt = nbt.getList("spacePosWithSCBlockPathList", 10);
-        for (int i = 0; i < spacePosWithSCBlockPathList_nbt.size(); i++) {
-            NbtCompound spacePosWithSCBlockPath_nbt = spacePosWithSCBlockPathList_nbt.getCompound(i);
+        NbtList spacePosWithSCBlockPathList_nbt = NbtUtil.getList(nbt, "spacePosWithSCBlockPathList", 10);
+        for (int i = 0; i < NbtListUtil.size(spacePosWithSCBlockPathList_nbt); i++) {
+            NbtCompound spacePosWithSCBlockPath_nbt = NbtListUtil.getCompound(spacePosWithSCBlockPathList_nbt, i);
 
             // BlockPos (spacePos)
             BlockPos spacePos;
