@@ -7,3 +7,14 @@ Space Cube is a mod that creates space in another dimension
 
 Fabric版のCompact Machinesが欲しいなーと思い、1から作って再現してみました。
 I thought I'd like a Fabric version of Compact Machines, so I made one from scratch and tried to reproduce it.
+
+## Dependency
+```groovy
+repositories {
+    maven { url "https://maven.pitan76.net/" }
+}
+
+dependencies {
+    modImplementation "net.pitan76.spacecube-fabric:0.9.13"
+}
+```
