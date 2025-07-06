@@ -32,3 +32,6 @@ dependencies {
     modImplementation "net.pitan76.spacecube-fabric:0.9.13"
 }
 ```
+
+## License
+- MIT License
