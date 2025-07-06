@@ -16,6 +16,7 @@ import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;
 import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 import net.pitan76.spacecube.cmd.SpaceCubeCommand;
 import net.pitan76.spacecube.compat.RebornEnergyRegister;
+import net.pitan76.spacecube.world.ChunkTicketTypes;
 
 public class SpaceCube extends ExtendModInitializer {
 
@@ -29,9 +30,6 @@ public class SpaceCube extends ExtendModInitializer {
 
     public static final CreativeTabBuilder SPACE_CUBE_CREATIVE_TAB = CreativeTabBuilder.create(_id("creative_tab")).setIcon(() -> ItemStackUtil.create(Items.NORMAL_SPACE_CUBE, 1));
     public static final CompatIdentifier SPACE_CUBE_DIMENSION_WORLD_KEY = _id("space_cube_dimension");
-
-    // TODO: Space Cube Dimensionで雨が降らないようにする (Make it so that it doesn't rain in the Space Cube Dimension)
-    // TODO: アップグレーダーの実装 (Implementation of upgrader)
 
     @Override
     public void init() {
@@ -50,6 +48,8 @@ public class SpaceCube extends ExtendModInitializer {
 
         registerFluidStorage();
         registerEnergyStorage();
+
+        ChunkTicketTypes.init();
 
         CommandRegistry.register("spacecube", new SpaceCubeCommand());
     }

@@ -116,7 +116,6 @@ publishing {
     }
 }
 
-
 curseforge {
     if (System.getenv("CURSEFORGE_TOKEN") != null) {
         apiKey = System.getenv("CURSEFORGE_TOKEN")

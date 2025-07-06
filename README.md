@@ -15,7 +15,7 @@ Check the latest version on the above link.
 - gradle.properties
 ```properties
 # check these on https://maven.pitan76.net/v/#net/pitan76/
-mcpitanlib_version=1.20.4:3.3.7
+mcpitanlib_version=1.20.4:3.3.8
 itemalchemy_version=1.1.3
 ```
 
@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     modImplementation "net.pitan76:mcpitanlib-fabric-${project.mcpitanlib_version}"
-    modImplementation "net.pitan76.spacecube-fabric:0.9.13"
+    modImplementation "net.pitan76.spacecube-fabric:0.9.14"
 }
 ```
 
