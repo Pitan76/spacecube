@@ -7,7 +7,7 @@ import net.pitan76.spacecube.blockentity.TunnelWallBlockEntity;
 
 public class TunnelType {
 
-    public static TunnelType NONE = new TunnelType(SpaceCube._id("none"), 0x6D6D6D, 0x6D6D6D, 0x19C419);
+    public static TunnelType NONE = new TunnelType(SpaceCube._id("none"), 0x6D6D6D, 0x6D6D6D, 0x19C419, ItemTunnel::new);
     public static TunnelType ENERGY = new TunnelType(SpaceCube._id("energy_tunnel"), 0x6D6D6D, 0x19C419, 0x19C419, EnergyTunnel::new);
     public static TunnelType FLUID = new TunnelType(SpaceCube._id("fluid_tunnel"), 0x6D6D6D, 0x19C4C4, 0x19C419, FluidTunnel::new);
     public static TunnelType ITEM = new TunnelType(SpaceCube._id("item_tunnel"), 0x6D6D6D, 0xE1C400, 0x19C419, ItemTunnel::new);
