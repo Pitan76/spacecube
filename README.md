@@ -15,6 +15,7 @@ repositories {
 }
 
 dependencies {
+    modImplementation "net.pitan76:mcpitanlib-fabric-${project.minecraft_version}:${project.mcpitanlib_version}"
     modImplementation "net.pitan76.spacecube-fabric:0.9.13"
 }
 ```
