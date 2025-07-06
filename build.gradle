@@ -7,7 +7,7 @@ plugins {
 
 version = project.mod_version
 group = project.maven_group
-archivesBaseName = project.archives_base_name + "-fabric"
+project.archives_base_name += "-fabric"
 
 repositories {
     maven { url 'https://jitpack.io' }
@@ -97,6 +97,8 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            artifactId = project.archives_base_name
+            version = project.mod_version
             from components.java
         }
     }
