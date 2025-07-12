@@ -46,10 +46,10 @@ public class SpaceCube extends ExtendModInitializer {
         Items.init();
         BlockEntities.init();
 
+        ChunkTicketTypes.init();
+
         registerFluidStorage();
         registerEnergyStorage();
-
-        ChunkTicketTypes.init();
 
         CommandRegistry.register("spacecube", new SpaceCubeCommand());
     }

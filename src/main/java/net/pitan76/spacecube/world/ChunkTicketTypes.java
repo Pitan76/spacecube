@@ -7,10 +7,10 @@ import net.pitan76.spacecube.SpaceCube;
 import static net.pitan76.spacecube.SpaceCube.registry;
 
 public class ChunkTicketTypes {
-    public static RegistryResult<ChunkTicketType<?>> CHUNK_LOADER;
+    public static RegistryResult<ChunkTicketType<?>> CHUNK_LOADER = registry.registerChunkTicketType(SpaceCube._id("chunk_loader"),
+            () -> ChunkTicketType.create("spacecube:chunk_loader"));
 
     public static void init() {
-        CHUNK_LOADER = registry.registerChunkTicketType(SpaceCube._id("chunk_loader").toMinecraft(),
-                () -> ChunkTicketType.create("spacecube:chunk_loader"));
+
     }
 }
