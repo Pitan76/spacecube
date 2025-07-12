@@ -144,7 +144,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (spaceCubeWorld == null) return;
 
         ChunkPos chunkPos = new ChunkPos(getScRoomPos());
-        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
+        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius());
 
         ticketedChunkSpaceCubeWorld = true;
     }
@@ -159,7 +159,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (!(mainWorld instanceof ServerWorld)) return;
 
         ChunkPos chunkPos = new ChunkPos(BlockEntityUtil.getPos(this));
-        WorldUtil.addTicket((ServerWorld) mainWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
+        WorldUtil.addTicket((ServerWorld) mainWorld, ChunkTicketTypes.CHUNK_LOADER, chunkPos, Config.getChunkLoaderRadius());
 
         ticketedChunkMainWorld = true;
     }
