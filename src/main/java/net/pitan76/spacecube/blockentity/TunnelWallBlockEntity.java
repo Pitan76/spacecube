@@ -28,6 +28,7 @@ import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.v2.NbtRWUtil;
+import net.pitan76.mcpitanlib.api.util.world.ChunkManagerUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -163,8 +164,7 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements IInvento
         if (WorldUtil.isClient(world)) return;
         if (!(world instanceof ServerWorld)) return;
 
-        // TODO: MCPitanLibの
-        ((ServerWorld) world).getChunkManager().markForUpdate(BlockEntityUtil.getPos(this));
+        ChunkManagerUtil.markForUpdate(world, BlockEntityUtil.getPos(this));
     }
 
     public Optional<SpaceCubeBlockEntity> getSpaceCubeBlockEntity() {
