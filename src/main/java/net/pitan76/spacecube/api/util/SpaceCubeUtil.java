@@ -54,7 +54,7 @@ public class SpaceCubeUtil {
         double nearestDistance = Double.MAX_VALUE;
 
         for (BlockPos scRoomPos : state.getSpacePosWithSCBlockPath().keySet()) {
-            double distance = pos.getSquaredDistance(scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ());
+            double distance = PosUtil.getSquaredDistance(pos, PosUtil.x(scRoomPos), PosUtil.y(scRoomPos), PosUtil.z(scRoomPos));
             if (distance < nearestDistance) {
                 nearestPos = scRoomPos;
                 nearestDistance = distance;
@@ -63,12 +63,11 @@ public class SpaceCubeUtil {
 
         if (nearestPos == null) return null;
 
-        return PosUtil.flooredBlockPos(nearestPos.getX(), 64, nearestPos.getZ());
+        return PosUtil.flooredBlockPos(PosUtil.x(nearestPos), 64, PosUtil.z(nearestPos));
     }
 
     @Nullable
     public static BlockPos getNearestPos(ServerWorld world, BlockPos pos) {
-
         Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
         return getNearestPos(SpaceCubeState.getOrCreate(optionalServer.get()), pos);
     }

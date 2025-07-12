@@ -83,9 +83,9 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
             // - y: int
             // - z: int
             NbtCompound scRoomPos_nbt = NbtUtil.create();
-            NbtUtil.set(scRoomPos_nbt, "x", scRoomPos.getX());
-            NbtUtil.set(scRoomPos_nbt, "y", scRoomPos.getY());
-            NbtUtil.set(scRoomPos_nbt, "z", scRoomPos.getZ());
+            NbtUtil.set(scRoomPos_nbt, "x", PosUtil.x(scRoomPos));
+            NbtUtil.set(scRoomPos_nbt, "y", PosUtil.y(scRoomPos));
+            NbtUtil.set(scRoomPos_nbt, "z", PosUtil.z(scRoomPos));
             NbtUtil.put(nbt, "scRoomPos", scRoomPos_nbt);
         }
         if (tunnelSides != null) {
@@ -101,9 +101,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
                 NbtCompound data_nbt = NbtUtil.create();
                 for (Map.Entry<Direction, BlockPos> entry : data.getTunnels().entrySet()) {
                     NbtCompound tunnel_nbt = NbtUtil.create();
-                    NbtUtil.set(tunnel_nbt, "x", entry.getValue().getX());
-                    NbtUtil.set(tunnel_nbt, "y", entry.getValue().getY());
-                    NbtUtil.set(tunnel_nbt, "z", entry.getValue().getZ());
+                    NbtUtil.setBlockPosDirect(tunnel_nbt, entry.getValue());
                     NbtUtil.put(data_nbt, entry.getKey().toString(), tunnel_nbt);
                 }
                 NbtUtil.put(tunnels_nbt, type.getId().toString(), data_nbt);

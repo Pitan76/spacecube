@@ -15,6 +15,7 @@ import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.sound.CompatSoundEvents;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ServerPlayerUtil;
+import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
@@ -137,7 +138,7 @@ public class PersonalShrinkingDevice extends CompatItem {
                 spaceCubeState.addEntryPos(serverPlayer.getUuid(), serverPlayer.getBlockPos());
 
                 // Teleport the player to the space cube (プレイヤーをspace cubeにテレポート)
-                player.teleport(scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ());
+                player.teleport(PosUtil.x(scRoomPos), PosUtil.y(scRoomPos), PosUtil.z(scRoomPos));
 
             } else {
                 // another dimension
@@ -172,7 +173,7 @@ public class PersonalShrinkingDevice extends CompatItem {
                 PersistentStateUtil.markDirty(spaceCubeState);
 
                 // Teleport the player to the space cube dimension (プレイヤーをspace cube dimensionにテレポート)
-                ServerPlayerUtil.teleport(serverPlayer, spaceCubeWorld, scRoomPos.getX(), scRoomPos.getY(), scRoomPos.getZ(), player.getYaw(), player.getPitch());
+                ServerPlayerUtil.teleport(serverPlayer, spaceCubeWorld, PosUtil.x(scRoomPos), PosUtil.y(scRoomPos), PosUtil.z(scRoomPos), player.getYaw(), player.getPitch());
             }
 
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
@@ -201,9 +202,9 @@ public class PersonalShrinkingDevice extends CompatItem {
                 // same dimension
 
                 BlockPos entryPos = spaceCubeState.getLastEntryPosWithRemove(uuid);
-                int x = entryPos.getX();
-                int y = entryPos.getY();
-                int z = entryPos.getZ();
+                int x = PosUtil.x(entryPos);
+                int y = PosUtil.y(entryPos);
+                int z = PosUtil.z(entryPos);
 
                 ServerPlayerUtil.teleport(serverPlayer, x, y, z);
 
@@ -225,15 +226,15 @@ public class PersonalShrinkingDevice extends CompatItem {
                     // entryPosListがある場合は、その最後の座標を取得 (普通はこっち)
                     // If entryPosList exists, get the last coordinate (usually this one)
                     BlockPos entryPos = spaceCubeState.getLastEntryPosWithRemove(uuid);
-                    x = entryPos.getX();
-                    y = entryPos.getY();
-                    z = entryPos.getZ();
+                    x = PosUtil.x(entryPos);
+                    y = PosUtil.y(entryPos);
+                    z = PosUtil.z(entryPos);
                 } else {
                     // 未知のバグが発生した場合は、スポーン地点を取得 (普通は発生しない)
                     // If an unknown bug occurs, get the spawn point (usually doesn't happen)
-                    x = returnWorld.getSpawnPos().getX();
-                    y = returnWorld.getSpawnPos().getY();
-                    z = returnWorld.getSpawnPos().getZ();
+                    x = PosUtil.x(returnWorld.getSpawnPos());
+                    y = PosUtil.y(returnWorld.getSpawnPos());
+                    z = PosUtil.z(returnWorld.getSpawnPos());
                 }
                 // Remove entryPosList
                 spaceCubeState.removeEntryPosList(uuid);
@@ -264,15 +265,15 @@ public class PersonalShrinkingDevice extends CompatItem {
                     // entryPosListがある場合は、その最後の座標を取得 (普通はこっち)
                     // If entryPosList exists, get the last coordinate (usually this one)
                     BlockPos entryPos = scBlockPath.getPos();
-                    x = entryPos.getX();
-                    y = entryPos.getY();
-                    z = entryPos.getZ();
+                    x = PosUtil.x(entryPos);
+                    y = PosUtil.y(entryPos);
+                    z = PosUtil.z(entryPos);
                 } else {
                     // 未知のバグが発生した場合は、スポーン地点を取得 (普通は発生しない)
                     // If an unknown bug occurs, get the spawn point (usually doesn't happen)
-                    x = returnWorld.getSpawnPos().getX();
-                    y = returnWorld.getSpawnPos().getY();
-                    z = returnWorld.getSpawnPos().getZ();
+                    x = PosUtil.x(returnWorld.getSpawnPos());
+                    y = PosUtil.y(returnWorld.getSpawnPos());
+                    z = PosUtil.z(returnWorld.getSpawnPos());
                 }
                 ServerPlayerUtil.teleport(serverPlayer, returnWorld, x, y, z, player.getYaw(), player.getPitch());
 

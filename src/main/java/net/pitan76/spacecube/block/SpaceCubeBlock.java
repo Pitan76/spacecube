@@ -1,7 +1,6 @@
 package net.pitan76.spacecube.block;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -100,9 +99,7 @@ public class SpaceCubeBlock extends CompatBlock implements ExtendBlockEntityProv
                 ItemStack stack = ItemStackUtil.create(this);
                 BlockEntityDataUtil.writeCompatBlockEntityNbtToStack(stack, spaceCubeBlockEntity);
 
-                ItemEntity itemEntity = ItemEntityUtil.create(world.getRaw(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
-                ItemEntityUtil.setToDefaultPickupDelay(itemEntity);
-                world.spawnEntity(itemEntity);
+                ItemEntityUtil.createWithSpawn(world.getRaw(), stack, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
             }
         }
         return super.onBreak(e);

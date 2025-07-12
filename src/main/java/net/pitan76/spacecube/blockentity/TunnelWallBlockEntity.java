@@ -79,6 +79,9 @@ public class TunnelWallBlockEntity extends CompatBlockEntity implements IInvento
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
 
+        if (scRoomPos == null)
+            scRoomPos = PosUtil.flooredBlockPos(0, 0, 0);
+
         NbtRWUtil.putBlockPos(args, "scRoomPos", scRoomPos);
         NbtRWUtil.putString(args, "tunnelType", tunnelType.getId().toString());
         NbtRWUtil.putString(args, "tunnelItem", tunnelItemId.toString());

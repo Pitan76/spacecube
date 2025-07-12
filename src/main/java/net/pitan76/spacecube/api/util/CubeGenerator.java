@@ -24,9 +24,9 @@ public class CubeGenerator {
 
         // 中心の座標xyzをそれぞれ代入してみる
         // Assign the center coordinates xyz to each
-        int x = centerPos.getX();
-        int y = centerPos.getY() - 1;
-        int z = centerPos.getZ();
+        int x = PosUtil.x(centerPos);
+        int y = PosUtil.y(centerPos) - 1;
+        int z = PosUtil.z(centerPos);
 
         // これはループして空洞の外側のブロックを配置していくやつ
         // This is a loop that places blocks on the outside of the hollow
