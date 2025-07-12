@@ -24,7 +24,6 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.TunnelSideData;
@@ -82,11 +81,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
             // - x: int
             // - y: int
             // - z: int
-            NbtCompound scRoomPos_nbt = NbtUtil.create();
-            NbtUtil.set(scRoomPos_nbt, "x", PosUtil.x(scRoomPos));
-            NbtUtil.set(scRoomPos_nbt, "y", PosUtil.y(scRoomPos));
-            NbtUtil.set(scRoomPos_nbt, "z", PosUtil.z(scRoomPos));
-            NbtUtil.put(nbt, "scRoomPos", scRoomPos_nbt);
+            NbtUtil.setBlockPos(nbt, "scRoomPos", scRoomPos);
         }
         if (tunnelSides != null) {
             // tunnels
@@ -116,12 +111,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         NbtCompound nbt = args.getNbt();
 
         if (NbtUtil.has(nbt, "scRoomPos")) {
-            NbtCompound scRoomPos_nbt = NbtUtil.get(nbt, "scRoomPos");
-            int x = NbtUtil.get(scRoomPos_nbt, "x", Integer.class);
-            int y = NbtUtil.get(scRoomPos_nbt, "y", Integer.class);
-            int z = NbtUtil.get(scRoomPos_nbt, "z", Integer.class);
-            scRoomPos = PosUtil.flooredBlockPos(x, y, z);
-
+            scRoomPos = NbtUtil.getBlockPos(nbt, "scRoomPos");
             addTicket();
         }
         if (NbtUtil.has(nbt, "tunnels")) {
@@ -132,10 +122,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
                 TunnelSideData data = new TunnelSideData();
                 for (String direction : NbtUtil.getKeys(data_nbt)) {
                     NbtCompound tunnel_nbt = NbtUtil.get(data_nbt, direction);
-                    int x = NbtUtil.get(tunnel_nbt, "x", Integer.class);
-                    int y = NbtUtil.get(tunnel_nbt, "y", Integer.class);
-                    int z = NbtUtil.get(tunnel_nbt, "z", Integer.class);
-                    data.addTunnel(Direction.valueOf(direction.toUpperCase()), PosUtil.flooredBlockPos(x, y, z));
+                    data.addTunnel(Direction.valueOf(direction.toUpperCase()), NbtUtil.getBlockPosDirect(tunnel_nbt));
                 }
                 tunnelSides.put(tunnelType, data);
             }
