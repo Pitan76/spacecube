@@ -232,9 +232,9 @@ public class PersonalShrinkingDevice extends CompatItem {
                 } else {
                     // 未知のバグが発生した場合は、スポーン地点を取得 (普通は発生しない)
                     // If an unknown bug occurs, get the spawn point (usually doesn't happen)
-                    x = PosUtil.x(returnWorld.getSpawnPos());
-                    y = PosUtil.y(returnWorld.getSpawnPos());
-                    z = PosUtil.z(returnWorld.getSpawnPos());
+                    x = PosUtil.x(WorldUtil.getSpawnPos(returnWorld));
+                    y = PosUtil.y(WorldUtil.getSpawnPos(returnWorld));
+                    z = PosUtil.z(WorldUtil.getSpawnPos(returnWorld));
                 }
                 // Remove entryPosList
                 spaceCubeState.removeEntryPosList(uuid);
@@ -271,9 +271,9 @@ public class PersonalShrinkingDevice extends CompatItem {
                 } else {
                     // 未知のバグが発生した場合は、スポーン地点を取得 (普通は発生しない)
                     // If an unknown bug occurs, get the spawn point (usually doesn't happen)
-                    x = PosUtil.x(returnWorld.getSpawnPos());
-                    y = PosUtil.y(returnWorld.getSpawnPos());
-                    z = PosUtil.z(returnWorld.getSpawnPos());
+                    x = PosUtil.x(WorldUtil.getSpawnPos(returnWorld));
+                    y = PosUtil.y(WorldUtil.getSpawnPos(returnWorld));
+                    z = PosUtil.z(WorldUtil.getSpawnPos(returnWorld));
                 }
                 ServerPlayerUtil.teleport(serverPlayer, returnWorld, x, y, z, player.getYaw(), player.getPitch());
 

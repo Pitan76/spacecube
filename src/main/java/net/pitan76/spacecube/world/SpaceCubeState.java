@@ -48,7 +48,8 @@ public class SpaceCubeState extends CompatiblePersistentState {
             // EntryPosList
             List<BlockPos> entryPosList = new ArrayList<>();
             NbtList entryPosList_nbt = NbtUtil.getNbtCompoundList(players_nbt, "entryPosList");
-            for (int i = 0; i < NbtListUtil.size(entryPosList_nbt); i++) {
+            int size = NbtListUtil.size(entryPosList_nbt);
+            for (int i = 0; i < size; i++) {
                 NbtCompound entryPos_nbt = NbtListUtil.getCompound(entryPosList_nbt, i);
                 int x = NbtUtil.getInt(entryPos_nbt, "x");
                 int y = NbtUtil.getInt(entryPos_nbt, "y");
@@ -67,7 +68,8 @@ public class SpaceCubeState extends CompatiblePersistentState {
 
         // Get spacePosWithSCBlockPath
         NbtList spacePosWithSCBlockPathList_nbt = NbtUtil.getList(nbt, "spacePosWithSCBlockPathList", 10);
-        for (int i = 0; i < NbtListUtil.size(spacePosWithSCBlockPathList_nbt); i++) {
+        int size = NbtListUtil.size(spacePosWithSCBlockPathList_nbt);
+        for (int i = 0; i < size; i++) {
             NbtCompound spacePosWithSCBlockPath_nbt = NbtListUtil.getCompound(spacePosWithSCBlockPathList_nbt, i);
 
             // BlockPos (spacePos)
