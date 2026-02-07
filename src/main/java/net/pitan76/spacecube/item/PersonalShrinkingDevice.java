@@ -43,7 +43,15 @@ public class PersonalShrinkingDevice extends CompatItem {
         // sneaking
         if (e.isSneaking()) return e.pass();
         // Only run on the server side
-        if (e.isClient()) return e.success();
+        if (e.isClient()) {
+
+            // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
+            if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.equals(world.getId())) {
+                player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, 1.0F, 1.0F);
+            }
+
+            return e.success();
+        }
 
         // Process when the player's world is space cube dimension
         // プレイヤーのワールドがspace cube dimensionの場合の処理
@@ -81,7 +89,19 @@ public class PersonalShrinkingDevice extends CompatItem {
             return e.pass();
         }
         // Only run on the server side
-        if (world.isClient()) return e.success();
+        if (world.isClient()) {
+
+            // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
+            if (state.getBlock() instanceof SpaceCubeBlock) {
+                player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, 1.0F, 1.0F);
+            }
+
+            if (SpaceCube.SPACE_CUBE_DIMENSION_WORLD_KEY.equals(world.getId())) {
+                player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, 1.0F, 1.0F);
+            }
+
+            return e.success();
+        }
 
         // Process when SpaceCubeBlock (SpaceCubeBlockの場合の処理)
         if (state.getBlock() instanceof SpaceCubeBlock) {
@@ -177,7 +197,7 @@ public class PersonalShrinkingDevice extends CompatItem {
             }
 
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-            ServerPlayerUtil.playSound(serverPlayer, CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
+            // ServerPlayerUtil.playSound(serverPlayer, CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
 
             return e.success();
         }
@@ -243,7 +263,7 @@ public class PersonalShrinkingDevice extends CompatItem {
                 ServerPlayerUtil.teleport(serverPlayer, returnWorld, x, y, z, player.getYaw(), player.getPitch());
             }
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-            player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
+            // player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
             return CompatActionResult.SUCCESS;
         } else {
             // データがないときの処理
@@ -278,7 +298,7 @@ public class PersonalShrinkingDevice extends CompatItem {
                 ServerPlayerUtil.teleport(serverPlayer, returnWorld, x, y, z, player.getYaw(), player.getPitch());
 
                 // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
-                player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
+                // player.playSound(CompatSoundEvents.BLOCK_PORTAL_TRAVEL, CompatSoundCategory.PLAYERS, 1.0F, 1.0F);
                 return CompatActionResult.SUCCESS;
             }
 
