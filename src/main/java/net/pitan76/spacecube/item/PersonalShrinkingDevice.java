@@ -114,7 +114,7 @@ public class PersonalShrinkingDevice extends CompatItem {
 
             ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player.getEntity();
 
-            MinecraftServer server = spaceCubeWorld.getServer();
+            MinecraftServer server = WorldUtil.getServer(spaceCubeWorld).get();
             SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(server);
 
             int size = ((SpaceCubeBlock) state.getBlock()).getSize();
