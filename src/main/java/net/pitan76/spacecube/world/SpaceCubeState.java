@@ -5,12 +5,12 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.PersistentStateUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.NbtListUtil;
 import net.pitan76.mcpitanlib.api.world.CompatiblePersistentState;
@@ -58,7 +58,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
             }
 
             // Dimension
-            CompatIdentifier dimensionId = CompatIdentifier.fromMinecraft(World.OVERWORLD.getValue());
+            CompatIdentifier dimensionId = WorldUtil.getOverworldId();
             if (NbtUtil.has(players_nbt, "dimension"))
                 dimensionId = CompatIdentifier.of(NbtUtil.getString(players_nbt, "dimension"));
 
