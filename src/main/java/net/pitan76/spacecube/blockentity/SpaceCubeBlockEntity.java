@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
@@ -24,6 +23,7 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
+import net.pitan76.mcpitanlib.midohra.util.math.ChunkPos;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.TunnelSideData;
@@ -65,6 +65,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
 
     public BlockPos getScRoomPos() {
         return scRoomPos;
+    }
+
+    public net.pitan76.mcpitanlib.midohra.util.math.BlockPos getScRoomPosM() {
+        return net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(scRoomPos);
     }
 
     public boolean isScRoomPosNull() {
@@ -143,8 +147,8 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) BlockEntityUtil.getWorld(this));
         if (spaceCubeWorld == null) return;
 
-        ChunkPos chunkPos = new ChunkPos(getScRoomPos());
-        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
+        ChunkPos chunkPos = ChunkPos.of(getScRoomPosM());
+        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos.getRaw(), Config.getChunkLoaderRadius());
 
         ticketedChunkSpaceCubeWorld = true;
     }
@@ -158,8 +162,8 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         World mainWorld = BlockEntityUtil.getWorld(this);
         if (!(mainWorld instanceof ServerWorld)) return;
 
-        ChunkPos chunkPos = new ChunkPos(BlockEntityUtil.getPos(this));
-        WorldUtil.addTicket((ServerWorld) mainWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
+        ChunkPos chunkPos = ChunkPos.of(getMidohraPos());
+        WorldUtil.addTicket((ServerWorld) mainWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos.getRaw(), Config.getChunkLoaderRadius());
 
         ticketedChunkMainWorld = true;
     }
