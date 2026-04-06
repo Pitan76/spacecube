@@ -134,6 +134,11 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         addTicketMainWorld();
     }
 
+    public void removeTicket() {
+        removeTicketSpaceCubeWorld();
+        removeTicketMainWorld();
+    }
+
     public void addTicketSpaceCubeWorld() {
         if (ticketedChunkSpaceCubeWorld) return;
         if (!Config.enabledChunkLoader()) return;
@@ -161,6 +166,35 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         mainWorld.get().addTicket(ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
 
         ticketedChunkMainWorld = true;
+    }
+
+    public void removeTicketSpaceCubeWorld() {
+        if (!ticketedChunkSpaceCubeWorld) return;
+        if (!Config.enabledChunkLoader()) return;
+
+        Optional<ServerWorld> mainWorld = getMidohraWorld().toServerWorld();
+        if (!mainWorld.isPresent()) return;
+
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld(mainWorld.get());
+        if (spaceCubeWorld == null) return;
+
+        ChunkPos chunkPos = ChunkPos.of(getScRoomPos());
+        spaceCubeWorld.removeTicket(ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
+
+        ticketedChunkSpaceCubeWorld = false;
+    }
+
+    public void removeTicketMainWorld() {
+        if (!ticketedChunkMainWorld) return;
+        if (!Config.enabledChunkLoader()) return;
+
+        Optional<ServerWorld> mainWorld = getMidohraWorld().toServerWorld();
+        if (!mainWorld.isPresent()) return;
+
+        ChunkPos chunkPos = ChunkPos.of(getMidohraPos());
+        mainWorld.get().removeTicket(ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
+
+        ticketedChunkMainWorld = false;
     }
 
     public Map<TunnelType, TunnelSideData> getTunnelSides() {

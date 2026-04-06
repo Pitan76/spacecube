@@ -27,7 +27,6 @@ import net.pitan76.spacecube.world.SpaceCubeState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class SpaceCubeBlock extends CompatBlock implements ExtendBlockEntityProvider {
     public final int size;
@@ -101,6 +100,8 @@ public class SpaceCubeBlock extends CompatBlock implements ExtendBlockEntityProv
 
                 ItemEntityUtil.createWithSpawn(world.getRaw(), stack, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
             }
+
+            spaceCubeBlockEntity.removeTicket();
         }
         return super.onBreak(e);
     }
