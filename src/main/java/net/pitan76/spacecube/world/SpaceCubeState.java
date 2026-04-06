@@ -2,8 +2,6 @@ package net.pitan76.spacecube.world;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.PersistentStateManager;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -11,9 +9,10 @@ import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.PersistentStateUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.api.util.nbt.NbtListUtil;
 import net.pitan76.mcpitanlib.api.world.CompatiblePersistentState;
+import net.pitan76.mcpitanlib.midohra.server.MCServer;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.spacecube.api.data.SCBlockPath;
 import net.pitan76.spacecube.api.data.SCPlayerData;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +53,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
                 int x = NbtUtil.getInt(entryPos_nbt, "x");
                 int y = NbtUtil.getInt(entryPos_nbt, "y");
                 int z = NbtUtil.getInt(entryPos_nbt, "z");
-                entryPosList.add(PosUtil.flooredBlockPos(x, y, z));
+                entryPosList.add(BlockPos.of(x, y, z));
             }
 
             // Dimension
@@ -77,7 +76,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
             if (!NbtUtil.has(spacePosWithSCBlockPath_nbt, "spacePos"))
                 continue;
 
-            spacePos = NbtUtil.getBlockPos(spacePosWithSCBlockPath_nbt, "spacePos");
+            spacePos = BlockPos.of(NbtUtil.getBlockPos(spacePosWithSCBlockPath_nbt, "spacePos"));
 
             // SCBlockPath (spacePosWithSCBlockPath)
             SCBlockPath scBlockPath = new SCBlockPath();
@@ -121,7 +120,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
             NbtList entryPosList_nbt = new NbtList();
             for (BlockPos entryPos : entryPosList) {
                 NbtCompound entryPos_nbt = NbtUtil.create();
-                NbtUtil.setBlockPosDirect(entryPos_nbt, entryPos);
+                NbtUtil.setBlockPosDirect(entryPos_nbt, entryPos.toMinecraft());
                 NbtListUtil.add(entryPosList_nbt, entryPos_nbt);
             }
             NbtUtil.put(player_nbt, "entryPosList", entryPosList_nbt);
@@ -141,7 +140,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
 
             // BlockPos (spacePos)
             BlockPos spacePos = entry.getKey();
-            NbtUtil.setBlockPos(spacePosWithSCBlockPath_nbt, "spacePos", spacePos);
+            NbtUtil.setBlockPos(spacePosWithSCBlockPath_nbt, "spacePos", spacePos.toMinecraft());
 
             // SCBlockPath (spacePosWithSCBlockPath)
             if (entry.getValue().pos != null && entry.getValue().dimension != null) {
@@ -149,7 +148,7 @@ public class SpaceCubeState extends CompatiblePersistentState {
 
                 SCBlockPath scBlockPath = entry.getValue();
                 BlockPos scBlockPathPos = scBlockPath.getPos();
-                NbtUtil.setBlockPosDirect(scBlockPath_nbt, scBlockPathPos);
+                NbtUtil.setBlockPosDirect(scBlockPath_nbt, scBlockPathPos.toMinecraft());
                 NbtUtil.putString(scBlockPath_nbt, "dimension", scBlockPath.getDimension().toString());
                 NbtUtil.put(spacePosWithSCBlockPath_nbt, "scBlockPath", scBlockPath_nbt);
             }
@@ -164,8 +163,9 @@ public class SpaceCubeState extends CompatiblePersistentState {
     // SpaceCubeStateを取るならこれを使えばいい (Use this to get SpaceCubeState)
     // まあ、サーバーからSpaceCubeStateを取得するって感じだけどなければ、作成する
     // Well, it's like getting SpaceCubeState from the server, but if it doesn't exist, create it
-    public static SpaceCubeState getOrCreate(MinecraftServer server) {
-        PersistentStateManager manager = PersistentStateUtil.getManagerFromServer(server);
+    public static SpaceCubeState getOrCreate(MCServer server) {
+        // TODO: getManagerFromServerに直接MCServerを渡せるようにする
+        PersistentStateManager manager = PersistentStateUtil.getManagerFromServer(server.getRaw());
         return PersistentStateUtil.getOrCreate(manager, "spacecube", SpaceCubeState::new, SpaceCubeState::create);
     }
 

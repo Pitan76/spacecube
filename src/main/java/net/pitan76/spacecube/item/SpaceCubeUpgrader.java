@@ -1,21 +1,22 @@
 package net.pitan76.spacecube.item;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseEvent;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
+import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.ExtendItem;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.MCBlocks;
+import net.pitan76.mcpitanlib.midohra.server.MCServer;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.ServerWorld;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
 import net.pitan76.spacecube.api.data.SCBlockPath;
@@ -28,7 +29,7 @@ import net.pitan76.spacecube.world.SpaceCubeState;
 import java.util.Map;
 import java.util.Optional;
 
-public class SpaceCubeUpgrader extends ExtendItem {
+public class SpaceCubeUpgrader extends CompatItem {
     public final int size;
 
     public SpaceCubeUpgrader(CompatibleItemSettings settings, int size) {
@@ -42,12 +43,12 @@ public class SpaceCubeUpgrader extends ExtendItem {
 
     @Override
     public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
-        World world = e.getWorld();
-        BlockPos pos = e.getBlockPos();
-        BlockState state = e.getBlockState();
+        World world = e.getMidohraWorld();
+        BlockPos pos = e.getMidohraPos();
+        BlockState state = e.getMidohraState();
         Player player = e.getPlayer();
 
-        if (state.getBlock() instanceof SpaceCubeBlock) {
+        if (e.getBlockWrapper().get() instanceof SpaceCubeBlock) {
             // sneaking
             if (player.isSneaking()) return e.pass();
             // Only run on the server side
@@ -65,7 +66,7 @@ public class SpaceCubeUpgrader extends ExtendItem {
 
     @Override
     public StackActionResult onRightClick(ItemUseEvent e) {
-        World world = e.getWorld();
+        World world = e.getMidohraWorld();
         Player player = e.getUser();
         ItemStack stack = e.getStack();
 
@@ -74,25 +75,27 @@ public class SpaceCubeUpgrader extends ExtendItem {
         // Only run on the server side
         if (e.isClient()) return e.success();
 
-        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
-        if (spaceCubeWorld != null && WorldUtil.equals(world, spaceCubeWorld)) {
-            BlockPos spacePos = SpaceCubeUtil.getNearestPos((ServerWorld) world, player.getBlockPos());
+        ServerWorld serverWorld = world.toServerWorld().get();
+
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld(serverWorld);
+        if (world.equals(spaceCubeWorld)) {
+            BlockPos spacePos = SpaceCubeUtil.getNearestPos(serverWorld, player.getBlockPosM());
             if (spacePos == null) return e.fail();
 
-            Optional<MinecraftServer> optionalServer = WorldUtil.getServer(world);
-            SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
+            MCServer server = serverWorld.getMCServer();
+            SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(server);
             Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath =  spaceCubeState.getSpacePosWithSCBlockPath();
             if (!spacePosWithSCBlockPath.containsKey(spacePos)) return e.fail();
 
             SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(spacePos);
             BlockPos placedPos = scBlockPath.getPos();
 
-            Optional<ServerWorld> optionalPlacedWorld = WorldUtil.getWorld(world, scBlockPath.getDimension());
+            Optional<ServerWorld> optionalPlacedWorld = world.getServerWorld(scBlockPath.getDimension());
             if (!optionalPlacedWorld.isPresent()) return e.fail();
             World placedWorld = optionalPlacedWorld.get();
 
-            BlockState state = WorldUtil.getBlockState(placedWorld, placedPos);
-            if (state.getBlock() instanceof SpaceCubeBlock) {
+            BlockState state = placedWorld.getBlockState(placedPos);
+            if (state.getBlock().get() instanceof SpaceCubeBlock) {
                 CompatActionResult result = upgradeSpaceCube(placedWorld, placedPos, state, stack);
                 if (result == CompatActionResult.CONSUME)
                     player.sendMessage(TextUtil.literal("[SpaceCube] Upgraded!"));
@@ -105,32 +108,32 @@ public class SpaceCubeUpgrader extends ExtendItem {
     }
 
     public CompatActionResult upgradeSpaceCube(World world, BlockPos pos, BlockState state, ItemStack stack) {
-        SpaceCubeBlock spaceCubeBlock = (SpaceCubeBlock) state.getBlock();
+        SpaceCubeBlock spaceCubeBlock = (SpaceCubeBlock) state.getBlock().get();
         if (spaceCubeBlock.getSize() < size) {
             NbtCompound nbt = NbtUtil.create();
 
-            BlockEntity blockEntity = WorldUtil.getBlockEntity(world, pos);
+            BlockEntity blockEntity = world.getBlockEntity(pos).get();
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 scBlockEntity.writeNbt(new WriteNbtArgs(nbt));
             }
 
-            BlockState newState = SpaceCubeBlock.getSpaceCubeBlockFromSize(size).getNewDefaultState();
-            WorldUtil.setBlockState(world, pos, newState);
+            BlockState newState = SpaceCubeBlock.getSpaceCubeBlockFromSize(size).getDefaultMidohraState();
+            world.setBlockState(pos, newState);
 
-            BlockEntity newBlockEntity = WorldUtil.getBlockEntity(world, pos);
+            BlockEntity newBlockEntity = world.getBlockEntity(pos).get();
             if (newBlockEntity instanceof SpaceCubeBlockEntity && !nbt.isEmpty()) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) newBlockEntity;
                 scBlockEntity.readNbt(new ReadNbtArgs(nbt));
                 if (scBlockEntity.scRoomPos != null) {
-                    ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
+                    ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld(world.toServerWorld().get());
                     if (spaceCubeWorld == null) {
                         SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
                         return CompatActionResult.FAIL;
                     }
 
-                    CubeGenerator.generateCube(spaceCubeWorld, scBlockEntity.scRoomPos, net.minecraft.block.Blocks.AIR, spaceCubeBlock.getSize());
-                    CubeGenerator.generateCube(spaceCubeWorld, scBlockEntity.scRoomPos, Blocks.SOLID_WALL, size);
+                    CubeGenerator.generateCube(spaceCubeWorld, scBlockEntity.scRoomPos, MCBlocks.AIR, spaceCubeBlock.getSize());
+                    CubeGenerator.generateCube(spaceCubeWorld, scBlockEntity.scRoomPos, Blocks.SOLID_WALL.getWrapper(), size);
                 }
             }
 

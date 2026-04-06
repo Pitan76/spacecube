@@ -8,8 +8,8 @@
     "Pitan"
   ],
   "contact": {
-    "website": "https://www.curseforge.com/minecraft/mc-mods/spacecube",
-    "repo": "https://github.com/PTOM76/spacecube"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/spacecube",
+    "sources": "https://github.com/PTOM76/spacecube"
   },
   "license": "MIT",
   "icon": "assets/spacecube/icon.png",
@@ -28,6 +28,6 @@
   "depends": {
     "fabricloader": "*",
     "minecraft": "*",
-    "mcpitanlib": ">3.0.0"
+    "mcpitanlib": ">3.6.2"
   }
 }

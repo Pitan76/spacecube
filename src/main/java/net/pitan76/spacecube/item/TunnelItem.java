@@ -1,13 +1,12 @@
 package net.pitan76.spacecube.item;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.mcpitanlib.api.event.item.ItemUseOnBlockEvent;
 import net.pitan76.mcpitanlib.api.item.v2.CompatItem;
 import net.pitan76.mcpitanlib.api.item.v2.CompatibleItemSettings;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.Blocks;
@@ -29,11 +28,11 @@ public class TunnelItem extends CompatItem {
     @Override
     public CompatActionResult onRightClickOnBlock(ItemUseOnBlockEvent e) {
         World world = e.getMidohraWorld();
-        BlockPos pos = e.getBlockPos();
+        BlockPos pos = e.getMidohraPos();
         BlockState state = e.getMidohraState();
 
         if (state.getBlock().get() == Blocks.SOLID_WALL) {
-            world.setBlockState(net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(pos), Blocks.TUNNEL_WALL.getDefaultMidohraState().with(TunnelWallBlock.CONNECTED_SIDE, Direction.UP));
+            world.setBlockState(pos, Blocks.TUNNEL_WALL.getDefaultMidohraState().with(TunnelWallBlock.CONNECTED_SIDE, Direction.UP));
 
             BlockEntity blockEntity = e.getBlockEntity();
             if (blockEntity instanceof TunnelWallBlockEntity) {
@@ -42,7 +41,7 @@ public class TunnelItem extends CompatItem {
                 tunnelWallBlockEntity.setTunnelItem(e.getStack().getItem());
                 if (e.isClient()) return e.success();
 
-                BlockPos scRoomPos = SpaceCubeUtil.getNearestPos((ServerWorld) world.getRaw(), e.getBlockPos());
+                BlockPos scRoomPos = SpaceCubeUtil.getNearestPos(world.toServerWorld().get(), pos);
 
                 tunnelWallBlockEntity.setScRoomPos(scRoomPos);
                 BlockEntityUtil.markDirty(tunnelWallBlockEntity);
@@ -52,22 +51,22 @@ public class TunnelItem extends CompatItem {
                     Optional<SpaceCubeBlockEntity> spaceCubeBlockEntity = tunnelWallBlockEntity.getSpaceCubeBlockEntity();
                     if (!spaceCubeBlockEntity.isPresent()) return e.fail();
 
-                    state = world.getBlockState(net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(pos));
+                    state = world.getBlockState(pos);
                     Direction dir = state.get(TunnelWallBlock.CONNECTED_SIDE);
 
                     TunnelSideData tunnelSide = spaceCubeBlockEntity.get().getTunnelSide(getTunnelType());
                     if (tunnelSide.isFull()) {
                         e.player.sendMessage(TextUtil.translatable("message.spacecube.tunnel_full"));
-                        world.setBlockState(net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(pos), Blocks.SOLID_WALL.getDefaultMidohraState());
+                        world.setBlockState(pos, Blocks.SOLID_WALL.getDefaultMidohraState());
                         return e.fail();
                     }
 
                     // Connected Sideが存在する場合は別のSideに割り当てる
                     if (tunnelSide.hasTunnel(dir)) {
-                        dir = tunnelSide.getRestMidohraDir().get();
-                        world.setBlockState(net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(pos), state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
+                        dir = tunnelSide.getRestDir().get();
+                        world.setBlockState(pos, state.with(TunnelWallBlock.CONNECTED_SIDE, dir));
                     }
-                    tunnelSide.addTunnel(dir, net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(pos));
+                    tunnelSide.addTunnel(dir, pos);
                 }
 
                 // Chunk Loader

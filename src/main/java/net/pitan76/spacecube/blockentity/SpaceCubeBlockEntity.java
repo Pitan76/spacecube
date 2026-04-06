@@ -1,14 +1,9 @@
 package net.pitan76.spacecube.blockentity;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -18,12 +13,15 @@ import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanExtractArgs;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.CanInsertArgs;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
-import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.ChunkPos;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.ServerWorld;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.Config;
 import net.pitan76.spacecube.api.data.TunnelSideData;
@@ -52,7 +50,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
     public boolean ticketedChunkMainWorld = false;
 
     public SpaceCubeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, new TileCreateEvent(pos, state));
+        super(type, new TileCreateEvent(pos.toMinecraft(), state.toMinecraft()));
     }
 
     public SpaceCubeBlockEntity(TileCreateEvent event) {
@@ -65,10 +63,6 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
 
     public BlockPos getScRoomPos() {
         return scRoomPos;
-    }
-
-    public net.pitan76.mcpitanlib.midohra.util.math.BlockPos getScRoomPosM() {
-        return net.pitan76.mcpitanlib.midohra.util.math.BlockPos.of(scRoomPos);
     }
 
     public boolean isScRoomPosNull() {
@@ -85,7 +79,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
             // - x: int
             // - y: int
             // - z: int
-            NbtUtil.setBlockPos(nbt, "scRoomPos", scRoomPos);
+            NbtUtil.setBlockPos(nbt, "scRoomPos", scRoomPos.toMinecraft());
         }
         if (tunnelSides != null) {
             // tunnels
@@ -100,7 +94,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
                 NbtCompound data_nbt = NbtUtil.create();
                 for (Map.Entry<Direction, BlockPos> entry : data.getTunnels().entrySet()) {
                     NbtCompound tunnel_nbt = NbtUtil.create();
-                    NbtUtil.setBlockPosDirect(tunnel_nbt, entry.getValue());
+                    NbtUtil.setBlockPosDirect(tunnel_nbt, entry.getValue().toMinecraft());
                     NbtUtil.put(data_nbt, entry.getKey().toString(), tunnel_nbt);
                 }
                 NbtUtil.put(tunnels_nbt, type.getId().toString(), data_nbt);
@@ -115,7 +109,7 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         NbtCompound nbt = args.getNbt();
 
         if (NbtUtil.has(nbt, "scRoomPos")) {
-            scRoomPos = NbtUtil.getBlockPos(nbt, "scRoomPos");
+            scRoomPos = BlockPos.of(NbtUtil.getBlockPos(nbt, "scRoomPos"));
             addTicket();
         }
         if (NbtUtil.has(nbt, "tunnels")) {
@@ -126,7 +120,9 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
                 TunnelSideData data = new TunnelSideData();
                 for (String direction : NbtUtil.getKeys(data_nbt)) {
                     NbtCompound tunnel_nbt = NbtUtil.get(data_nbt, direction);
-                    data.addTunnel(Direction.valueOf(direction.toUpperCase()), NbtUtil.getBlockPosDirect(tunnel_nbt));
+                    data.addTunnel(
+                            Direction.of(net.minecraft.util.math.Direction.valueOf(direction.toUpperCase())),
+                            BlockPos.of(NbtUtil.getBlockPosDirect(tunnel_nbt)));
                 }
                 tunnelSides.put(tunnelType, data);
             }
@@ -140,30 +136,29 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
 
     public void addTicketSpaceCubeWorld() {
         if (ticketedChunkSpaceCubeWorld) return;
-
         if (!Config.enabledChunkLoader()) return;
-        if (!(BlockEntityUtil.getWorld(this) instanceof ServerWorld)) return;
 
-        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) BlockEntityUtil.getWorld(this));
+        Optional<ServerWorld> mainWorld = getMidohraWorld().toServerWorld();
+        if (!mainWorld.isPresent()) return;
+
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld(mainWorld.get());
         if (spaceCubeWorld == null) return;
 
-        ChunkPos chunkPos = ChunkPos.of(getScRoomPosM());
-        WorldUtil.addTicket(spaceCubeWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos.getRaw(), Config.getChunkLoaderRadius());
+        ChunkPos chunkPos = ChunkPos.of(getScRoomPos());
+        spaceCubeWorld.addTicket(ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
 
         ticketedChunkSpaceCubeWorld = true;
     }
 
     public void addTicketMainWorld() {
         if (ticketedChunkMainWorld) return;
-
         if (!Config.enabledChunkLoader()) return;
-        if (!(BlockEntityUtil.getWorld(this) instanceof ServerWorld)) return;
 
-        World mainWorld = BlockEntityUtil.getWorld(this);
-        if (!(mainWorld instanceof ServerWorld)) return;
+        Optional<ServerWorld> mainWorld = getMidohraWorld().toServerWorld();
+        if (!mainWorld.isPresent()) return;
 
         ChunkPos chunkPos = ChunkPos.of(getMidohraPos());
-        WorldUtil.addTicket((ServerWorld) mainWorld, ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos.getRaw(), Config.getChunkLoaderRadius());
+        mainWorld.get().addTicket(ChunkTicketTypes.CHUNK_LOADER.get(), chunkPos, Config.getChunkLoaderRadius());
 
         ticketedChunkMainWorld = true;
     }
@@ -229,50 +224,51 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
 
     @Override
     public int[] getAvailableSlots(AvailableSlotsArgs args) {
-        Direction side = args.getSide();
+        Direction side = Direction.of(args.getSide());
 
         if (!hasTunnelType(TunnelType.ITEM)) return new int[0];
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
         if (!data.hasTunnel(side)) return new int[0];
-        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
+        World world = getMidohraWorld();
+        ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld(world.toServerWorld().get());
 
         if (spaceCubeWorld == null) return new int[0];
-        BlockEntity blockEntity = WorldUtil.getBlockEntity(spaceCubeWorld, data.getTunnel(side));
+        BlockEntity blockEntity = spaceCubeWorld.getBlockEntity(data.getTunnel(side)).get();
 
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return new int[0];
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
         ITunnelDef tunnelDef = tunnelWallBlockEntity.getTunnelDef();
         if (!(tunnelDef instanceof ItemTunnel)) return new int[0];
 
-        int dirindex = dirToIndex(side);
+        int dirIndex = dirToIndex(side);
         addTicket();
 
-        return new int[]{dirindex * 2, (dirindex * 2 + 1)};
+        return new int[]{dirIndex * 2, (dirIndex * 2 + 1)};
     }
 
     @Override
     public boolean canInsert(CanInsertArgs args) {
-        Direction dir = args.getDir();
+        Direction dir = Direction.of(args.getDir());
         int slot = args.getSlot();
 
         if (!hasTunnelType(TunnelType.ITEM)) return false;
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
 
         if (dir == null) return false;
-        int dirindex = dirToIndex(dir);
-        return data.hasTunnel(dir) && slot == dirindex * 2 + 1;
+        int dirIndex = dirToIndex(dir);
+        return data.hasTunnel(dir) && slot == dirIndex * 2 + 1;
     }
 
     @Override
     public boolean canExtract(CanExtractArgs args) {
-        Direction dir = args.getDir();
+        Direction dir = Direction.of(args.getDir());
         int slot = args.getSlot();
 
         if (!hasTunnelType(TunnelType.ITEM)) return false;
         TunnelSideData data = getTunnelSide(TunnelType.ITEM);
 
-        int dirindex = dirToIndex(dir);
-        return data.hasTunnel(dir) && slot == dirindex * 2;
+        int dirIndex = dirToIndex(dir);
+        return data.hasTunnel(dir) && slot == dirIndex * 2;
     }
 
     @Nullable
@@ -280,10 +276,12 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
         if (!hasTunnelType(type)) return null;
         TunnelSideData data = getTunnelSide(type);
         if (!data.hasTunnel(dir)) return null;
-        ServerWorld serverWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world);
+
+        World world = getMidohraWorld();
+        ServerWorld serverWorld = SpaceCubeUtil.getSpaceCubeWorld(world.toServerWorld().get());
         if (serverWorld == null) return null;
 
-        BlockEntity blockEntity = serverWorld.getBlockEntity(data.getTunnel(dir));
+        BlockEntity blockEntity = serverWorld.getBlockEntity(data.getTunnel(dir)).get();
         if (!(blockEntity instanceof TunnelWallBlockEntity)) return null;
 
         TunnelWallBlockEntity tunnelWallBlockEntity = (TunnelWallBlockEntity) blockEntity;
@@ -359,6 +357,10 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
     }
 
     public static int dirToIndex(Direction dir) {
+        return dirToIndex(dir.toMinecraft());
+    }
+
+    public static int dirToIndex(net.minecraft.util.math.Direction dir) {
         switch (dir) {
             case UP:
                 return 0;
@@ -394,17 +396,5 @@ public class SpaceCubeBlockEntity extends CompatBlockEntity implements CompatSid
             default:
                 return null;
         }
-    }
-
-    public boolean hasTunnel(TunnelType type, net.pitan76.mcpitanlib.midohra.util.math.Direction direction) {
-        return hasTunnel(type, direction.toMinecraft());
-    }
-
-    public boolean addTunnel(TunnelType type, net.pitan76.mcpitanlib.midohra.util.math.Direction direction, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos) {
-        return addTunnel(type, direction.toMinecraft(), pos.toMinecraft());
-    }
-
-    public void removeTunnel(TunnelType type, net.pitan76.mcpitanlib.midohra.util.math.Direction direction) {
-        removeTunnel(type, direction.toMinecraft());
     }
 }

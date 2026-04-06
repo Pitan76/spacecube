@@ -1,8 +1,11 @@
 package net.pitan76.spacecube;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.pitan76.mcpitanlib.api.command.CommandRegistry;
 import net.pitan76.mcpitanlib.api.item.CreativeTabBuilder;
+import net.pitan76.mcpitanlib.api.lookup.block.BlockApiLookupWithDirection;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
 import net.pitan76.mcpitanlib.api.transfer.fluid.v1.fabric.FabricFluidStorage;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
@@ -71,7 +74,9 @@ public class SpaceCube extends ExtendModInitializer {
     }
 
     public static void registerFluidStorage() {
-        FluidStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
+        BlockApiLookupWithDirection<Storage<FluidVariant>> sided = new BlockApiLookupWithDirection<>(FluidStorage.SIDED);
+
+        sided.registerForBlockEntityM((blockEntity, dir) -> {
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 ITunnelDef def = ((TunnelWallBlockEntity) blockEntity).getTunnelDef();
                 if (def instanceof FluidTunnel)
@@ -81,7 +86,7 @@ public class SpaceCube extends ExtendModInitializer {
             return null;
         }, BlockEntities.TUNNEL_WALL_BLOCK_ENTITY.getOrNull());
 
-        FluidStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
+        sided.registerForBlockEntityM((blockEntity, dir) -> {
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 ITunnelDef def = scBlockEntity.getTunnelDef(TunnelType.FLUID, dir);

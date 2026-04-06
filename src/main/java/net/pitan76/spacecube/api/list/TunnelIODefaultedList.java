@@ -1,9 +1,9 @@
 package net.pitan76.spacecube.api.list;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.ItemTunnel;
 import net.pitan76.spacecube.blockentity.SpaceCubeBlockEntity;

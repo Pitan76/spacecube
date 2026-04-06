@@ -1,5 +1,6 @@
 package net.pitan76.spacecube.compat;
 
+import net.pitan76.mcpitanlib.api.lookup.block.BlockApiLookupWithDirection;
 import net.pitan76.spacecube.BlockEntities;
 import net.pitan76.spacecube.api.tunnel.TunnelType;
 import net.pitan76.spacecube.api.tunnel.def.EnergyTunnel;
@@ -10,7 +11,9 @@ import team.reborn.energy.api.EnergyStorage;
 
 public class RebornEnergyRegister {
     public static void init() {
-        EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
+        BlockApiLookupWithDirection<EnergyStorage> sided = new BlockApiLookupWithDirection<>(EnergyStorage.SIDED);
+
+        sided.registerForBlockEntityM((blockEntity, dir) -> {
             if (blockEntity instanceof TunnelWallBlockEntity) {
                 ITunnelDef def = ((TunnelWallBlockEntity) blockEntity).getTunnelDef();
                 if (def instanceof EnergyTunnel) {
@@ -25,7 +28,7 @@ public class RebornEnergyRegister {
             return null;
         }, BlockEntities.TUNNEL_WALL_BLOCK_ENTITY.getOrNull());
 
-        EnergyStorage.SIDED.registerForBlockEntity((blockEntity, dir) -> {
+        sided.registerForBlockEntityM((blockEntity, dir) -> {
             if (blockEntity instanceof SpaceCubeBlockEntity) {
                 SpaceCubeBlockEntity scBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 ITunnelDef def = scBlockEntity.getTunnelDef(TunnelType.ENERGY, dir);

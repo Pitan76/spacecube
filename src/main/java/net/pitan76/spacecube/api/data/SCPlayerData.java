@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.api.data;
 
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;

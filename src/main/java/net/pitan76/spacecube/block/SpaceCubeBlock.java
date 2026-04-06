@@ -3,8 +3,6 @@ package net.pitan76.spacecube.block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
@@ -14,7 +12,9 @@ import net.pitan76.mcpitanlib.api.event.block.result.BlockBreakResult;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.entity.ItemEntityUtil;
+import net.pitan76.mcpitanlib.midohra.server.MCServer;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.world.ServerWorld;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.spacecube.Blocks;
 import net.pitan76.spacecube.SpaceCube;
@@ -118,21 +118,22 @@ public class SpaceCubeBlock extends CompatBlock implements ExtendBlockEntityProv
                 SpaceCubeBlockEntity spaceCubeBlockEntity = (SpaceCubeBlockEntity) blockEntity;
                 BlockEntityDataUtil.readCompatBlockEntityNbtFromStack(stack, spaceCubeBlockEntity);
 
-                ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld((ServerWorld) world.getRaw());
+                ServerWorld spaceCubeWorld = SpaceCubeUtil.getSpaceCubeWorld(world.toServerWorld().get());
                 if (spaceCubeWorld == null) {
                     SpaceCube.INSTANCE.error("[SpaceCube] Error: spaceCubeWorld is null.");
                     super.onPlaced(e);
                     return;
                 }
 
-                Optional<MinecraftServer> optionalServer = WorldUtil.getServer(spaceCubeWorld);
-                SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(optionalServer.get());
-                Map<net.minecraft.util.math.BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
+                MCServer server = spaceCubeWorld.getMCServer();
 
-                net.minecraft.util.math.BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
+                SpaceCubeState spaceCubeState = SpaceCubeState.getOrCreate(server);
+                Map<BlockPos, SCBlockPath> spacePosWithSCBlockPath = spaceCubeState.getSpacePosWithSCBlockPath();
+
+                BlockPos scRoomPos = spaceCubeBlockEntity.getScRoomPos();
                 if (spacePosWithSCBlockPath.containsKey(scRoomPos)) {
                     SCBlockPath scBlockPath = spacePosWithSCBlockPath.get(scRoomPos);
-                    scBlockPath.setPos(pos.toMinecraft());
+                    scBlockPath.setPos(pos);
                     scBlockPath.setDimension(world.getId());
                 }
             }

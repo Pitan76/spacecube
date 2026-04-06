@@ -1,7 +1,7 @@
 package net.pitan76.spacecube.api.data;
 
-import net.minecraft.util.math.BlockPos;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 
 public class SCBlockPath {
     public BlockPos pos;
@@ -22,6 +22,10 @@ public class SCBlockPath {
 
     public void setPos(BlockPos pos) {
         this.pos = pos;
+    }
+
+    public void setPos(net.minecraft.util.math.BlockPos pos) {
+        this.pos = BlockPos.of(pos);
     }
 
     public CompatIdentifier getDimension() {
