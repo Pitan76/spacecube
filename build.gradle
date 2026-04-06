@@ -121,7 +121,7 @@ curseforge {
         apiKey = System.getenv("CURSEFORGE_TOKEN")
         project {
             id = '964401'
-            changelog = "Support for 1.21.7\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
+            changelog = "Support for 26.1\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
             releaseType = 'release'
             addGameVersion '1.18.1'
             addGameVersion '1.18.2'
@@ -174,7 +174,7 @@ modrinth {
         gameVersions = ['1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4', '1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4', '1.21.5', '1.21.6', '1.21.7', '1.21.8', '1.21.9', '1.21.10', '1.21.11', '26.1', '26.1.1']
         versionType = 'release'
         loaders = ['fabric']
-        changelog = "Support for 1.21.7\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
+        changelog = "Support for 26.1\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
         dependencies = [
                 new ModDependency('P7dR8mSH', 'required'),  // Fabric API
                 new ModDependency('uNRoUnGT', 'required'),  // mcpitanlib
