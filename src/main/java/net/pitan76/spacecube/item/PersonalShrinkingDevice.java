@@ -88,7 +88,7 @@ public class PersonalShrinkingDevice extends CompatItem {
         }
 
         // Only run on the server side
-        if (world.isClient()) {
+        if (e.isClient()) {
             // Play the sound of dimension teleportation (ディメンション移動の音を鳴らす)
             if (state.getBlock().get() instanceof SpaceCubeBlock) {
                 // TODO: entity.moveToWorld(serverWorld);
